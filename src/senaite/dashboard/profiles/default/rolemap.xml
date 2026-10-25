@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<rolemap>
+  <permissions>
+    <!-- Every signed-in user has a dashboard -->
+    <permission name="senaite.dashboard: View Dashboard"
+                acquire="False">
+      <role name="Authenticated"/>
+    </permission>
+    <!-- ... and may arrange it for themselves -->
+    <permission name="senaite.dashboard: Customize Dashboard"
+                acquire="False">
+      <role name="Authenticated"/>
+    </permission>
+    <!-- What everybody starts from is up to the laboratory management -->
+    <permission name="senaite.dashboard: Manage Global Dashboards"
+                acquire="False">
+      <role name="Manager"/>
+      <role name="LabManager"/>
+    </permission>
+  </permissions>
+</rolemap>

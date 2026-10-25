@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="senaite.dashboard">
+
+  <metal:title fill-slot="content-title"></metal:title>
+  <metal:description fill-slot="content-description"></metal:description>
+
+  <metal:content fill-slot="content-core">
+    <link rel="stylesheet"
+          tal:define="css string:senaite.dashboard.css"
+          tal:attributes="href python:view.get_resource_url(css)" />
+
+    <script type="application/json"
+            id="senaite-dashboard-bootstrap"
+            tal:content="structure view/get_bootstrap_json"></script>
+
+    <div class="sd-mount" tal:attributes="id view/mount_id">
+      <div class="sd-boot" i18n:translate="">Loading</div>
+    </div>
+
+    <script tal:define="js string:senaite.dashboard.js"
+            tal:attributes="src python:view.get_resource_url(js)"></script>
+  </metal:content>
+
+</html>

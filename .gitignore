@@ -1,0 +1,7 @@
+*.py[cod]
+__pycache__/
+*.egg-info/
+dist/
+build/
+.installed.cfg
+webpack/node_modules/

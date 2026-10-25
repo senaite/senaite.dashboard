@@ -1,0 +1,48 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope">
+
+  <!-- Datasets: what a tile may search, by the name it refers to -->
+  <utility
+      component=".builtin.SAMPLES"
+      provides="senaite.dashboard.interfaces.IDashboardDataset"
+      name="samples"
+      />
+  <utility
+      component=".builtin.ANALYSES"
+      provides="senaite.dashboard.interfaces.IDashboardDataset"
+      name="analyses"
+      />
+  <utility
+      component=".builtin.WORKSHEETS"
+      provides="senaite.dashboard.interfaces.IDashboardDataset"
+      name="worksheets"
+      />
+
+  <!-- Data sources, by the name a tile refers to them -->
+  <utility
+      factory=".sources.CountSource"
+      provides="senaite.dashboard.interfaces.IDashboardDataSource"
+      name="count"
+      />
+  <utility
+      factory=".sources.GroupSource"
+      provides="senaite.dashboard.interfaces.IDashboardDataSource"
+      name="group"
+      />
+  <utility
+      factory=".sources.TimeseriesSource"
+      provides="senaite.dashboard.interfaces.IDashboardDataSource"
+      name="timeseries"
+      />
+  <utility
+      factory=".sources.ListSource"
+      provides="senaite.dashboard.interfaces.IDashboardDataSource"
+      name="list"
+      />
+  <utility
+      factory=".sources.SpanSource"
+      provides="senaite.dashboard.interfaces.IDashboardDataSource"
+      name="span"
+      />
+
+</configure>

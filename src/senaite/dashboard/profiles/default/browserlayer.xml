@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<layers>
+  <layer
+      name="senaite.dashboard"
+      interface="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+</layers>

@@ -1,0 +1,47 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="senaite.dashboard">
+
+  <i18n:registerTranslations directory="locales" />
+
+  <permission
+      id="senaite.dashboard.ViewDashboard"
+      title="senaite.dashboard: View Dashboard"
+      />
+  <permission
+      id="senaite.dashboard.CustomizeDashboard"
+      title="senaite.dashboard: Customize Dashboard"
+      />
+  <permission
+      id="senaite.dashboard.ManageDashboards"
+      title="senaite.dashboard: Manage Global Dashboards"
+      />
+
+  <!-- The tile library -->
+  <utility
+      factory=".library.builtin.CorePresets"
+      provides=".interfaces.IDashboardPresetProvider"
+      name="senaite.dashboard"
+      />
+  <utility
+      factory=".library.saved.SavedPresets"
+      provides=".interfaces.IDashboardPresetProvider"
+      name="senaite.dashboard.saved"
+      />
+
+  <include package=".query" />
+  <include package=".routes" />
+  <include package=".browser" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="SENAITE DASHBOARD"
+      description="Configurable dashboards for SENAITE"
+      directory="profiles/default"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
+      />
+
+</configure>

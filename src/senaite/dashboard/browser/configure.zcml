@@ -1,0 +1,38 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="senaite.dashboard">
+
+  <!-- Takes the place of the SENAITE dashboard -->
+  <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="senaite-dashboard"
+      class=".view.DashboardView"
+      permission="senaite.dashboard.ViewDashboard"
+      layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+
+  <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="dashboard"
+      class=".view.DashboardView"
+      permission="senaite.dashboard.ViewDashboard"
+      layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+
+  <!-- Where managers define datasets of their own -->
+  <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="dashboard-datasets"
+      class=".view.DatasetsView"
+      permission="senaite.dashboard.ManageDashboards"
+      layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+
+  <browser:resourceDirectory
+      name="senaite.dashboard"
+      directory="static"
+      layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+
+</configure>
