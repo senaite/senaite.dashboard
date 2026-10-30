@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layers>
+  <!-- Without the layer the dashboard view and its routes are gone;
+       the dashboards stay on the site for a later install -->
+  <layer name="senaite.dashboard"
+         interface="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+         remove="True" />
+</layers>

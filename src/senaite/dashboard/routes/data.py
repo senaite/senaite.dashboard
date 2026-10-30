@@ -7,7 +7,8 @@ catalog searches.
 """
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.dashboards.model import MAX_TILES
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query.compute import compute
 from senaite.dashboard.query.compute import get_cost
 from senaite.dashboard.query.registry import get_dataset
@@ -17,8 +18,6 @@ from senaite.dashboard.routes.base import get_tiles
 from senaite.dashboard.routes.base import message
 from senaite.dashboard.routes.base import route
 
-# A dashboard holds at most this many tiles, and asks for all at once
-MAX_TILES_PER_REQUEST = 60
 # Catalog searches one request may cause, roughly: a dashboard of
 # charts over long periods is fine, sixty of them are not
 MAX_COST_PER_REQUEST = 1000
@@ -28,7 +27,7 @@ def compute_tile(tile, env):
     """Return the data of one tile, or the reason there is none."""
     try:
         return compute(tile.get("source"), tile.get("params") or {}, env)
-    except QueryError as exc:
+    except ValidationError as exc:
         return {"error": message(exc)}
 
 
@@ -42,13 +41,13 @@ def data_tiles(body):
     """The tiles of a data request that have a data source."""
     tiles = [tile for tile in get_tiles(body)
              if isinstance(tile, dict) and tile.get("source")]
-    if len(tiles) > MAX_TILES_PER_REQUEST:
-        raise QueryError(_("Too many tiles in one request"))
+    if len(tiles) > MAX_TILES:
+        raise ValidationError(_("Too many tiles in one request"))
     cost = sum(get_cost(tile.get("source"), tile.get("params"))
                for tile in tiles)
     if cost > MAX_COST_PER_REQUEST:
-        raise QueryError(_("This asks for too much at once; use fewer "
-                           "or shorter charts"))
+        raise ValidationError(_("This asks for too much at once; use fewer "
+                                "or shorter charts"))
     return tiles
 
 

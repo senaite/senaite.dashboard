@@ -20,7 +20,7 @@ from bika.lims import api
 from DateTime import DateTime
 from senaite.core.i18n import translate
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardDataSource
 from senaite.dashboard.query import timeline
 from senaite.dashboard.query.datasets import COL_DATE
@@ -57,6 +57,11 @@ MAX_STACKS = 12
 MAX_ROWS = 50
 # A span is measured over the most recent objects only
 MAX_SPAN_OBJECTS = 5000
+
+# What a tile that reads every object it finds costs, in catalog
+# searches: a group reads the index value of each, a span the dates of
+# thousands
+SCAN_COST = 10
 
 DEFAULT_PERIODS = 12
 DEFAULT_LIMIT = 10
@@ -99,6 +104,38 @@ def periods_of(params, default):
     return clamp(periods, default, 1, timeline.MAX_PERIODS[timeline.WEEK])
 
 
+@implementer(IDashboardDataSource)
+class DataSource(object):
+    """Base of a data source; add-ons subclass it for sources of their own.
+
+    A subclass sets `title`, `output` and `params`, the parameters it
+    takes by kind (see params.py; `with_dataset` adds those of a source
+    on a dataset), and implements `__call__`. It may override `clean`,
+    to check its parameters further, and `cost`, when it causes more
+    than one catalog search.
+    """
+    title = None
+    output = None
+    params = {}
+
+    def clean(self, params):
+        """The parameters, checked further than by their kinds.
+
+        :raises ValidationError: when they are not valid
+        """
+        return params
+
+    def cost(self, params):
+        """How many catalog searches the tile causes, roughly.
+
+        :param params: the parameters as the tile sent them, unchecked
+        """
+        return 1
+
+    def __call__(self, params, env):
+        raise NotImplementedError
+
+
 # Fields
 
 def get_dataset_query(params, env):
@@ -112,15 +149,16 @@ def get_date_field(dataset, name, env):
     name = name or "created"
     field = dataset.get_field(name, env)
     if field.kind != DATE:
-        raise QueryError(_("${name} is not a date", mapping={"name": name}))
+        raise ValidationError(_("${name} is not a date",
+                                mapping={"name": name}))
     return field
 
 
 def get_group_field(dataset, name, env):
     field = dataset.get_field(name, env)
     if not field.groupable:
-        raise QueryError(_("Cannot group by ${name}",
-                           mapping={"name": name}))
+        raise ValidationError(_("Cannot group by ${name}",
+                                mapping={"name": name}))
     return field
 
 
@@ -305,8 +343,7 @@ def summarize_hours(hours, span):
 
 # Sources
 
-@implementer(IDashboardDataSource)
-class CountSource(object):
+class CountSource(DataSource):
     """Number of objects, optionally with its course over time.
 
     Answer: {"value": 12, "trend": {"interval": "week",
@@ -344,8 +381,7 @@ class CountSource(object):
         }
 
 
-@implementer(IDashboardDataSource)
-class GroupSource(object):
+class GroupSource(DataSource):
     """Number of objects per value of a field.
 
     Answer: {"total": 40, "kind": field kind, "items": [{"key": value,
@@ -355,6 +391,9 @@ class GroupSource(object):
     title = _("Group")
     output = "items"
     params = with_dataset({"group_by": NAME, "limit": NUMBER})
+
+    def cost(self, params):
+        return SCAN_COST
 
     def __call__(self, params, env):
         dataset, query = get_dataset_query(params, env)
@@ -370,8 +409,7 @@ class GroupSource(object):
         }
 
 
-@implementer(IDashboardDataSource)
-class TimeseriesSource(object):
+class TimeseriesSource(DataSource):
     """Number of objects per period, optionally stacked by a field.
 
     Answer: {"interval": "week", "kind": kind of the stack field or
@@ -405,8 +443,7 @@ class TimeseriesSource(object):
         }
 
 
-@implementer(IDashboardDataSource)
-class ListSource(object):
+class ListSource(DataSource):
     """The first objects of a search, with some of their columns.
 
     Answer: {"total": 40, "columns": [{"name", "title", "kind"}, ...],
@@ -442,8 +479,7 @@ class ListSource(object):
         }
 
 
-@implementer(IDashboardDataSource)
-class SpanSource(object):
+class SpanSource(DataSource):
     """How long it takes between two dates, e.g. the turnaround time.
 
     Measured over the objects that have both dates, the most recent
@@ -455,6 +491,9 @@ class SpanSource(object):
     title = _("Duration")
     output = "scalar"
     params = with_dataset({"span": NAME})
+
+    def cost(self, params):
+        return SCAN_COST
 
     def __call__(self, params, env):
         dataset, query = get_dataset_query(params, env)

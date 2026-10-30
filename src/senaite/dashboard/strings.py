@@ -28,6 +28,15 @@ UI_STRINGS = OrderedDict([
     ("cancel", _("Cancel")),
     ("close", _("Close")),
     ("color", _("Color")),
+    ("color_aqua", _("Aqua")),
+    ("color_blue", _("Blue")),
+    ("color_green", _("Green")),
+    ("color_magenta", _("Magenta")),
+    ("color_orange", _("Orange")),
+    ("color_red", _("Red")),
+    ("color_slate", _("Slate")),
+    ("color_violet", _("Violet")),
+    ("color_yellow", _("Yellow")),
     ("column", _("Column")),
     ("columns", _("Columns")),
     ("create", _("Create")),
@@ -52,6 +61,7 @@ UI_STRINGS = OrderedDict([
                               "client contacts.")),
     ("dataset_general", _("Dataset")),
     ("dataset_lab_only", _("Only for the laboratory")),
+    ("dataset_missing", _("The dataset of this tile is gone, or not for you")),
     ("dataset_spans", _("Spans of time")),
     ("dataset_spans_hint", _("How long it takes from one date to another, "
                              "e.g. from reception to release.")),
@@ -77,6 +87,7 @@ UI_STRINGS = OrderedDict([
                                  "gone.")),
     ("descending", _("Newest first")),
     ("description", _("Description")),
+    ("discard_changes", _("Discard the unsaved changes?")),
     ("discard_draft", _("Discard changes")),
     ("done", _("Done")),
     ("draft", _("Draft")),
@@ -86,9 +97,6 @@ UI_STRINGS = OrderedDict([
                                "change here stays in the draft until "
                                "you publish again.")),
     ("edit_draft", _("Edit for everybody")),
-    ("pending_hint", _("The draft has changes that are not published "
-                       "yet. Everybody else sees this version.")),
-    ("open_draft", _("Open the draft")),
     ("edit_draft_hint", _("Change the dashboard every user starts from")),
     ("edit_hint", _("Drag tiles by their title to move them, drag the "
                     "corner to resize. Changes are saved automatically.")),
@@ -99,6 +107,7 @@ UI_STRINGS = OrderedDict([
     ("empty_tile", _("Nothing to show")),
     ("error", _("Not saved")),
     ("examples", _("Examples")),
+    ("field_missing", _("The dataset no longer offers this field")),
     ("filters", _("Filters")),
     ("for_everybody", _("Nobody selected: visible for everybody")),
     ("for_roles", _("Visible for")),
@@ -130,7 +139,7 @@ UI_STRINGS = OrderedDict([
     ("last_365d", _("Last 12 months")),
     ("last_7d", _("Last 7 days")),
     ("last_90d", _("Last 90 days")),
-    ("last_updated", _("Updated")),
+    ("last_updated", _("Updated {time}")),
     ("library", _("Add a tile")),
     ("library_hint", _("Pick a tile to add it to the dashboard. You can "
                        "change it afterwards.")),
@@ -149,6 +158,8 @@ UI_STRINGS = OrderedDict([
     ("my_client", _("My client")),
     ("my_client_hint", _("Client contacts see their own client, the "
                          "laboratory sees all")),
+    ("network_error", _("The server cannot be reached. Please check the "
+                        "connection.")),
     ("new_dashboard_hint", _("Start with")),
     ("new_dataset", _("New dataset")),
     ("new_global", _("For everybody (draft)")),
@@ -180,11 +191,14 @@ UI_STRINGS = OrderedDict([
     ("notice_tile_removed", _("Tile removed")),
     ("notice_was_reset", _("Your changes are undone. You see the "
                            "dashboard as everybody else.")),
-    ("objects_visible", _("objects you may see")),
-    ("of_total", _("of")),
+    ("objects_visible", _("{count} objects you may see")),
+    ("of_total", _("{shown} of {total}")),
+    ("open_draft", _("Open the draft")),
     ("open_list", _("Open list")),
     ("or", _("or ...")),
     ("p90", _("90% within")),
+    ("pending_hint", _("The draft has changes that are not published "
+                       "yet. Everybody else sees this version.")),
     ("periods", _("Periods")),
     ("personal", _("Only for you")),
     ("pick_dataset", _("Pick a dataset on the left, or make a new one.")),
@@ -193,16 +207,17 @@ UI_STRINGS = OrderedDict([
     ("refresh", _("Refresh")),
     ("refreshing", _("Refreshing")),
     ("remove_from_library", _("Remove from the library")),
+    ("request_failed", _("The request failed ({status})")),
     ("reset", _("Reset to default")),
     ("reset_confirm", _("Undo all your changes to this dashboard?")),
     ("restore", _("Restore")),
     ("restore_defaults", _("Restore default dashboards")),
-    ("restore_defaults_hint", _("Add the default dashboards that are "
-                                "missing")),
     ("restore_defaults_confirm", _("Default dashboards that are missing "
                                    "are added as drafts. Dashboards that "
                                    "are there stay as they are. Users see "
                                    "the new ones once you publish them.")),
+    ("restore_defaults_hint", _("Add the default dashboards that are "
+                                "missing")),
     ("save", _("Save")),
     ("save_to_library", _("Save to library")),
     ("save_to_library_hint", _("Everybody can add the tile from the "
@@ -211,6 +226,8 @@ UI_STRINGS = OrderedDict([
     ("saved", _("Saved")),
     ("saving", _("Saving")),
     ("search_tiles", _("Search tiles")),
+    ("session_expired", _("Your session has expired. Please reload the "
+                          "page and sign in again.")),
     ("settings", _("Settings")),
     ("sort_on", _("Sort by")),
     ("source", _("Kind of data")),
@@ -247,7 +264,7 @@ UI_STRINGS = OrderedDict([
     ("use", _("Use")),
     ("value_any", _("Any")),
     ("view_as_user", _("Back to my view")),
-    ("week_of", _("Week of")),
+    ("week_of", _("Week of {date}")),
     ("yes", _("Yes")),
 ])
 

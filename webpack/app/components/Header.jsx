@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import Icon from "./Icon";
 import {formatDateTime, formatToday} from "../format";
-import {t, titleText} from "../i18n";
+import {format, t, titleText} from "../i18n";
 
 function greeting(now) {
   const hour = new Date(now).getHours();
@@ -37,7 +37,8 @@ function RefreshButton({updated, onRefresh}) {
       <Icon name="refresh" size={16}/>
       <span role="status">
         {busy ? t("refreshing")
-          : updated ? `${t("last_updated")} ${formatDateTime(updated)}`
+          : updated ? format("last_updated",
+                             {time: formatDateTime(updated)})
             : t("refresh")}
       </span>
     </button>

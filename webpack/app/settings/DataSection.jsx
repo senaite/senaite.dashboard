@@ -25,11 +25,35 @@ function SourceField({tile, update, context}) {
   );
 }
 
+// The tile's dataset is gone, or the user may not use it: the tile
+// can move to another one
+function MissingDataset({tile, update, context}) {
+  const datasets = datasetsFor(tile.source, context);
+  return (
+    <Section title={t("data")}>
+      <SourceField tile={tile} update={update} context={context}/>
+      <Field label={t("dataset")} hint={t("dataset_missing")}>
+        <Select label={t("dataset")} options={options(datasets)} value=""
+                allowEmpty="–"
+                onChange={(name) => name && update({
+                  params: paramsOnDataset(tile, context.datasets[name],
+                                          context)})}/>
+      </Field>
+    </Section>
+  );
+}
+
 export default function DataSection({tile, update, context}) {
   const params = tile.params;
   const dataset = context.datasets[params.dataset];
-  if (!dataset) {
+  // Notes, links and other tiles without data, and sources of add-ons
+  // that work on no dataset, have nothing to set here
+  const source = tile.source && context.sources[tile.source];
+  if (!source || !source.params.includes("dataset")) {
     return null;
+  }
+  if (!dataset) {
+    return <MissingDataset tile={tile} update={update} context={context}/>;
   }
   const dateFields = dataset.fields.filter((f) => f.kind === "date");
   const groupFields = dataset.fields.filter((f) => f.groupable);

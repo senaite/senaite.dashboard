@@ -22,6 +22,7 @@ from senaite.dashboard.query.fields import Field
 from senaite.dashboard.query.labels import get_labels
 from senaite.dashboard.query.search import NONE
 from senaite.dashboard.query.search import count_values
+from senaite.dashboard.query.search import get_metadata
 from senaite.dashboard.query.search import get_rids
 
 # Objects looked at to propose the kinds of columns and show examples
@@ -94,11 +95,7 @@ def to_text(value):
 
 
 def get_column_values(brains, name):
-    values = []
-    for brain in brains:
-        value = getattr(brain, name, None)
-        values.append(value() if callable(value) else value)
-    return values
+    return [get_metadata(brain, name) for brain in brains]
 
 
 def sample_column_values(values):

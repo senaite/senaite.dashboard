@@ -1,26 +1,50 @@
 # -*- coding: utf-8 -*-
 """What a data source knows about the request it answers."""
 
+from collections import OrderedDict
+
 from bika.lims import api
 from DateTime import DateTime
 from plone.memoize.instance import memoize
+from senaite.dashboard import messagefactory as _
 from senaite.dashboard.titles import get_language
+
+# The roles of SENAITE, with the names users know them by, in the order
+# a manager picks them for a global dashboard
+ROLES = OrderedDict([
+    ("LabManager", _("Lab managers")),
+    ("LabClerk", _("Lab clerks")),
+    ("Analyst", _("Analysts")),
+    ("Verifier", _("Verifiers")),
+    ("Publisher", _("Publishers")),
+    ("Sampler", _("Samplers")),
+    ("Preserver", _("Preservers")),
+    ("SamplingCoordinator", _("Sampling coordinators")),
+    ("RegulatoryInspector", _("Regulatory inspectors")),
+    ("Client", _("Client contacts")),
+    ("Manager", _("Site administrators")),
+])
+
+# Roles of client contacts
+CLIENT_ROLES = frozenset(["Client"])
 
 # Roles that mark a member of the laboratory staff. A user without any
 # of them is treated like a client contact: fields that only make
 # sense inside the laboratory are not offered.
-LAB_ROLES = frozenset([
-    "Analyst",
-    "LabClerk",
-    "LabManager",
-    "Manager",
-    "Preserver",
-    "Publisher",
-    "RegulatoryInspector",
-    "Sampler",
-    "SamplingCoordinator",
-    "Verifier",
-])
+LAB_ROLES = frozenset(ROLES) - CLIENT_ROLES
+
+
+class LabOnly(object):
+    """Something that may be kept from users outside the laboratory.
+
+    A dataset, a field or a column sets `lab_only` to hide itself from
+    client contacts.
+    """
+    lab_only = False
+
+    def is_available(self, env):
+        """Whether the user may use it."""
+        return env.is_lab or not self.lab_only
 
 
 class Environment(object):

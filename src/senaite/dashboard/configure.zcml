@@ -34,6 +34,7 @@
   <include package=".query" />
   <include package=".routes" />
   <include package=".browser" />
+  <include package=".upgrades" />
 
   <genericsetup:registerProfile
       name="default"
@@ -42,6 +43,14 @@
       directory="profiles/default"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       post_handler=".setuphandlers.post_install"
+      />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="SENAITE DASHBOARD (uninstall)"
+      description="Removes the dashboards view and routes; the dashboards stay"
+      directory="profiles/uninstall"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
 </configure>

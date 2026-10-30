@@ -10,7 +10,7 @@ export default function Tooltip({x, y, width, children}) {
     ? {right: Math.max(0, width - x + 12), top: y}
     : {left: x + 12, top: y};
   return (
-    <div className="sd-tooltip" style={style} role="status">
+    <div className="sd-tooltip" style={style}>
       {children}
     </div>
   );

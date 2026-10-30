@@ -18,10 +18,10 @@ Everything here is pure: tiles in, tiles out.
 import copy
 import json
 import re
-import uuid
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.titles import new_id
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.titles import clean_title
 
 GRID_COLUMNS = 12
@@ -38,15 +38,11 @@ TILE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,31}\Z")
 TILE_FIELDS = ("type", "title", "source", "params", "options", "layout")
 
 
-def new_id():
-    return uuid.uuid4().hex[:8]
-
-
 def parse_layout_int(value, minimum, maximum):
     try:
         value = int(value)
     except (TypeError, ValueError):
-        raise QueryError(_("Tile layout must be numbers"))
+        raise ValidationError(_("Tile layout must be numbers"))
     return max(minimum, min(maximum, value))
 
 
@@ -66,7 +62,7 @@ def clean_dashboard_title(title):
     """The title of a dashboard, which it cannot be without."""
     title = clean_title(title)
     if not title:
-        raise QueryError(_("A dashboard needs a title"))
+        raise ValidationError(_("A dashboard needs a title"))
     return title
 
 
@@ -77,41 +73,60 @@ def clean_tile_id(tile_id):
     return new_id()
 
 
-def clean_tile(tile):
-    """Return the tile with known fields only, or raise QueryError."""
-    if not isinstance(tile, dict):
-        raise QueryError(_("A tile must be a mapping"))
-    tile_type = tile.get("type")
+def clean_tile_type(tile_type):
     if not isinstance(tile_type, basestring) or not tile_type:
-        raise QueryError(_("A tile needs a type"))
-    params = tile.get("params") or {}
-    options = tile.get("options") or {}
-    if not isinstance(params, dict) or not isinstance(options, dict):
-        raise QueryError(_("Tile settings must be mappings"))
-    source = tile.get("source") or None
+        raise ValidationError(_("A tile needs a type"))
+    return tile_type
+
+
+def clean_tile_settings(value):
+    """The params or options of a tile: a mapping, empty by default."""
+    value = value or {}
+    if not isinstance(value, dict):
+        raise ValidationError(_("Tile settings must be mappings"))
+    return value
+
+
+def clean_tile_source(source):
+    """The name of the data source of a tile, or None for none."""
+    source = source or None
     if source is not None and not isinstance(source, basestring):
-        raise QueryError(_("A tile source must be a name"))
+        raise ValidationError(_("A tile source must be a name"))
+    return source
+
+
+def check_tile_size(tile):
+    if len(json.dumps(tile)) > MAX_TILE_SIZE:
+        raise ValidationError(_("The tile is too large"))
+
+
+def clean_tile(tile):
+    """Return the tile with known fields only.
+
+    :raises ValidationError: when a field is not valid
+    """
+    if not isinstance(tile, dict):
+        raise ValidationError(_("A tile must be a mapping"))
     clean = {
         "id": clean_tile_id(tile.get("id")),
-        "type": tile_type,
+        "type": clean_tile_type(tile.get("type")),
         "title": clean_title(tile.get("title")),
-        "source": source,
-        "params": params,
-        "options": options,
+        "source": clean_tile_source(tile.get("source")),
+        "params": clean_tile_settings(tile.get("params")),
+        "options": clean_tile_settings(tile.get("options")),
         "layout": clean_layout(tile.get("layout")),
     }
-    if len(json.dumps(clean)) > MAX_TILE_SIZE:
-        raise QueryError(_("The tile is too large"))
+    check_tile_size(clean)
     return clean
 
 
 def clean_tiles(tiles):
     """Return the tiles cleaned, with unique ids."""
     if not isinstance(tiles, (list, tuple)):
-        raise QueryError(_("Tiles must be a list"))
+        raise ValidationError(_("Tiles must be a list"))
     if len(tiles) > MAX_TILES:
-        raise QueryError(_("A dashboard holds at most ${count} tiles",
-                           mapping={"count": MAX_TILES}))
+        raise ValidationError(_("A dashboard holds at most ${count} tiles",
+                                mapping={"count": MAX_TILES}))
     cleaned = []
     seen = set()
     for tile in tiles:

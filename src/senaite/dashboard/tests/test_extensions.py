@@ -7,7 +7,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from senaite.dashboard.env import Environment
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardDatasetExtension
 from senaite.dashboard.interfaces import IDashboardPresetProvider
 from senaite.dashboard.library.presets import get_categories
@@ -114,9 +114,9 @@ class ExtensionsTestCase(unittest.TestCase):
 
     def test_fields_of_an_unknown_kind_are_refused(self):
         field = Field("getPriority", u"Priority", "colour")
-        self.assertRaises(QueryError, get_choices, field, self.samples(),
+        self.assertRaises(ValidationError, get_choices, field, self.samples(),
                           self.env)
-        self.assertRaises(QueryError, get_labels, ["1"], field,
+        self.assertRaises(ValidationError, get_labels, ["1"], field,
                           self.samples(), self.env)
 
     def test_provider_categories_come_before_general(self):

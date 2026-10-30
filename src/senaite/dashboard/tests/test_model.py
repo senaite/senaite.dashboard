@@ -4,7 +4,7 @@
 import unittest
 
 from senaite.dashboard.dashboards import model
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.titles import title_text
 
 
@@ -28,7 +28,7 @@ class LayoutTestCase(unittest.TestCase):
                          {"x": 0, "y": 0, "w": 4, "h": 2})
 
     def test_refuses_text(self):
-        self.assertRaises(QueryError, model.clean_layout, {"w": "wide"})
+        self.assertRaises(ValidationError, model.clean_layout, {"w": "wide"})
 
 
 class TileTestCase(unittest.TestCase):
@@ -38,7 +38,7 @@ class TileTestCase(unittest.TestCase):
         self.assertNotIn("script", cleaned)
 
     def test_needs_a_type(self):
-        self.assertRaises(QueryError, model.clean_tile, {"id": "a"})
+        self.assertRaises(ValidationError, model.clean_tile, {"id": "a"})
 
     def test_gets_an_id(self):
         self.assertTrue(model.clean_tile({"type": "note"})["id"])
@@ -49,11 +49,11 @@ class TileTestCase(unittest.TestCase):
 
     def test_too_many_tiles(self):
         tiles = [tile(str(i)) for i in range(model.MAX_TILES + 1)]
-        self.assertRaises(QueryError, model.clean_tiles, tiles)
+        self.assertRaises(ValidationError, model.clean_tiles, tiles)
 
     def test_too_large(self):
         big = tile("a", options={"text": "x" * model.MAX_TILE_SIZE})
-        self.assertRaises(QueryError, model.clean_tile, big)
+        self.assertRaises(ValidationError, model.clean_tile, big)
 
     def test_title_in_several_languages(self):
         title = {"en": "Samples", "de": u"Proben"}

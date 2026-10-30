@@ -38,13 +38,23 @@ function linkTarget(url, portalUrl) {
   return resolveUrl(url, portalUrl);
 }
 
+// Whether a link leaves the site: compared by origin, as a prefix
+// would take https://lims.example.com.other.tld for the site
+function isExternal(href, portalUrl) {
+  if (!/^(https?:)?\/\//i.test(href)) {
+    return false;
+  }
+  const site = new URL(portalUrl, window.location.href).origin;
+  return new URL(href, window.location.href).origin !== site;
+}
+
 function renderLink(text, url, key, portalUrl) {
   const href = linkTarget(url, portalUrl);
   const content = renderInline(text, portalUrl);
   if (!href) {
     return <React.Fragment key={key}>{content}</React.Fragment>;
   }
-  const external = /^https?:/i.test(href) && !href.startsWith(portalUrl);
+  const external = isExternal(href, portalUrl);
   return (
     <a key={key} href={href}
        {...(external ? {target: "_blank", rel: "noopener noreferrer"}

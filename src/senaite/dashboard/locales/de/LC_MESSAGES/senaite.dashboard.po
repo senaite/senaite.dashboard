@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: senaite.dashboard\n"
-"POT-Creation-Date: 2026-10-25 10:23+0000\n"
+"POT-Creation-Date: 2026-10-30 09:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,107 +18,107 @@ msgstr ""
 "Domain: senaite.dashboard\n"
 "Language: de\n"
 
-#: senaite/dashboard/query/custom.py:82
+#: senaite/dashboard/query/custom.py:88
 msgid "${name} cannot be a field of kind ${kind}"
 msgstr "${name} kann kein Feld der Art ${kind} sein"
 
-#: senaite/dashboard/query/sources.py:115
+#: senaite/dashboard/query/sources.py:152
 msgid "${name} is not a date"
 msgstr "${name} ist kein Datum"
 
-#: senaite/dashboard/query/custom.py:88
+#: senaite/dashboard/query/custom.py:94
 msgid "${name} needs the type it points to"
 msgstr "${name} braucht den Typ, auf den es verweist"
 
-#: senaite/dashboard/strings.py:143
+#: senaite/dashboard/strings.py:152
 msgid "**bold**, *italic*, # heading, - list, [text](samples) for a link"
 msgstr "**fett**, *kursiv*, # Überschrift, - Liste, [Text](samples) für einen Link"
 
-#: senaite/dashboard/strings.py:187
+#: senaite/dashboard/strings.py:199
 msgid "90% within"
 msgstr "90 % innerhalb"
 
-#: senaite/dashboard/query/custom.py:101
+#: senaite/dashboard/query/custom.py:107
 msgid "A column must be a mapping"
 msgstr "Eine Spalte muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:102
+#: senaite/dashboard/query/custom.py:108
 msgid "A column needs a name"
 msgstr "Eine Spalte braucht einen Namen"
 
-#: senaite/dashboard/strings.py:222
+#: senaite/dashboard/strings.py:239
 msgid "A copy of this one"
 msgstr "Einer Kopie von diesem"
 
-#: senaite/dashboard/dashboards/model.py:113
+#: senaite/dashboard/dashboards/model.py:128
 msgid "A dashboard holds at most ${count} tiles"
 msgstr "Ein Dashboard fasst höchstens ${count} Kacheln"
 
-#: senaite/dashboard/dashboards/model.py:69
+#: senaite/dashboard/dashboards/model.py:65
 msgid "A dashboard needs a title"
 msgstr "Ein Dashboard braucht einen Titel"
 
-#: senaite/dashboard/query/catalogs.py:117
+#: senaite/dashboard/query/catalogs.py:128
 msgid "A dataset cannot be made of ${type}"
 msgstr "Aus ${type} lässt sich kein Dataset machen"
 
-#: senaite/dashboard/query/custom.py:154
+#: senaite/dashboard/query/custom.py:160
 msgid "A dataset must be a mapping"
 msgstr "Ein Dataset muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:163
+#: senaite/dashboard/query/custom.py:169
 msgid "A dataset needs a title"
 msgstr "Ein Dataset braucht einen Titel"
 
-#: senaite/dashboard/query/fields.py:92
+#: senaite/dashboard/query/fields.py:89
 msgid "A date filter needs a min or a max"
 msgstr "Ein Datumsfilter braucht einen Anfang oder ein Ende"
 
-#: senaite/dashboard/query/custom.py:74
+#: senaite/dashboard/query/custom.py:80
 msgid "A field must be a mapping"
 msgstr "Ein Feld muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:75
+#: senaite/dashboard/query/custom.py:81
 msgid "A field needs an index"
 msgstr "Ein Feld braucht einen Index"
 
-#: senaite/dashboard/query/fields.py:117
+#: senaite/dashboard/query/fields.py:114
 msgid "A filter takes at most ${count} values"
 msgstr "Ein Filter nimmt höchstens ${count} Werte"
 
-#: senaite/dashboard/query/custom.py:126
+#: senaite/dashboard/query/custom.py:132
 msgid "A span must be a mapping"
 msgstr "Eine Zeitspanne muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:127
+#: senaite/dashboard/query/custom.py:133
 msgid "A span needs a title"
 msgstr "Eine Zeitspanne braucht einen Titel"
 
-#: senaite/dashboard/query/custom.py:131
+#: senaite/dashboard/query/custom.py:137
 msgid "A span needs two dates of the type"
 msgstr "Eine Zeitspanne braucht zwei Datumsangaben des Typs"
 
-#: senaite/dashboard/library/builtin.py:233
+#: senaite/dashboard/library/builtin.py:231
 msgid "A text of your own, e.g. a notice for the team"
 msgstr "Ein eigener Text, z. B. ein Hinweis für das Team"
 
-#: senaite/dashboard/dashboards/model.py:83
+#: senaite/dashboard/dashboards/model.py:109
 msgid "A tile must be a mapping"
 msgstr "Eine Kachel muss ein Objekt sein"
 
-#: senaite/dashboard/dashboards/model.py:86
+#: senaite/dashboard/dashboards/model.py:78
 msgid "A tile needs a type"
 msgstr "Eine Kachel braucht einen Typ"
 
-#: senaite/dashboard/dashboards/model.py:93
+#: senaite/dashboard/dashboards/model.py:94
 msgid "A tile source must be a name"
 msgstr "Die Datenquelle einer Kachel muss ein Name sein"
 
-#: senaite/dashboard/titles.py:42
+#: senaite/dashboard/titles.py:43
 msgid "A title has too many languages"
 msgstr "Ein Titel hat zu viele Sprachen"
 
-#: senaite/dashboard/query/fields.py:129
+#: senaite/dashboard/query/fields.py:126
 msgid "A yes or no filter needs true or false"
 msgstr "Ein Ja/Nein-Filter braucht wahr oder falsch"
 
@@ -126,7 +126,7 @@ msgstr "Ein Ja/Nein-Filter braucht wahr oder falsch"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: senaite/dashboard/strings.py:134
+#: senaite/dashboard/strings.py:143
 msgid "Add a tile"
 msgstr "Kachel hinzufügen"
 
@@ -142,7 +142,7 @@ msgstr "Link hinzufügen"
 msgid "Add span"
 msgstr "Zeitspanne hinzufügen"
 
-#: senaite/dashboard/strings.py:200
+#: senaite/dashboard/strings.py:219
 msgid "Add the default dashboards that are missing"
 msgstr "Fehlende Standard-Dashboards wieder anlegen"
 
@@ -150,7 +150,7 @@ msgstr "Fehlende Standard-Dashboards wieder anlegen"
 msgid "Add tile"
 msgstr "Kachel hinzufügen"
 
-#: senaite/dashboard/strings.py:246
+#: senaite/dashboard/strings.py:263
 msgid "Address"
 msgstr "Adresse"
 
@@ -162,40 +162,40 @@ msgstr "Erweitert"
 msgid "All"
 msgstr "Alle"
 
-#: senaite/dashboard/strings.py:169
+#: senaite/dashboard/strings.py:180
 msgid "All default dashboards are there already."
 msgstr "Alle Standard-Dashboards sind bereits vorhanden."
 
-#: senaite/dashboard/strings.py:221
+#: senaite/dashboard/strings.py:238
 msgid "An empty dashboard"
 msgstr "Einem leeren Dashboard"
 
-#: senaite/dashboard/library/builtin.py:33
+#: senaite/dashboard/library/builtin.py:31
 #: senaite/dashboard/query/builtin.py:85
 msgid "Analyses"
 msgstr "Analysen"
 
-#: senaite/dashboard/library/builtin.py:151
+#: senaite/dashboard/library/builtin.py:149
 msgid "Analyses assigned to me, waiting for a result"
 msgstr "Mir zugewiesene Analysen, die auf ein Ergebnis warten"
 
-#: senaite/dashboard/library/builtin.py:184
+#: senaite/dashboard/library/builtin.py:182
 msgid "Analyses by status"
 msgstr "Analysen nach Status"
 
-#: senaite/dashboard/library/builtin.py:156
+#: senaite/dashboard/library/builtin.py:154
 msgid "Analyses not yet on a worksheet"
 msgstr "Analysen, die noch auf keinem Arbeitsblatt sind"
 
-#: senaite/dashboard/library/builtin.py:183
+#: senaite/dashboard/library/builtin.py:181
 msgid "Analyses of the last 30 days per status"
 msgstr "Analysen der letzten 30 Tage nach Status"
 
-#: senaite/dashboard/app.py:35
+#: senaite/dashboard/env.py:17
 msgid "Analysts"
 msgstr "Analytiker"
 
-#: senaite/dashboard/strings.py:248
+#: senaite/dashboard/strings.py:265
 msgid "Any"
 msgstr "Beliebig"
 
@@ -203,27 +203,31 @@ msgstr "Beliebig"
 msgid "Appearance"
 msgstr "Darstellung"
 
-#: senaite/dashboard/strings.py:224
+#: senaite/dashboard/strings.py:31
+msgid "Aqua"
+msgstr "Türkis"
+
+#: senaite/dashboard/strings.py:241
 msgid "Area"
 msgstr "Fläche"
 
-#: senaite/dashboard/strings.py:96
+#: senaite/dashboard/strings.py:104
 msgid "Arrange the tiles the way you like; nobody else is affected"
 msgstr "Kacheln nach eigenen Wünschen anordnen; für alle anderen bleibt es, wie es ist"
 
-#: senaite/dashboard/strings.py:118
+#: senaite/dashboard/strings.py:127
 msgid "Arrow keys move the tile, with Shift they resize it"
 msgstr "Pfeiltasten verschieben die Kachel, mit Umschalt ändern sie ihre Größe"
 
-#: senaite/dashboard/query/custom.py:139
+#: senaite/dashboard/query/custom.py:145
 msgid "At most ${count} entries"
 msgstr "Höchstens ${count} Einträge"
 
-#: senaite/dashboard/library/builtin.py:94
+#: senaite/dashboard/library/builtin.py:92
 msgid "Average time from reception to verification, last 90 days"
 msgstr "Mittlere Zeit vom Probeneingang bis zur Verifizierung, letzte 90 Tage"
 
-#: senaite/dashboard/strings.py:249
+#: senaite/dashboard/strings.py:266
 msgid "Back to my view"
 msgstr "Zurück zu meiner Ansicht"
 
@@ -231,7 +235,7 @@ msgstr "Zurück zu meiner Ansicht"
 msgid "Back to the dashboard"
 msgstr "Zurück zum Dashboard"
 
-#: senaite/dashboard/strings.py:237
+#: senaite/dashboard/strings.py:254
 msgid "Bars"
 msgstr "Balken"
 
@@ -243,31 +247,39 @@ msgstr "Vor jetzt"
 msgid "Between 1 and ${max} periods"
 msgstr "Zwischen 1 und ${max} Zeiträume"
 
+#: senaite/dashboard/strings.py:32
+msgid "Blue"
+msgstr "Blau"
+
 #: senaite/dashboard/strings.py:28
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: senaite/dashboard/query/sources.py:122
+#: senaite/dashboard/query/sources.py:160
 msgid "Cannot group by ${name}"
 msgstr "Nach ${name} kann nicht gruppiert werden"
 
-#: senaite/dashboard/strings.py:92
+#: senaite/dashboard/strings.py:100
 msgid "Change the dashboard every user starts from"
 msgstr "Das Dashboard ändern, mit dem alle Benutzer starten"
 
-#: senaite/dashboard/strings.py:173
+#: senaite/dashboard/strings.py:184
 msgid "Changes discarded. The draft is the published version again."
 msgstr "Änderungen verworfen. Der Entwurf entspricht wieder der veröffentlichten Fassung."
 
-#: senaite/dashboard/library/builtin.py:224
+#: senaite/dashboard/routes/base.py:69
+msgid "Changes from another site are refused"
+msgstr "Änderungen von einer anderen Seite werden abgelehnt"
+
+#: senaite/dashboard/library/builtin.py:222
 msgid "Choose yourself what the tile shows and how"
 msgstr "Selbst wählen, was die Kachel zeigt und wie"
 
-#: senaite/dashboard/app.py:42
+#: senaite/dashboard/env.py:24
 msgid "Client contacts"
 msgstr "Kundenkontakte"
 
-#: senaite/dashboard/strings.py:150
+#: senaite/dashboard/strings.py:159
 msgid "Client contacts see their own client, the laboratory sees all"
 msgstr "Kundenkontakte sehen ihren eigenen Kunden, das Labor sieht alle"
 
@@ -279,27 +291,27 @@ msgstr "Schließen"
 msgid "Color"
 msgstr "Farbe"
 
-#: senaite/dashboard/strings.py:31
+#: senaite/dashboard/strings.py:40
 msgid "Column"
 msgstr "Spalte"
 
-#: senaite/dashboard/strings.py:32
+#: senaite/dashboard/strings.py:41
 msgid "Columns"
 msgstr "Spalten"
 
-#: senaite/dashboard/strings.py:45
+#: senaite/dashboard/strings.py:54
 msgid "Columns of tables"
 msgstr "Spalten für Tabellen"
 
-#: senaite/dashboard/configure.zcml:45
+#: senaite/dashboard/configure.zcml:46
 msgid "Configurable dashboards for SENAITE"
 msgstr "Konfigurierbare Dashboards für SENAITE"
 
-#: senaite/dashboard/query/sources.py:315
+#: senaite/dashboard/query/sources.py:352
 msgid "Count"
 msgstr "Anzahl"
 
-#: senaite/dashboard/strings.py:33
+#: senaite/dashboard/strings.py:42
 msgid "Create"
 msgstr "Anlegen"
 
@@ -307,163 +319,167 @@ msgstr "Anlegen"
 msgid "Created"
 msgstr "Angelegt"
 
-#: senaite/dashboard/strings.py:38
+#: senaite/dashboard/strings.py:47
 msgid "Custom"
 msgstr "Benutzerdefiniert"
 
-#: senaite/dashboard/strings.py:39
+#: senaite/dashboard/strings.py:48
 msgid "Customize"
 msgstr "Anpassen"
 
-#: senaite/dashboard/strings.py:95
+#: senaite/dashboard/strings.py:103
 msgid "Customize for me"
 msgstr "Für mich anpassen"
 
-#: senaite/dashboard/strings.py:40
+#: senaite/dashboard/strings.py:49
 msgid "Customized for you"
 msgstr "Für Sie angepasst"
 
-#: senaite/dashboard/strings.py:114
+#: senaite/dashboard/strings.py:123
 msgid "Daily"
 msgstr "Täglich"
 
-#: senaite/dashboard/strings.py:42
+#: senaite/dashboard/strings.py:51
 msgid "Dashboards"
 msgstr "Dashboards"
 
-#: senaite/dashboard/strings.py:43
+#: senaite/dashboard/strings.py:52
 msgid "Data"
 msgstr "Daten"
 
-#: senaite/dashboard/strings.py:53
+#: senaite/dashboard/strings.py:62
 msgid "Dataset"
 msgstr "Dataset"
 
-#: senaite/dashboard/strings.py:167
+#: senaite/dashboard/strings.py:178
 msgid "Dataset deleted"
 msgstr "Dataset gelöscht"
 
-#: senaite/dashboard/strings.py:67
+#: senaite/dashboard/strings.py:77
 msgid "Datasets"
 msgstr "Datasets"
 
-#: senaite/dashboard/strings.py:70
+#: senaite/dashboard/strings.py:80
 msgid "Date"
 msgstr "Datum"
 
-#: senaite/dashboard/strings.py:171
+#: senaite/dashboard/strings.py:182
 msgid "Default dashboards added as drafts. Publish them to show them to users."
 msgstr "Standard-Dashboards als Entwürfe angelegt. Veröffentlichen Sie sie, damit Benutzer sie sehen."
 
-#: senaite/dashboard/strings.py:202
+#: senaite/dashboard/strings.py:215
 msgid "Default dashboards that are missing are added as drafts. Dashboards that are there stay as they are. Users see the new ones once you publish them."
 msgstr "Fehlende Standard-Dashboards werden als Entwürfe angelegt. Vorhandene Dashboards bleiben unverändert. Benutzer sehen die neuen erst, wenn Sie sie veröffentlichen."
 
-#: senaite/dashboard/strings.py:72
+#: senaite/dashboard/strings.py:82
 msgid "Delete"
 msgstr "Löschen"
 
-#: senaite/dashboard/strings.py:74
+#: senaite/dashboard/strings.py:84
 msgid "Delete dashboard"
 msgstr "Dashboard löschen"
 
-#: senaite/dashboard/strings.py:75
+#: senaite/dashboard/strings.py:85
 msgid "Delete dataset"
 msgstr "Dataset löschen"
 
-#: senaite/dashboard/strings.py:73
+#: senaite/dashboard/strings.py:83
 msgid "Delete this dashboard? This cannot be undone."
 msgstr "Dieses Dashboard löschen? Das lässt sich nicht rückgängig machen."
 
-#: senaite/dashboard/strings.py:79
+#: senaite/dashboard/strings.py:89
 msgid "Description"
 msgstr "Beschreibung"
 
-#: senaite/dashboard/strings.py:80
+#: senaite/dashboard/strings.py:91
 msgid "Discard changes"
 msgstr "Änderungen verwerfen"
 
-#: senaite/dashboard/strings.py:234
+#: senaite/dashboard/strings.py:90
+msgid "Discard the unsaved changes?"
+msgstr "Ungespeicherte Änderungen verwerfen?"
+
+#: senaite/dashboard/strings.py:251
 msgid "Display"
 msgstr "Anzeigen als"
 
-#: senaite/dashboard/strings.py:81
+#: senaite/dashboard/strings.py:92
 msgid "Done"
 msgstr "Fertig"
 
-#: senaite/dashboard/strings.py:239
+#: senaite/dashboard/strings.py:256
 msgid "Donut"
 msgstr "Ring"
 
-#: senaite/dashboard/strings.py:82
+#: senaite/dashboard/strings.py:93
 msgid "Draft"
 msgstr "Entwurf"
 
-#: senaite/dashboard/strings.py:93
+#: senaite/dashboard/strings.py:101
 msgid "Drag tiles by their title to move them, drag the corner to resize. Changes are saved automatically."
 msgstr "Kacheln am Titel ziehen, um sie zu verschieben, an der Ecke ziehen, um die Größe zu ändern. Änderungen werden automatisch gespeichert."
 
-#: senaite/dashboard/library/builtin.py:134
+#: senaite/dashboard/library/builtin.py:132
 msgid "Due next"
 msgstr "Als Nächstes fällig"
 
-#: senaite/dashboard/query/sources.py:455
+#: senaite/dashboard/query/sources.py:491
 msgid "Duration"
 msgstr "Dauer"
 
-#: senaite/dashboard/strings.py:88
+#: senaite/dashboard/strings.py:99
 msgid "Edit for everybody"
 msgstr "Für alle bearbeiten"
 
-#: senaite/dashboard/strings.py:137
+#: senaite/dashboard/strings.py:146
 msgid "Entries"
 msgstr "Einträge"
 
-#: senaite/dashboard/strings.py:208
+#: senaite/dashboard/strings.py:223
 msgid "Everybody can add the tile from the library afterwards. Say in a few words what it shows."
 msgstr "Danach kann jeder die Kachel aus der Bibliothek hinzufügen. Beschreiben Sie in wenigen Worten, was sie zeigt."
 
-#: senaite/dashboard/strings.py:64
+#: senaite/dashboard/strings.py:74
 msgid "Everybody who may see an object sees what you offer of it here. Personal data and results are never offered."
 msgstr "Wer ein Objekt sehen darf, sieht auch alles, was Sie hier davon freigeben. Personenbezogene Daten und Ergebnisse werden nie angeboten."
 
-#: senaite/dashboard/strings.py:85
+#: senaite/dashboard/strings.py:96
 msgid "Everything is published. What you change here stays in the draft until you publish again."
 msgstr "Alles ist veröffentlicht. Was Sie hier ändern, bleibt im Entwurf, bis Sie erneut veröffentlichen."
 
-#: senaite/dashboard/strings.py:101
+#: senaite/dashboard/strings.py:109
 msgid "Examples"
 msgstr "Beispiele"
 
-#: senaite/dashboard/strings.py:49
+#: senaite/dashboard/strings.py:58
 msgid "Fields"
 msgstr "Felder"
 
-#: senaite/dashboard/query/fields.py:158
+#: senaite/dashboard/query/fields.py:155
 msgid "Fields of kind ${kind} cannot be shown"
 msgstr "Felder der Art ${kind} können nicht angezeigt werden"
 
-#: senaite/dashboard/query/fields.py:120
+#: senaite/dashboard/query/fields.py:117
 msgid "Filter values must be text"
 msgstr "Filterwerte müssen Text sein"
 
-#: senaite/dashboard/strings.py:102
+#: senaite/dashboard/strings.py:111
 msgid "Filters"
 msgstr "Filter"
 
-#: senaite/dashboard/query/search.py:28
+#: senaite/dashboard/query/search.py:84
 msgid "Filters must be a mapping"
 msgstr "Filter müssen ein Objekt sein"
 
-#: senaite/dashboard/strings.py:105
+#: senaite/dashboard/strings.py:114
 msgid "For everybody"
 msgstr "Für alle"
 
-#: senaite/dashboard/strings.py:154
+#: senaite/dashboard/strings.py:165
 msgid "For everybody (draft)"
 msgstr "Für alle (Entwurf)"
 
-#: senaite/dashboard/strings.py:218
+#: senaite/dashboard/strings.py:235
 msgid "From"
 msgstr "Von"
 
@@ -471,47 +487,51 @@ msgstr "Von"
 msgid "From now on"
 msgstr "Ab jetzt"
 
-#: senaite/dashboard/library/builtin.py:37
+#: senaite/dashboard/library/builtin.py:35
 msgid "General"
 msgstr "Allgemein"
 
-#: senaite/dashboard/strings.py:106
+#: senaite/dashboard/strings.py:115
 msgid "Good afternoon"
 msgstr "Guten Tag"
 
-#: senaite/dashboard/strings.py:107
+#: senaite/dashboard/strings.py:116
 msgid "Good evening"
 msgstr "Guten Abend"
 
-#: senaite/dashboard/strings.py:108
+#: senaite/dashboard/strings.py:117
 msgid "Good morning"
 msgstr "Guten Morgen"
 
-#: senaite/dashboard/query/sources.py:355
+#: senaite/dashboard/strings.py:33
+msgid "Green"
+msgstr "Grün"
+
+#: senaite/dashboard/query/sources.py:391
 msgid "Group"
 msgstr "Gruppierung"
 
-#: senaite/dashboard/strings.py:109
+#: senaite/dashboard/strings.py:118
 msgid "Group by"
 msgstr "Gruppieren nach"
 
-#: senaite/dashboard/strings.py:56
+#: senaite/dashboard/strings.py:66
 msgid "How long it takes from one date to another, e.g. from reception to release."
 msgstr "Wie lange es von einem Datum zum anderen dauert, z. B. vom Eingang bis zur Freigabe."
 
-#: senaite/dashboard/strings.py:166
+#: senaite/dashboard/strings.py:177
 msgid "Important"
 msgstr "Wichtig"
 
-#: senaite/dashboard/strings.py:112
+#: senaite/dashboard/strings.py:121
 msgid "Index"
 msgstr "Index"
 
-#: senaite/dashboard/strings.py:113
+#: senaite/dashboard/strings.py:122
 msgid "Interval"
 msgstr "Intervall"
 
-#: senaite/dashboard/dashboards/personal.py:118
+#: senaite/dashboard/dashboards/personal.py:119
 msgid "Invalid dashboard id"
 msgstr "Ungültige Dashboard-ID"
 
@@ -523,206 +543,214 @@ msgstr "Ungültiger Parameter ${name}"
 msgid "Invalid placeholder ${name}"
 msgstr "Ungültiger Platzhalter ${name}"
 
-#: senaite/dashboard/strings.py:120
+#: senaite/dashboard/strings.py:129
 msgid "Kind"
 msgstr "Art"
 
-#: senaite/dashboard/strings.py:216
+#: senaite/dashboard/strings.py:233
 msgid "Kind of data"
 msgstr "Art der Daten"
 
-#: senaite/dashboard/app.py:34
+#: senaite/dashboard/env.py:16
 msgid "Lab clerks"
 msgstr "Laborsachbearbeitung"
 
-#: senaite/dashboard/app.py:33
+#: senaite/dashboard/env.py:15
 msgid "Lab managers"
 msgstr "Laborleitung"
 
-#: senaite/dashboard/strings.py:128
+#: senaite/dashboard/strings.py:137
 msgid "Lab only"
 msgstr "Nur Labor"
 
-#: senaite/dashboard/dashboards/defaults.py:56
+#: senaite/dashboard/dashboards/defaults.py:59
 msgid "Laboratory"
 msgstr "Labor"
 
-#: senaite/dashboard/strings.py:130
+#: senaite/dashboard/strings.py:139
 msgid "Last 12 months"
 msgstr "Letzte 12 Monate"
 
-#: senaite/dashboard/strings.py:129
+#: senaite/dashboard/strings.py:138
 msgid "Last 30 days"
 msgstr "Letzte 30 Tage"
 
-#: senaite/dashboard/strings.py:131
+#: senaite/dashboard/strings.py:140
 msgid "Last 7 days"
 msgstr "Letzte 7 Tage"
 
-#: senaite/dashboard/strings.py:132
+#: senaite/dashboard/strings.py:141
 msgid "Last 90 days"
 msgstr "Letzte 90 Tage"
 
-#: senaite/dashboard/library/builtin.py:128
+#: senaite/dashboard/library/builtin.py:126
 msgid "Latest samples"
 msgstr "Neueste Proben"
 
-#: senaite/dashboard/strings.py:226
+#: senaite/dashboard/strings.py:243
 msgid "Line"
 msgstr "Linie"
 
-#: senaite/dashboard/strings.py:138
+#: senaite/dashboard/strings.py:147
 msgid "Link"
 msgstr "Link"
 
-#: senaite/dashboard/strings.py:241
+#: senaite/dashboard/strings.py:258
 msgid "Links"
 msgstr "Links"
 
-#: senaite/dashboard/query/sources.py:415
+#: senaite/dashboard/query/sources.py:452
 msgid "List"
 msgstr "Liste"
 
 #: senaite/dashboard/browser/templates/dashboard.pt:18
-#: senaite/dashboard/strings.py:140
+#: senaite/dashboard/strings.py:149
 msgid "Loading"
 msgstr "Wird geladen"
 
-#: senaite/dashboard/strings.py:58
+#: senaite/dashboard/strings.py:68
 msgid "Made of"
 msgstr "Typ"
 
-#: senaite/dashboard/strings.py:142
+#: senaite/dashboard/strings.py:34
+msgid "Magenta"
+msgstr "Magenta"
+
+#: senaite/dashboard/strings.py:151
 msgid "Make more types available to tiles"
 msgstr "Weitere Typen für Kacheln freigeben"
 
-#: senaite/dashboard/strings.py:68
+#: senaite/dashboard/strings.py:78
 msgid "Make types of SENAITE and its add-ons available to tiles."
 msgstr "Typen aus SENAITE und den Add-ons für Kacheln freigeben."
 
-#: senaite/dashboard/strings.py:141
+#: senaite/dashboard/strings.py:150
 msgid "Manage datasets"
 msgstr "Datasets verwalten"
 
-#: senaite/dashboard/strings.py:145
+#: senaite/dashboard/strings.py:154
 msgid "Me"
 msgstr "Ich"
 
-#: senaite/dashboard/strings.py:217
+#: senaite/dashboard/strings.py:234
 msgid "Measure"
 msgstr "Messen"
 
-#: senaite/dashboard/strings.py:146
+#: senaite/dashboard/strings.py:155
 msgid "Measured"
 msgstr "Gemessen"
 
-#: senaite/dashboard/strings.py:147
+#: senaite/dashboard/strings.py:156
 msgid "Median"
 msgstr "Median"
 
-#: senaite/dashboard/strings.py:115
+#: senaite/dashboard/strings.py:124
 msgid "Monthly"
 msgstr "Monatlich"
 
-#: senaite/dashboard/strings.py:148
+#: senaite/dashboard/strings.py:157
 msgid "More actions"
 msgstr "Weitere Aktionen"
 
-#: senaite/dashboard/library/builtin.py:194
+#: senaite/dashboard/library/builtin.py:192
 msgid "My analyses due next"
 msgstr "Meine als Nächstes fälligen Analysen"
 
-#: senaite/dashboard/library/builtin.py:152
+#: senaite/dashboard/library/builtin.py:150
 msgid "My assigned analyses"
 msgstr "Meine zugewiesenen Analysen"
 
-#: senaite/dashboard/strings.py:149
+#: senaite/dashboard/strings.py:158
 msgid "My client"
 msgstr "Mein Kunde"
 
-#: senaite/dashboard/library/builtin.py:193
+#: senaite/dashboard/library/builtin.py:191
 msgid "My open analyses, the earliest due date first"
 msgstr "Meine offenen Analysen, früheste Fälligkeit zuerst"
 
-#: senaite/dashboard/dashboards/defaults.py:57
+#: senaite/dashboard/dashboards/defaults.py:60
 msgid "My work"
 msgstr "Meine Arbeit"
 
-#: senaite/dashboard/library/builtin.py:211
+#: senaite/dashboard/library/builtin.py:209
 msgid "My worksheets"
 msgstr "Meine Arbeitsblätter"
 
-#: senaite/dashboard/strings.py:34
+#: senaite/dashboard/strings.py:43
 msgid "New dashboard"
 msgstr "Neues Dashboard"
 
-#: senaite/dashboard/strings.py:153
+#: senaite/dashboard/strings.py:164
 msgid "New dataset"
 msgstr "Neues Dataset"
 
-#: senaite/dashboard/library/builtin.py:225
+#: senaite/dashboard/library/builtin.py:223
 msgid "New tile"
 msgstr "Neue Kachel"
 
-#: senaite/dashboard/strings.py:78
+#: senaite/dashboard/strings.py:88
 msgid "Newest first"
 msgstr "Neueste zuerst"
 
 #: senaite/dashboard/query/labels.py:66
-#: senaite/dashboard/strings.py:156
+#: senaite/dashboard/strings.py:167
 msgid "No"
 msgstr "Nein"
 
-#: senaite/dashboard/strings.py:159
+#: senaite/dashboard/strings.py:170
 msgid "No data"
 msgstr "Keine Daten"
 
-#: senaite/dashboard/strings.py:60
+#: senaite/dashboard/strings.py:70
 msgid "No global dashboard and no tile of the library uses it."
 msgstr "Kein globales Dashboard und keine Kachel der Bibliothek verwendet es."
 
-#: senaite/dashboard/strings.py:103
+#: senaite/dashboard/routes/base.py:75
+msgid "No such dashboard"
+msgstr "Dieses Dashboard gibt es nicht"
+
+#: senaite/dashboard/strings.py:112
 msgid "Nobody selected: visible for everybody"
 msgstr "Keine Auswahl: für alle sichtbar"
 
-#: senaite/dashboard/strings.py:161
+#: senaite/dashboard/strings.py:172
 msgid "None"
 msgstr "Keine"
 
-#: senaite/dashboard/query/fields.py:100
+#: senaite/dashboard/query/fields.py:97
 msgid "Not a date: ${value}"
 msgstr "Kein Datum: ${value}"
 
-#: senaite/dashboard/query/sources.py:151
+#: senaite/dashboard/query/sources.py:189
 msgid "Not assigned"
 msgstr "Nicht zugewiesen"
 
-#: senaite/dashboard/strings.py:162
+#: senaite/dashboard/strings.py:173
 msgid "Not published"
 msgstr "Nicht veröffentlicht"
 
-#: senaite/dashboard/strings.py:100
+#: senaite/dashboard/strings.py:108
 msgid "Not saved"
 msgstr "Nicht gespeichert"
 
-#: senaite/dashboard/query/sources.py:151
+#: senaite/dashboard/query/sources.py:189
 msgid "Not set"
 msgstr "Nicht gesetzt"
 
-#: senaite/dashboard/library/builtin.py:235
-#: senaite/dashboard/strings.py:242
+#: senaite/dashboard/library/builtin.py:233
+#: senaite/dashboard/strings.py:259
 msgid "Note"
 msgstr "Notiz"
 
-#: senaite/dashboard/strings.py:99
+#: senaite/dashboard/strings.py:107
 msgid "Nothing to show"
 msgstr "Nichts anzuzeigen"
 
-#: senaite/dashboard/strings.py:163
+#: senaite/dashboard/strings.py:174
 msgid "Notice"
 msgstr "Hinweis"
 
-#: senaite/dashboard/strings.py:123
+#: senaite/dashboard/strings.py:132
 msgid "Number"
 msgstr "Zahl"
 
@@ -730,104 +758,108 @@ msgstr "Zahl"
 msgid "Oldest first"
 msgstr "Älteste zuerst"
 
-#: senaite/dashboard/strings.py:155
+#: senaite/dashboard/strings.py:166
 msgid "Only for me"
 msgstr "Nur für mich"
 
-#: senaite/dashboard/strings.py:54
+#: senaite/dashboard/strings.py:63
 msgid "Only for the laboratory"
 msgstr "Nur für das Labor"
 
-#: senaite/dashboard/strings.py:189
+#: senaite/dashboard/strings.py:203
 msgid "Only for you"
 msgstr "Nur für Sie"
 
-#: senaite/dashboard/library/builtin.py:169
+#: senaite/dashboard/library/builtin.py:167
 msgid "Open analyses by analyst"
 msgstr "Offene Analysen nach Analyst"
 
-#: senaite/dashboard/library/builtin.py:179
+#: senaite/dashboard/library/builtin.py:177
 msgid "Open analyses by instrument"
 msgstr "Offene Analysen nach Gerät"
 
-#: senaite/dashboard/library/builtin.py:168
+#: senaite/dashboard/library/builtin.py:166
 msgid "Open analyses per analyst"
 msgstr "Offene Analysen pro Analyst"
 
-#: senaite/dashboard/library/builtin.py:178
+#: senaite/dashboard/library/builtin.py:176
 msgid "Open analyses per instrument"
 msgstr "Offene Analysen pro Gerät"
 
-#: senaite/dashboard/strings.py:185
+#: senaite/dashboard/strings.py:197
 msgid "Open list"
 msgstr "Liste öffnen"
 
-#: senaite/dashboard/library/builtin.py:100
+#: senaite/dashboard/library/builtin.py:98
 msgid "Open samples by status"
 msgstr "Offene Proben nach Status"
 
-#: senaite/dashboard/library/builtin.py:77
+#: senaite/dashboard/library/builtin.py:75
 msgid "Open samples past their due date"
 msgstr "Offene Proben nach ihrem Fälligkeitsdatum"
 
-#: senaite/dashboard/library/builtin.py:99
+#: senaite/dashboard/library/builtin.py:97
 msgid "Open samples per status"
 msgstr "Offene Proben pro Status"
 
-#: senaite/dashboard/strings.py:91
+#: senaite/dashboard/strings.py:196
 msgid "Open the draft"
 msgstr "Entwurf öffnen"
 
-#: senaite/dashboard/library/builtin.py:205
+#: senaite/dashboard/library/builtin.py:203
 msgid "Open worksheets"
 msgstr "Offene Arbeitsblätter"
 
-#: senaite/dashboard/library/builtin.py:210
+#: senaite/dashboard/library/builtin.py:208
 msgid "Open worksheets assigned to me"
 msgstr "Mir zugewiesene offene Arbeitsblätter"
 
-#: senaite/dashboard/library/builtin.py:216
+#: senaite/dashboard/library/builtin.py:214
 msgid "Open worksheets per analyst"
 msgstr "Offene Arbeitsblätter pro Analyst"
 
-#: senaite/dashboard/query/sources.py:172
+#: senaite/dashboard/strings.py:35
+msgid "Orange"
+msgstr "Orange"
+
+#: senaite/dashboard/query/sources.py:210
 msgid "Other"
 msgstr "Andere"
 
-#: senaite/dashboard/query/sources.py:381
-#: senaite/dashboard/strings.py:238
+#: senaite/dashboard/query/sources.py:419
+#: senaite/dashboard/strings.py:255
 msgid "Over time"
 msgstr "Zeitverlauf"
 
-#: senaite/dashboard/library/builtin.py:78
+#: senaite/dashboard/library/builtin.py:76
 msgid "Overdue samples"
 msgstr "Überfällige Proben"
 
-#: senaite/dashboard/dashboards/defaults.py:59
+#: senaite/dashboard/dashboards/defaults.py:62
 msgid "Overview"
 msgstr "Übersicht"
 
-#: senaite/dashboard/strings.py:139
+#: senaite/dashboard/strings.py:148
 msgid "Page the title leads to, e.g. samples"
 msgstr "Seite, zu der der Titel führt, z. B. samples"
 
-#: senaite/dashboard/query/params.py:98
+#: senaite/dashboard/query/params.py:99
 msgid "Parameters must be a mapping"
 msgstr "Parameter müssen ein Objekt sein"
 
-#: senaite/dashboard/strings.py:188
+#: senaite/dashboard/strings.py:202
 msgid "Periods"
 msgstr "Zeiträume"
 
-#: senaite/dashboard/strings.py:190
+#: senaite/dashboard/strings.py:204
 msgid "Pick a dataset on the left, or make a new one."
 msgstr "Wählen Sie links ein Dataset oder legen Sie ein neues an."
 
-#: senaite/dashboard/strings.py:135
+#: senaite/dashboard/strings.py:144
 msgid "Pick a tile to add it to the dashboard. You can change it afterwards."
 msgstr "Eine Kachel auswählen, um sie dem Dashboard hinzuzufügen. Sie lässt sich danach anpassen."
 
-#: senaite/dashboard/strings.py:165
+#: senaite/dashboard/strings.py:176
 msgid "Plain"
 msgstr "Normal"
 
@@ -835,31 +867,31 @@ msgstr "Normal"
 msgid "Point of capture"
 msgstr "Erfassungsort"
 
-#: senaite/dashboard/strings.py:191
+#: senaite/dashboard/strings.py:205
 msgid "Points to"
 msgstr "Verweist auf"
 
-#: senaite/dashboard/app.py:39
+#: senaite/dashboard/env.py:21
 msgid "Preservers"
 msgstr "Konservierer"
 
-#: senaite/dashboard/strings.py:192
+#: senaite/dashboard/strings.py:206
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: senaite/dashboard/library/builtin.py:89
+#: senaite/dashboard/library/builtin.py:87
 msgid "Published (30 days)"
 msgstr "Veröffentlicht (30 Tage)"
 
-#: senaite/dashboard/strings.py:175
+#: senaite/dashboard/strings.py:186
 msgid "Published. Everybody now sees this version."
 msgstr "Veröffentlicht. Alle sehen jetzt diese Fassung."
 
-#: senaite/dashboard/app.py:37
+#: senaite/dashboard/env.py:19
 msgid "Publishers"
 msgstr "Veröffentlicher"
 
-#: senaite/dashboard/library/builtin.py:229
+#: senaite/dashboard/library/builtin.py:227
 msgid "Quick links"
 msgstr "Schnellzugriff"
 
@@ -871,15 +903,15 @@ msgstr "Eingegangen"
 msgid "Received by"
 msgstr "Angenommen von"
 
-#: senaite/dashboard/library/builtin.py:122
+#: senaite/dashboard/library/builtin.py:120
 msgid "Received samples"
 msgstr "Eingegangene Proben"
 
-#: senaite/dashboard/library/builtin.py:59
+#: senaite/dashboard/library/builtin.py:57
 msgid "Received samples without all results"
 msgstr "Eingegangene Proben ohne alle Ergebnisse"
 
-#: senaite/dashboard/library/builtin.py:133
+#: senaite/dashboard/library/builtin.py:131
 msgid "Received samples, the earliest due date first"
 msgstr "Eingegangene Proben, früheste Fälligkeit zuerst"
 
@@ -891,19 +923,23 @@ msgstr "Eingang bis Veröffentlichung"
 msgid "Received to result"
 msgstr "Eingang bis Ergebnis"
 
-#: senaite/dashboard/library/builtin.py:141
+#: senaite/dashboard/library/builtin.py:139
 msgid "Recently published"
 msgstr "Zuletzt veröffentlicht"
 
-#: senaite/dashboard/strings.py:124
+#: senaite/dashboard/strings.py:36
+msgid "Red"
+msgstr "Rot"
+
+#: senaite/dashboard/strings.py:133
 msgid "Reference"
 msgstr "Verweis"
 
-#: senaite/dashboard/strings.py:193
+#: senaite/dashboard/strings.py:207
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: senaite/dashboard/strings.py:194
+#: senaite/dashboard/strings.py:208
 msgid "Refreshing"
 msgstr "Wird aktualisiert"
 
@@ -915,43 +951,47 @@ msgstr "Registriert"
 msgid "Registered by"
 msgstr "Registriert von"
 
-#: senaite/dashboard/library/builtin.py:117
+#: senaite/dashboard/library/builtin.py:115
 msgid "Registered samples"
 msgstr "Registrierte Proben"
 
-#: senaite/dashboard/library/builtin.py:116
+#: senaite/dashboard/library/builtin.py:114
 msgid "Registered samples per week, by their current status"
 msgstr "Registrierte Proben pro Woche, nach aktuellem Status"
 
-#: senaite/dashboard/library/builtin.py:84
+#: senaite/dashboard/library/builtin.py:82
 msgid "Registered this week"
 msgstr "Diese Woche registriert"
 
-#: senaite/dashboard/app.py:41
+#: senaite/dashboard/env.py:23
 msgid "Regulatory inspectors"
 msgstr "Behördliche Prüfer"
 
-#: senaite/dashboard/strings.py:110
+#: senaite/dashboard/strings.py:119
 msgid "Remove"
 msgstr "Entfernen"
 
-#: senaite/dashboard/strings.py:195
+#: senaite/dashboard/strings.py:209
 msgid "Remove from the library"
 msgstr "Aus der Bibliothek entfernen"
 
-#: senaite/dashboard/strings.py:177
+#: senaite/dashboard/strings.py:188
 msgid "Removed from the library"
 msgstr "Aus der Bibliothek entfernt"
 
-#: senaite/dashboard/strings.py:196
+#: senaite/dashboard/configure.zcml:54
+msgid "Removes the dashboards view and routes; the dashboards stay"
+msgstr "Entfernt die Dashboard-Ansicht und ihre Routen; die Dashboards bleiben erhalten"
+
+#: senaite/dashboard/strings.py:211
 msgid "Reset to default"
 msgstr "Auf Standard zurücksetzen"
 
-#: senaite/dashboard/strings.py:198
+#: senaite/dashboard/strings.py:213
 msgid "Restore"
 msgstr "Wiederherstellen"
 
-#: senaite/dashboard/strings.py:199
+#: senaite/dashboard/strings.py:214
 msgid "Restore default dashboards"
 msgstr "Standard-Dashboards wiederherstellen"
 
@@ -959,228 +999,264 @@ msgstr "Standard-Dashboards wiederherstellen"
 msgid "Result captured"
 msgstr "Ergebnis erfasst"
 
-#: senaite/dashboard/library/builtin.py:188
+#: senaite/dashboard/library/builtin.py:186
 msgid "Results captured"
 msgstr "Erfasste Ergebnisse"
 
-#: senaite/dashboard/library/builtin.py:187
+#: senaite/dashboard/library/builtin.py:185
 msgid "Results captured per day, last 30 days"
 msgstr "Erfasste Ergebnisse pro Tag, letzte 30 Tage"
 
-#: senaite/dashboard/library/builtin.py:60
+#: senaite/dashboard/library/builtin.py:58
 msgid "Results pending"
 msgstr "Ergebnisse ausstehend"
 
-#: senaite/dashboard/library/builtin.py:162
+#: senaite/dashboard/library/builtin.py:160
 msgid "Results to verify"
 msgstr "Zu verifizierende Ergebnisse"
 
-#: senaite/dashboard/library/builtin.py:161
+#: senaite/dashboard/library/builtin.py:159
 msgid "Results waiting for verification"
 msgstr "Ergebnisse, die auf Verifizierung warten"
 
-#: senaite/dashboard/library/builtin.py:173
+#: senaite/dashboard/library/builtin.py:171
 msgid "Results waiting for verification per analysis"
 msgstr "Ergebnisse, die auf Verifizierung warten, pro Analyse"
 
-#: senaite/dashboard/configure.zcml:45
+#: senaite/dashboard/configure.zcml:46
 msgid "SENAITE DASHBOARD"
 msgstr "SENAITE DASHBOARD"
+
+#: senaite/dashboard/configure.zcml:54
+msgid "SENAITE DASHBOARD (uninstall)"
+msgstr "SENAITE DASHBOARD (Deinstallation)"
 
 #: senaite/dashboard/query/builtin.py:98
 msgid "Sampled to received"
 msgstr "Probenahme bis Eingang"
 
-#: senaite/dashboard/app.py:38
+#: senaite/dashboard/env.py:20
 msgid "Samplers"
 msgstr "Probenehmer"
 
-#: senaite/dashboard/library/builtin.py:32
+#: senaite/dashboard/library/builtin.py:30
 #: senaite/dashboard/query/builtin.py:47
 msgid "Samples"
 msgstr "Proben"
 
-#: senaite/dashboard/library/builtin.py:109
+#: senaite/dashboard/library/builtin.py:107
 msgid "Samples by client"
 msgstr "Proben nach Kunde"
 
-#: senaite/dashboard/library/builtin.py:113
+#: senaite/dashboard/library/builtin.py:111
 msgid "Samples by sample point"
 msgstr "Proben nach Probenahmestelle"
 
-#: senaite/dashboard/library/builtin.py:105
+#: senaite/dashboard/library/builtin.py:103
 msgid "Samples by sample type"
 msgstr "Proben nach Probenart"
 
-#: senaite/dashboard/library/builtin.py:108
+#: senaite/dashboard/library/builtin.py:106
 msgid "Samples of the last 30 days per client"
 msgstr "Proben der letzten 30 Tage pro Kunde"
 
-#: senaite/dashboard/library/builtin.py:112
+#: senaite/dashboard/library/builtin.py:110
 msgid "Samples of the last 30 days per sample point"
 msgstr "Proben der letzten 30 Tage pro Probenahmestelle"
 
-#: senaite/dashboard/library/builtin.py:104
+#: senaite/dashboard/library/builtin.py:102
 msgid "Samples of the last 30 days per sample type"
 msgstr "Proben der letzten 30 Tage pro Probenart"
 
-#: senaite/dashboard/library/builtin.py:88
+#: senaite/dashboard/library/builtin.py:86
 msgid "Samples published in the last 30 days"
 msgstr "In den letzten 30 Tagen veröffentlichte Proben"
 
-#: senaite/dashboard/library/builtin.py:140
+#: senaite/dashboard/library/builtin.py:138
 msgid "Samples published most recently"
 msgstr "Zuletzt veröffentlichte Proben"
 
-#: senaite/dashboard/library/builtin.py:121
+#: senaite/dashboard/library/builtin.py:119
 msgid "Samples received per day, last 30 days"
 msgstr "Eingegangene Proben pro Tag, letzte 30 Tage"
 
-#: senaite/dashboard/library/builtin.py:83
+#: senaite/dashboard/library/builtin.py:81
 msgid "Samples registered since Monday"
 msgstr "Seit Montag registrierte Proben"
 
-#: senaite/dashboard/library/builtin.py:55
+#: senaite/dashboard/library/builtin.py:53
 msgid "Samples to receive"
 msgstr "Erwartete Proben"
 
-#: senaite/dashboard/library/builtin.py:54
+#: senaite/dashboard/library/builtin.py:52
 msgid "Samples waiting for reception"
 msgstr "Proben, die auf den Eingang warten"
 
-#: senaite/dashboard/library/builtin.py:66
+#: senaite/dashboard/library/builtin.py:64
 msgid "Samples with all results, waiting for verification"
 msgstr "Proben mit allen Ergebnissen, die auf Verifizierung warten"
 
-#: senaite/dashboard/app.py:40
+#: senaite/dashboard/env.py:22
 msgid "Sampling coordinators"
 msgstr "Probenahme-Koordination"
 
-#: senaite/dashboard/strings.py:206
+#: senaite/dashboard/strings.py:221
 msgid "Save"
 msgstr "Speichern"
 
-#: senaite/dashboard/strings.py:207
+#: senaite/dashboard/strings.py:222
 msgid "Save to library"
 msgstr "In Bibliothek speichern"
 
-#: senaite/dashboard/strings.py:211
+#: senaite/dashboard/strings.py:226
 msgid "Saved"
 msgstr "Gespeichert"
 
-#: senaite/dashboard/library/saved.py:85
+#: senaite/dashboard/library/saved.py:86
 msgid "Saved by your laboratory"
 msgstr "Vorlagen Ihres Labors"
 
-#: senaite/dashboard/strings.py:178
+#: senaite/dashboard/strings.py:189
 msgid "Saved to the library. Everybody can add it now."
 msgstr "In der Bibliothek gespeichert. Jeder kann sie jetzt hinzufügen."
 
-#: senaite/dashboard/strings.py:168
+#: senaite/dashboard/strings.py:179
 msgid "Saved. Load the dashboard again to use it."
 msgstr "Gespeichert. Laden Sie das Dashboard neu, um es zu verwenden."
 
-#: senaite/dashboard/strings.py:212
+#: senaite/dashboard/strings.py:227
 msgid "Saving"
 msgstr "Wird gespeichert"
 
-#: senaite/dashboard/strings.py:213
+#: senaite/dashboard/strings.py:228
 msgid "Search tiles"
 msgstr "Kacheln suchen"
 
-#: senaite/dashboard/strings.py:214
+#: senaite/dashboard/routes/base.py:138
+msgid "Send a JSON object"
+msgstr "Senden Sie ein JSON-Objekt"
+
+#: senaite/dashboard/routes/base.py:64
+msgid "Send the request as application/json"
+msgstr "Senden Sie die Anfrage als application/json"
+
+#: senaite/dashboard/strings.py:231
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: senaite/dashboard/library/builtin.py:227
+#: senaite/dashboard/library/builtin.py:225
 msgid "Shortcuts to the pages you use most"
 msgstr "Abkürzungen zu den meistgenutzten Seiten"
 
-#: senaite/dashboard/strings.py:44
+#: senaite/dashboard/strings.py:53
 msgid "Show"
 msgstr "Anzeigen"
 
-#: senaite/dashboard/strings.py:236
+#: senaite/dashboard/strings.py:253
 msgid "Show the course"
 msgstr "Verlauf zeigen"
 
-#: senaite/dashboard/app.py:43
+#: senaite/dashboard/env.py:25
 msgid "Site administrators"
 msgstr "Site-Administratoren"
 
-#: senaite/dashboard/strings.py:215
+#: senaite/dashboard/strings.py:37
+msgid "Slate"
+msgstr "Schiefergrau"
+
+#: senaite/dashboard/strings.py:232
 msgid "Sort by"
 msgstr "Sortieren nach"
 
-#: senaite/dashboard/strings.py:55
+#: senaite/dashboard/strings.py:65
 msgid "Spans of time"
 msgstr "Zeitspannen"
 
-#: senaite/dashboard/strings.py:220
+#: senaite/dashboard/strings.py:237
 msgid "Split by"
 msgstr "Aufteilen nach"
 
-#: senaite/dashboard/strings.py:152
+#: senaite/dashboard/strings.py:163
 msgid "Start with"
 msgstr "Beginnen mit"
 
-#: senaite/dashboard/strings.py:125
+#: senaite/dashboard/strings.py:134
 msgid "Status"
 msgstr "Status"
 
-#: senaite/dashboard/strings.py:223
+#: senaite/dashboard/strings.py:240
 msgid "Style"
 msgstr "Stil"
 
-#: senaite/dashboard/strings.py:243
+#: senaite/dashboard/strings.py:260
 msgid "Table"
 msgstr "Tabelle"
 
-#: senaite/dashboard/strings.py:126
+#: senaite/dashboard/strings.py:135
 msgid "Text"
 msgstr "Text"
 
-#: senaite/dashboard/query/custom.py:104
+#: senaite/dashboard/query/custom.py:110
 msgid "The column ${name} cannot be shown"
 msgstr "Die Spalte ${name} kann nicht angezeigt werden"
 
-#: senaite/dashboard/strings.py:89
+#: senaite/dashboard/strings.py:110
+msgid "The dataset no longer offers this field"
+msgstr "Das Dataset bietet dieses Feld nicht mehr an"
+
+#: senaite/dashboard/strings.py:64
+msgid "The dataset of this tile is gone, or not for you"
+msgstr "Das Dataset dieser Kachel gibt es nicht mehr, oder es ist nicht für Sie bestimmt"
+
+#: senaite/dashboard/strings.py:200
 msgid "The draft has changes that are not published yet. Everybody else sees this version."
 msgstr "Der Entwurf hat Änderungen, die noch nicht veröffentlicht sind. Alle anderen sehen diese Fassung."
 
-#: senaite/dashboard/query/custom.py:78
+#: senaite/dashboard/query/custom.py:84
 msgid "The index ${name} cannot be used"
 msgstr "Der Index ${name} kann nicht verwendet werden"
 
-#: senaite/dashboard/library/saved.py:29
+#: senaite/dashboard/library/saved.py:30
 msgid "The library keeps at most ${count} saved tiles"
 msgstr "Die Bibliothek fasst höchstens ${count} gespeicherte Kacheln"
 
-#: senaite/dashboard/library/builtin.py:127
+#: senaite/dashboard/library/builtin.py:125
 msgid "The most recently registered samples"
 msgstr "Die zuletzt registrierten Proben"
 
-#: senaite/dashboard/routes/base.py:115
+#: senaite/dashboard/strings.py:210
+msgid "The request failed ({status})"
+msgstr "Die Anfrage ist fehlgeschlagen ({status})"
+
+#: senaite/dashboard/routes/base.py:136
+msgid "The request is no valid JSON"
+msgstr "Die Anfrage ist kein gültiges JSON"
+
+#: senaite/dashboard/routes/base.py:154
 msgid "The request needs a list of tiles"
 msgstr "Die Anfrage braucht eine Liste von Kacheln"
 
-#: senaite/dashboard/dashboards/model.py:104
+#: senaite/dashboard/strings.py:161
+msgid "The server cannot be reached. Please check the connection."
+msgstr "Der Server ist nicht erreichbar. Bitte prüfen Sie die Verbindung."
+
+#: senaite/dashboard/dashboards/model.py:100
 msgid "The tile is too large"
 msgstr "Die Kachel ist zu groß"
 
-#: senaite/dashboard/strings.py:59
+#: senaite/dashboard/strings.py:69
 msgid "The type of a saved dataset stays as it is."
 msgstr "Der Typ eines gespeicherten Datasets lässt sich nicht mehr ändern."
 
-#: senaite/dashboard/strings.py:76
+#: senaite/dashboard/strings.py:86
 msgid "Their tiles will show that the dataset is gone."
 msgstr "Deren Kacheln zeigen dann, dass das Dataset fehlt."
 
-#: senaite/dashboard/strings.py:160
+#: senaite/dashboard/strings.py:171
 msgid "There are no datasets of your own yet."
 msgstr "Es gibt noch keine eigenen Datasets."
 
-#: senaite/dashboard/query/custom.py:198
+#: senaite/dashboard/query/custom.py:199
 msgid "There can be at most ${count} datasets"
 msgstr "Es kann höchstens ${count} Datasets geben"
 
@@ -1188,100 +1264,100 @@ msgstr "Es kann höchstens ${count} Datasets geben"
 msgid "There is no dashboard ${id}, or it is not meant for you"
 msgstr "Das Dashboard ${id} gibt es nicht, oder es ist nicht für Sie bestimmt"
 
-#: senaite/dashboard/strings.py:157
+#: senaite/dashboard/strings.py:168
 msgid "There is no dashboard for you yet. Make one of your own."
 msgstr "Für Sie gibt es noch kein Dashboard. Legen Sie ein eigenes an."
 
-#: senaite/dashboard/query/custom.py:217
+#: senaite/dashboard/query/custom.py:218
 msgid "There is no dataset ${name}"
 msgstr "Es gibt kein Dataset ${name}"
 
-#: senaite/dashboard/library/saved.py:59
+#: senaite/dashboard/library/saved.py:60
 msgid "There is no such tile in the library"
 msgstr "Diese Kachel gibt es in der Bibliothek nicht"
 
-#: senaite/dashboard/dashboards/shared.py:134
+#: senaite/dashboard/dashboards/shared.py:139
 msgid "There is nothing published to go back to"
 msgstr "Es gibt keine veröffentlichte Fassung, zu der zurückgekehrt werden kann"
 
-#: senaite/dashboard/routes/data.py:50
+#: senaite/dashboard/routes/data.py:49
 msgid "This asks for too much at once; use fewer or shorter charts"
 msgstr "Das ist zu viel auf einmal; bitte weniger oder kürzere Diagramme verwenden"
 
-#: senaite/dashboard/strings.py:98
+#: senaite/dashboard/strings.py:106
 msgid "This dashboard has no tiles yet."
 msgstr "Dieses Dashboard hat noch keine Kacheln."
 
-#: senaite/dashboard/strings.py:117
+#: senaite/dashboard/strings.py:126
 msgid "This is not valid JSON; nothing was changed."
 msgstr "Das ist kein gültiges JSON; es wurde nichts geändert."
 
-#: senaite/dashboard/strings.py:36
+#: senaite/dashboard/strings.py:45
 msgid "This month"
 msgstr "Dieser Monat"
 
-#: senaite/dashboard/strings.py:230
+#: senaite/dashboard/strings.py:247
 msgid "This tile cannot be shown. Check its settings or remove it."
 msgstr "Diese Kachel kann nicht angezeigt werden. Bitte ihre Einstellungen prüfen oder sie entfernen."
 
-#: senaite/dashboard/strings.py:37
+#: senaite/dashboard/strings.py:46
 msgid "This week"
 msgstr "Diese Woche"
 
-#: senaite/dashboard/strings.py:229
+#: senaite/dashboard/strings.py:246
 msgid "This year"
 msgstr "Dieses Jahr"
 
-#: senaite/dashboard/dashboards/model.py:49
+#: senaite/dashboard/dashboards/model.py:45
 msgid "Tile layout must be numbers"
 msgstr "Das Kachel-Layout muss aus Zahlen bestehen"
 
-#: senaite/dashboard/strings.py:180
+#: senaite/dashboard/strings.py:191
 msgid "Tile removed"
 msgstr "Kachel entfernt"
 
-#: senaite/dashboard/strings.py:232
+#: senaite/dashboard/strings.py:249
 msgid "Tile settings"
 msgstr "Kachel-Einstellungen"
 
-#: senaite/dashboard/dashboards/model.py:90
+#: senaite/dashboard/dashboards/model.py:86
 msgid "Tile settings must be mappings"
 msgstr "Kachel-Einstellungen müssen Objekte sein"
 
-#: senaite/dashboard/dashboards/model.py:111
+#: senaite/dashboard/dashboards/model.py:126
 msgid "Tiles must be a list"
 msgstr "Kacheln müssen eine Liste sein"
 
-#: senaite/dashboard/strings.py:41
+#: senaite/dashboard/strings.py:50
 msgid "Title"
 msgstr "Titel"
 
-#: senaite/dashboard/strings.py:219
+#: senaite/dashboard/strings.py:236
 msgid "To"
 msgstr "Bis"
 
-#: senaite/dashboard/library/builtin.py:73
+#: senaite/dashboard/library/builtin.py:71
 msgid "To be published"
 msgstr "Zu veröffentlichen"
 
-#: senaite/dashboard/library/builtin.py:67
+#: senaite/dashboard/library/builtin.py:65
 msgid "To be verified"
 msgstr "Zu verifizieren"
 
-#: senaite/dashboard/library/builtin.py:174
+#: senaite/dashboard/library/builtin.py:172
 msgid "To verify by analysis"
 msgstr "Zu verifizieren nach Analyse"
 
-#: senaite/dashboard/strings.py:35
+#: senaite/dashboard/strings.py:44
 msgid "Today"
 msgstr "Heute"
 
-#: senaite/dashboard/routes/data.py:46
+#: senaite/dashboard/routes/data.py:45
 msgid "Too many tiles in one request"
 msgstr "Zu viele Kacheln in einer Anfrage"
 
-#: senaite/dashboard/query/sources.py:215
-#: senaite/dashboard/strings.py:235
+#: senaite/dashboard/query/sources.py:253
+#: senaite/dashboard/strings.py:252
 msgid "Total"
 msgstr "Gesamt"
 
@@ -1289,23 +1365,23 @@ msgstr "Gesamt"
 msgid "Turnaround (received to verified)"
 msgstr "Durchlaufzeit (Eingang bis Verifizierung)"
 
-#: senaite/dashboard/library/builtin.py:95
+#: senaite/dashboard/library/builtin.py:93
 msgid "Turnaround time"
 msgstr "Durchlaufzeit"
 
-#: senaite/dashboard/library/builtin.py:157
+#: senaite/dashboard/library/builtin.py:155
 msgid "Unassigned analyses"
 msgstr "Nicht zugewiesene Analysen"
 
-#: senaite/dashboard/strings.py:244
+#: senaite/dashboard/strings.py:261
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: senaite/dashboard/strings.py:197
+#: senaite/dashboard/strings.py:212
 msgid "Undo all your changes to this dashboard?"
 msgstr "Alle eigenen Änderungen an diesem Dashboard zurücknehmen?"
 
-#: senaite/dashboard/query/datasets.py:206
+#: senaite/dashboard/query/datasets.py:200
 msgid "Unknown column ${name}"
 msgstr "Unbekannte Spalte ${name}"
 
@@ -1317,7 +1393,7 @@ msgstr "Unbekannte Datenquelle ${name}"
 msgid "Unknown dataset ${name}"
 msgstr "Unbekannte Datenmenge ${name}"
 
-#: senaite/dashboard/query/datasets.py:195
+#: senaite/dashboard/query/datasets.py:189
 msgid "Unknown field ${name}"
 msgstr "Unbekanntes Feld ${name}"
 
@@ -1325,55 +1401,59 @@ msgstr "Unbekanntes Feld ${name}"
 msgid "Unknown interval ${name}"
 msgstr "Unbekanntes Intervall ${name}"
 
-#: senaite/dashboard/query/datasets.py:213
+#: senaite/dashboard/query/datasets.py:207
 msgid "Unknown span ${name}"
 msgstr "Unbekannte Zeitspanne ${name}"
 
-#: senaite/dashboard/strings.py:245
+#: senaite/dashboard/strings.py:262
 msgid "Unpublished changes"
 msgstr "Unveröffentlichte Änderungen"
 
-#: senaite/dashboard/strings.py:133
-msgid "Updated"
-msgstr "Aktualisiert"
+#: senaite/dashboard/strings.py:142
+msgid "Updated {time}"
+msgstr "Aktualisiert {time}"
 
-#: senaite/dashboard/strings.py:247
+#: senaite/dashboard/strings.py:264
 msgid "Use"
 msgstr "Verwenden"
 
-#: senaite/dashboard/strings.py:62
+#: senaite/dashboard/strings.py:72
 msgid "Used by {dashboards} global dashboards and {library} tiles of the library."
 msgstr "Verwendet von {dashboards} globalen Dashboards und {library} Kacheln der Bibliothek."
 
-#: senaite/dashboard/strings.py:127
+#: senaite/dashboard/strings.py:136
 msgid "User"
 msgstr "Benutzer"
 
-#: senaite/dashboard/library/builtin.py:72
+#: senaite/dashboard/library/builtin.py:70
 msgid "Verified samples, waiting for publication"
 msgstr "Verifizierte Proben, die auf Veröffentlichung warten"
 
-#: senaite/dashboard/app.py:36
+#: senaite/dashboard/env.py:18
 msgid "Verifiers"
 msgstr "Verifizierer"
 
-#: senaite/dashboard/strings.py:104
+#: senaite/dashboard/strings.py:38
+msgid "Violet"
+msgstr "Violett"
+
+#: senaite/dashboard/strings.py:113
 msgid "Visible for"
 msgstr "Sichtbar für"
 
-#: senaite/dashboard/strings.py:250
-msgid "Week of"
-msgstr "Woche ab"
+#: senaite/dashboard/strings.py:267
+msgid "Week of {date}"
+msgstr "Woche ab {date}"
 
-#: senaite/dashboard/strings.py:116
+#: senaite/dashboard/strings.py:125
 msgid "Weekly"
 msgstr "Wöchentlich"
 
-#: senaite/dashboard/strings.py:46
+#: senaite/dashboard/strings.py:55
 msgid "What a table may show of each object. The values come from the catalog, not from the objects."
 msgstr "Was eine Tabelle von jedem Objekt zeigen darf. Die Werte kommen aus dem Katalog, nicht aus den Objekten."
 
-#: senaite/dashboard/strings.py:50
+#: senaite/dashboard/strings.py:59
 msgid "What a tile may filter and group by. Fields only for the laboratory are not offered to client contacts."
 msgstr "Wonach eine Kachel filtern und gruppieren darf. Felder nur für das Labor werden Kundenkontakten nicht angeboten."
 
@@ -1381,28 +1461,32 @@ msgstr "Wonach eine Kachel filtern und gruppieren darf. Felder nur für das Labo
 msgid "Worksheet"
 msgstr "Arbeitsblatt"
 
-#: senaite/dashboard/library/builtin.py:217
+#: senaite/dashboard/library/builtin.py:215
 msgid "Worksheets by analyst"
 msgstr "Arbeitsblätter nach Analyst"
 
-#: senaite/dashboard/library/builtin.py:204
+#: senaite/dashboard/library/builtin.py:202
 msgid "Worksheets waiting for results"
 msgstr "Arbeitsblätter, die auf Ergebnisse warten"
 
-#: senaite/dashboard/strings.py:164
+#: senaite/dashboard/strings.py:175
 msgid "Write a note"
 msgstr "Notiz schreiben"
 
+#: senaite/dashboard/strings.py:39
+msgid "Yellow"
+msgstr "Gelb"
+
 #: senaite/dashboard/query/labels.py:65
-#: senaite/dashboard/strings.py:251
+#: senaite/dashboard/strings.py:268
 msgid "Yes"
 msgstr "Ja"
 
-#: senaite/dashboard/strings.py:121
+#: senaite/dashboard/strings.py:130
 msgid "Yes or no"
 msgstr "Ja oder nein"
 
-#: senaite/dashboard/strings.py:83
+#: senaite/dashboard/strings.py:94
 msgid "You are editing the draft. Users see the published version until you publish."
 msgstr "Sie bearbeiten den Entwurf. Bis zur Veröffentlichung sehen alle anderen die veröffentlichte Fassung."
 
@@ -1410,30 +1494,38 @@ msgstr "Sie bearbeiten den Entwurf. Bis zur Veröffentlichung sehen alle anderen
 msgid "You are not allowed to do this"
 msgstr "Dazu fehlt Ihnen die Berechtigung"
 
-#: senaite/dashboard/dashboards/personal.py:41
+#: senaite/dashboard/dashboards/personal.py:42
 msgid "You can keep at most ${count} dashboards"
 msgstr "Sie können höchstens ${count} Dashboards anlegen"
 
-#: senaite/dashboard/strings.py:181
+#: senaite/dashboard/strings.py:192
 msgid "Your changes are undone. You see the dashboard as everybody else."
 msgstr "Ihre Änderungen sind zurückgenommen. Sie sehen das Dashboard wie alle anderen."
 
-#: senaite/dashboard/strings.py:71
+#: senaite/dashboard/strings.py:229
+msgid "Your session has expired. Please reload the page and sign in again."
+msgstr "Ihre Sitzung ist abgelaufen. Bitte laden Sie die Seite neu und melden Sie sich wieder an."
+
+#: senaite/dashboard/strings.py:81
 msgid "d"
 msgstr "T"
 
-#: senaite/dashboard/strings.py:111
+#: senaite/dashboard/strings.py:120
 msgid "h"
 msgstr "Std."
 
-#: senaite/dashboard/strings.py:183
-msgid "objects you may see"
-msgstr "Objekte, die Sie sehen dürfen"
-
-#: senaite/dashboard/strings.py:184
-msgid "of"
-msgstr "von"
-
-#: senaite/dashboard/strings.py:186
+#: senaite/dashboard/strings.py:198
 msgid "or ..."
 msgstr "oder ..."
+
+#: senaite/dashboard/routes/base.py:86
+msgid "senaite.dashboard is not installed"
+msgstr "senaite.dashboard ist nicht installiert"
+
+#: senaite/dashboard/strings.py:194
+msgid "{count} objects you may see"
+msgstr "{count} Objekte, die Sie sehen dürfen"
+
+#: senaite/dashboard/strings.py:195
+msgid "{shown} of {total}"
+msgstr "{shown} von {total}"

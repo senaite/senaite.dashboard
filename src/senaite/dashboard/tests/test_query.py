@@ -4,7 +4,7 @@
 import unittest
 
 from DateTime import DateTime
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import fields
 from senaite.dashboard.query import timeline
 from senaite.dashboard.query import variables
@@ -52,27 +52,27 @@ class VariablesTestCase(unittest.TestCase):
                          {"a": ["tweber", 1]})
 
     def test_unknown(self):
-        self.assertRaises(QueryError, self.resolve, "$password")
+        self.assertRaises(ValidationError, self.resolve, "$password")
 
     def test_offset_on_text(self):
-        self.assertRaises(QueryError, self.resolve, "$user-1d")
+        self.assertRaises(ValidationError, self.resolve, "$user-1d")
 
     def test_months_are_calendar_months(self):
         self.assertEqual(self.resolve("$month-1m").Date(), "2026/09/01")
         self.assertEqual(self.resolve("$year+1y").Date(), "2027/01/01")
 
     def test_huge_offsets_are_invalid(self):
-        self.assertRaises(QueryError, self.resolve, "$today-99999d")
+        self.assertRaises(ValidationError, self.resolve, "$today-99999d")
 
     def test_offsets_beyond_the_calendar_are_invalid(self):
         for token in ("$today+9999y", "$year-9999y", "$now+9999y"):
-            self.assertRaises(QueryError, self.resolve, token)
+            self.assertRaises(ValidationError, self.resolve, token)
 
     def test_a_trailing_newline_is_invalid(self):
-        self.assertRaises(QueryError, self.resolve, "$user\n")
+        self.assertRaises(ValidationError, self.resolve, "$user\n")
 
     def test_unicode_placeholder(self):
-        self.assertRaises(QueryError, self.resolve, u"$\xfcser")
+        self.assertRaises(ValidationError, self.resolve, u"$\xfcser")
 
     def test_plain_text_stays(self):
         self.assertEqual(self.resolve("published"), "published")
@@ -97,10 +97,12 @@ class TimelineTestCase(unittest.TestCase):
                          ["2026/10/21", "2026/10/22"])
 
     def test_limits(self):
-        self.assertRaises(QueryError, timeline.get_periods, "week", 0, NOW)
-        self.assertRaises(QueryError, timeline.get_periods, "week",
+        self.assertRaises(ValidationError, timeline.get_periods, "week", 0,
+                          NOW)
+        self.assertRaises(ValidationError, timeline.get_periods, "week",
                           timeline.MAX_PERIODS["week"] + 1, NOW)
-        self.assertRaises(QueryError, timeline.get_periods, "hour", 3, NOW)
+        self.assertRaises(ValidationError, timeline.get_periods, "hour", 3,
+                          NOW)
 
     def test_periods_start_at_local_midnight_across_dst(self):
         # Europe/Berlin leaves summer time on 2026-10-25
@@ -138,12 +140,12 @@ class FieldQueryTestCase(unittest.TestCase):
                                       [UNSET]), UNSET)
 
     def test_values_must_be_text(self):
-        self.assertRaises(QueryError, fields.to_query,
+        self.assertRaises(ValidationError, fields.to_query,
                           self.field(fields.STATE), [{"$ne": 1}])
 
     def test_too_many_values(self):
         values = ["v%d" % i for i in range(fields.MAX_FILTER_VALUES + 1)]
-        self.assertRaises(QueryError, fields.to_query,
+        self.assertRaises(ValidationError, fields.to_query,
                           self.field(fields.STATE), values)
 
     def test_date_range(self):
@@ -152,7 +154,7 @@ class FieldQueryTestCase(unittest.TestCase):
         self.assertEqual(query["range"], "min:max")
 
     def test_date_needs_a_mapping(self):
-        self.assertRaises(QueryError, fields.to_query,
+        self.assertRaises(ValidationError, fields.to_query,
                           self.field(fields.DATE), "yesterday")
 
     def test_boolean(self):
@@ -160,4 +162,4 @@ class FieldQueryTestCase(unittest.TestCase):
         self.assertIs(fields.to_query(field, True), True)
         self.assertIs(fields.to_query(field, False), False)
         for value in ("false", 1, {"not": [True]}):
-            self.assertRaises(QueryError, fields.to_query, field, value)
+            self.assertRaises(ValidationError, fields.to_query, field, value)

@@ -16,7 +16,7 @@ from senaite.dashboard.access import check_manage
 from senaite.dashboard.dashboards import ids
 from senaite.dashboard.dashboards import model
 from senaite.dashboard.exceptions import NotFound
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 
 
 def not_found(dashboard_id):
@@ -98,7 +98,11 @@ def create(title, tiles, roles, env, default=None):
 
 
 def save_draft(dashboard_id, env, tiles=None, title=None, roles=None):
-    """Change the draft of a global dashboard, or its title or roles."""
+    """Change the draft of a global dashboard, or its title or roles.
+
+    Only the tiles have a draft: a new title or new roles apply at once,
+    to the published version too, like the settings of a page.
+    """
     check_manage(env)
     record = get(dashboard_id, env)
     if tiles is not None:
@@ -122,6 +126,7 @@ def publish(dashboard_id, env):
         "by": env.user_id,
     }
     record["revision"] = record.get("revision", 0) + 1
+    touch(record, env)
     storage.set_global(record)
     return record
 
@@ -131,8 +136,9 @@ def discard_draft(dashboard_id, env):
     check_manage(env)
     record = get(dashboard_id, env)
     if not is_published(record):
-        raise QueryError(_("There is nothing published to go back to"))
+        raise ValidationError(_("There is nothing published to go back to"))
     record["draft"] = {"tiles": copy.deepcopy(record["published"]["tiles"])}
+    touch(record, env)
     storage.set_global(record)
     return record
 
@@ -141,6 +147,7 @@ def unpublish(dashboard_id, env):
     check_manage(env)
     record = get(dashboard_id, env)
     record["published"] = None
+    touch(record, env)
     storage.set_global(record)
     return record
 

@@ -20,7 +20,7 @@ from bika.lims import api
 from bika.lims import senaiteMessageFactory as _c
 from senaite.core.i18n import translate
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import fields as kinds
 
 # Catalogs that are not SENAITE's own: a type kept only there is a
@@ -68,10 +68,21 @@ def is_offered(name):
     return name not in INTERNAL_NAMES and not is_blocked(name)
 
 
+def is_secured(catalog):
+    """Whether the catalog filters its results by who may see them.
+
+    A catalog without the index of the roles and users that may see an
+    object would show every user everything it holds.
+    """
+    return "allowedRolesAndUsers" in catalog.indexes()
+
+
 def get_own_catalog(portal_type):
     """The catalog SENAITE keeps the type in, or None for CMS types."""
     for catalog in api.get_catalogs_for(portal_type):
-        if catalog.getId() not in GENERIC_CATALOGS:
+        if catalog.getId() in GENERIC_CATALOGS:
+            continue
+        if is_secured(catalog):
             return catalog.getId()
     return None
 
@@ -114,8 +125,8 @@ def get_candidate(portal_type, candidates):
     for candidate in candidates:
         if candidate["portal_type"] == portal_type:
             return candidate
-    raise QueryError(_("A dataset cannot be made of ${type}",
-                       mapping={"type": portal_type}))
+    raise ValidationError(_("A dataset cannot be made of ${type}",
+                            mapping={"type": portal_type}))
 
 
 def get_offered_indexes(catalog_id):

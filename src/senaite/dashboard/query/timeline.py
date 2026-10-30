@@ -2,7 +2,7 @@
 """Periods for charts over time."""
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import calendar_dates as cal
 
 DAY = "day"
@@ -42,11 +42,11 @@ def shift_period(start, interval, count):
 
 def check_periods(interval, periods):
     if interval not in MAX_PERIODS:
-        raise QueryError(_("Unknown interval ${name}",
-                           mapping={"name": interval}))
+        raise ValidationError(_("Unknown interval ${name}",
+                                mapping={"name": interval}))
     if not 1 <= periods <= MAX_PERIODS[interval]:
-        raise QueryError(_("Between 1 and ${max} periods",
-                           mapping={"max": MAX_PERIODS[interval]}))
+        raise ValidationError(_("Between 1 and ${max} periods",
+                                mapping={"max": MAX_PERIODS[interval]}))
 
 
 def get_periods(interval, periods, now):

@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 """Integration tests: tiles managers save to the library."""
 
-import unittest
-
-from bika.lims import api
-from plone.app.testing import login
-from senaite.dashboard.env import Environment
 from senaite.dashboard.exceptions import Forbidden
 from senaite.dashboard.exceptions import NotFound
 from senaite.dashboard.library import saved
 from senaite.dashboard.library.presets import get_categories
 from senaite.dashboard.library.presets import get_presets
-from senaite.dashboard.tests.layers import DASHBOARD_TESTING
+from senaite.dashboard.tests.base import DashboardTestCase
 
 TILE = {"id": "abc", "type": "bar", "title": {"en": u"Mine", "de": u"Meins"},
         "source": "group",
@@ -19,22 +14,7 @@ TILE = {"id": "abc", "type": "bar", "title": {"en": u"Mine", "de": u"Meins"},
         "layout": {"x": 4, "y": 6, "w": 6, "h": 4}}
 
 
-def add_user(user_id, roles):
-    acl = api.get_tool("acl_users")
-    acl.userFolderAddUser(user_id, "secret-" + user_id, roles, [])
-
-
-class LibraryTestCase(unittest.TestCase):
-    layer = DASHBOARD_TESTING
-
-    def setUp(self):
-        self.portal = self.layer["portal"]
-        add_user("manager", ["LabManager"])
-        add_user("analyst", ["Analyst"])
-
-    def as_user(self, user_id):
-        login(self.portal, user_id)
-        return Environment()
+class LibraryTestCase(DashboardTestCase):
 
     def saved_presets(self, env):
         return [p for p in get_presets(env)

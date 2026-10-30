@@ -13,7 +13,7 @@ from bika.lims import api
 from plone.memoize import ram
 from senaite.core.i18n import translate
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardDataSource
 from senaite.dashboard.query.params import clean_params
 from senaite.dashboard.query.registry import find_dataset
@@ -35,8 +35,8 @@ def find_source(name):
 def get_source(name):
     source = find_source(name)
     if source is None:
-        raise QueryError(_("Unknown data source ${name}",
-                           mapping={"name": name}))
+        raise ValidationError(_("Unknown data source ${name}",
+                                mapping={"name": name}))
     return source
 
 
@@ -45,7 +45,7 @@ def describe_sources():
         "name": name,
         "title": translate(source.title, to_utf8=False),
         "output": source.output,
-        "params": sorted(source.params),
+        "params": sorted(getattr(source, "params", None) or {}),
     } for name, source in getUtilitiesFor(IDashboardDataSource)]
 
 
@@ -90,7 +90,7 @@ def _compute(name, params_json, dataset_name, env):
 
 def clean_source_params(source, params):
     """The parameters the source declares, checked."""
-    params = clean_params(params, source.params)
+    params = clean_params(params, getattr(source, "params", None) or {})
     clean = getattr(source, "clean", None)
     return clean(params) if clean else params
 
@@ -98,7 +98,7 @@ def clean_source_params(source, params):
 def compute(name, params, env):
     """Return the data of a source for the parameters of a tile.
 
-    :raises QueryError: for an unknown source or invalid parameters
+    :raises ValidationError: for an unknown source or invalid parameters
     """
     params = clean_source_params(get_source(name), params)
     params_json = json.dumps(params, sort_keys=True)

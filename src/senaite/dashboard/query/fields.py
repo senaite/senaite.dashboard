@@ -11,7 +11,8 @@ from bika.lims import api
 from senaite.core.api import dtime
 from senaite.core.i18n import translate
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.env import LabOnly
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query.variables import UNSET
 from senaite.dashboard.titles import display_title
 
@@ -29,7 +30,7 @@ CHOICE = "choice"
 MAX_FILTER_VALUES = 100
 
 
-class Field(object):
+class Field(LabOnly):
     """A catalog index a tile may filter or group by.
 
     :param index: the catalog index
@@ -55,10 +56,6 @@ class Field(object):
     @property
     def name(self):
         return self.index
-
-    def is_available(self, env):
-        """Whether the user may filter and group by the field."""
-        return env.is_lab or not self.lab_only
 
     def get_choice_values(self):
         return [value for value, title in self.choices]
@@ -89,7 +86,7 @@ def to_list(value):
 def to_date_query(value):
     """Return a DateIndex range query for {"min": ..., "max": ...}."""
     if not isinstance(value, dict):
-        raise QueryError(_("A date filter needs a min or a max"))
+        raise ValidationError(_("A date filter needs a min or a max"))
     bounds = []
     ranges = []
     for key in ("min", "max"):
@@ -97,8 +94,8 @@ def to_date_query(value):
             continue
         date = dtime.to_DT(value[key])
         if date is None:
-            raise QueryError(_("Not a date: ${value}",
-                               mapping={"value": value[key]}))
+            raise ValidationError(_("Not a date: ${value}",
+                                    mapping={"value": value[key]}))
         bounds.append(date)
         ranges.append(key)
     if not bounds:
@@ -114,10 +111,10 @@ def to_values_query(value):
     negate = isinstance(value, dict)
     values = to_list(value.get("not") if negate else value)
     if len(values) > MAX_FILTER_VALUES:
-        raise QueryError(_("A filter takes at most ${count} values",
-                           mapping={"count": MAX_FILTER_VALUES}))
+        raise ValidationError(_("A filter takes at most ${count} values",
+                                mapping={"count": MAX_FILTER_VALUES}))
     if not all(isinstance(item, basestring) for item in values):
-        raise QueryError(_("Filter values must be text"))
+        raise ValidationError(_("Filter values must be text"))
     if not values:
         return UNSET
     return {"not": values} if negate else {"query": values}
@@ -126,7 +123,7 @@ def to_values_query(value):
 def to_boolean_query(value):
     """Return a BooleanIndex query for true or false."""
     if not isinstance(value, bool):
-        raise QueryError(_("A yes or no filter needs true or false"))
+        raise ValidationError(_("A yes or no filter needs true or false"))
     return value
 
 
@@ -151,10 +148,10 @@ def get_by_kind(registry, field):
     index values: a raw value may be something the user must not see.
 
     :param registry: {kind: function}
-    :raises QueryError: when the registry does not know the kind
+    :raises ValidationError: when the registry does not know the kind
     """
     function = registry.get(field.kind)
     if function is None:
-        raise QueryError(_("Fields of kind ${kind} cannot be shown",
-                           mapping={"kind": field.kind}))
+        raise ValidationError(_("Fields of kind ${kind} cannot be shown",
+                                mapping={"kind": field.kind}))
     return function

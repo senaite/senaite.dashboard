@@ -53,7 +53,8 @@ export default function AppearanceSection({tile, update}) {
           {Object.entries(NAMED).map(([name, color]) => (
             <button key={name} type="button" role="radio"
                     aria-checked={tile.options.color === name}
-                    aria-label={name} style={{background: color}}
+                    aria-label={t(`color_${name}`)}
+                    style={{background: color}}
                     onClick={() => setOption({color: name})}/>
           ))}
         </div>

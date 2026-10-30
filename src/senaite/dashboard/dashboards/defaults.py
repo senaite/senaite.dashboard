@@ -6,16 +6,19 @@ manager deleted can be told apart and restored, whatever the others
 are called by now.
 """
 
+from bika.lims import api
 from senaite.dashboard import messagefactory as _
 from senaite.dashboard import storage
 from senaite.dashboard.access import check_manage
 from senaite.dashboard.dashboards import shared
 from senaite.dashboard.env import LAB_ROLES
+from senaite.dashboard.library.builders import translate_tile
 from senaite.dashboard.library.builders import translate_title
-from senaite.dashboard.library.builtin import make_tile
+from senaite.dashboard.library.builtin import PRESET_GROUPS
+from senaite.dashboard.titles import new_id
 
-# Stored titles carry these languages; the page shows the one in use
-LANGUAGES = ("en", "de")
+# Stored titles always carry English, the language a title falls back to
+FALLBACK_LANGUAGE = "en"
 
 # (preset, x, y, w, h)
 LABORATORY = [
@@ -60,8 +63,35 @@ DEFAULTS = [
 ]
 
 
-def make_tiles(entries):
-    return [make_tile(preset_id, x, y, w, h, languages=LANGUAGES)
+def find_preset(preset_id):
+    """The tile of a preset senaite.dashboard ships with."""
+    for category, entries in PRESET_GROUPS:
+        for entry_id, description, tile in entries:
+            if entry_id == preset_id:
+                return tile
+    raise KeyError(preset_id)
+
+
+def make_tile(preset_id, x, y, w, h, languages):
+    """A new tile from a preset, placed on the grid."""
+    tile = translate_tile(find_preset(preset_id), languages)
+    tile["id"] = new_id()
+    tile["layout"] = {"x": x, "y": y, "w": w, "h": h}
+    return tile
+
+
+def get_languages():
+    """The languages the titles of the defaults are stored in.
+
+    Those the site offers, so that each user reads the titles in their
+    language; the page shows the one in use.
+    """
+    languages = api.get_registry_record("plone.available_languages") or []
+    return sorted(set(languages) | {FALLBACK_LANGUAGE})
+
+
+def make_tiles(entries, languages):
+    return [make_tile(preset_id, x, y, w, h, languages)
             for preset_id, x, y, w, h in entries]
 
 
@@ -82,8 +112,10 @@ def is_missing(default, records):
 def create_default(default, env):
     """Create one default dashboard as a draft and return its id."""
     key, title, roles, entries = default
-    record = shared.create(translate_title(title, LANGUAGES),
-                           make_tiles(entries), roles, env, default=key)
+    languages = get_languages()
+    record = shared.create(translate_title(title, languages),
+                           make_tiles(entries, languages), roles, env,
+                           default=key)
     return record["id"]
 
 

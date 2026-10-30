@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 """Integration tests: datasets managers define in the browser."""
 
-import unittest
-
-from bika.lims import api
 from Missing import Value as MissingValue
-from plone.app.testing import login
 from senaite.dashboard import storage
-from senaite.dashboard.env import Environment
+from senaite.dashboard.dashboards import usage
 from senaite.dashboard.exceptions import Forbidden
 from senaite.dashboard.exceptions import NotFound
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import catalogs
 from senaite.dashboard.query import custom
 from senaite.dashboard.query import inspection
@@ -18,7 +14,7 @@ from senaite.dashboard.query.compute import compute
 from senaite.dashboard.query.compute import get_data_version
 from senaite.dashboard.query.registry import get_dataset
 from senaite.dashboard.query.registry import get_datasets
-from senaite.dashboard.tests.layers import DASHBOARD_TESTING
+from senaite.dashboard.tests.base import DashboardTestCase
 
 CLIENTS = {
     "title": {"en": u"Clients", "de": u"Kunden"},
@@ -32,23 +28,7 @@ CLIENTS = {
 }
 
 
-def add_user(user_id, roles):
-    acl = api.get_tool("acl_users")
-    acl.userFolderAddUser(user_id, "secret-" + user_id, roles, [])
-
-
-class CustomDatasetsTestCase(unittest.TestCase):
-    layer = DASHBOARD_TESTING
-
-    def setUp(self):
-        self.portal = self.layer["portal"]
-        add_user("manager", ["LabManager"])
-        add_user("analyst", ["Analyst"])
-        add_user("contact", ["Client"])
-
-    def as_user(self, user_id):
-        login(self.portal, user_id)
-        return Environment()
+class CustomDatasetsTestCase(DashboardTestCase):
 
     def names(self, env):
         return [dataset.name for dataset in get_datasets(env)]
@@ -103,6 +83,14 @@ class CustomDatasetsTestCase(unittest.TestCase):
         self.assertNotIn(record["name"],
                          self.names(self.as_user("contact")))
 
+    def test_columns_are_for_the_laboratory_unless_opened(self):
+        opened = dict(CLIENTS, lab_only=False, columns=[
+            {"name": "Title", "kind": "text"}])
+        name = custom.save(opened, self.as_user("manager"))["name"]
+        contact = self.as_user("contact")
+        dataset = get_dataset(name, contact)
+        self.assertEqual(dataset.get_columns(contact), [])
+
     def test_fields_are_for_the_laboratory_unless_opened(self):
         record = custom.save(dict(CLIENTS, lab_only=False),
                              self.as_user("manager"))
@@ -113,14 +101,14 @@ class CustomDatasetsTestCase(unittest.TestCase):
 
     def test_columns_of_lab_only_fields_are_for_the_laboratory(self):
         opened = dict(CLIENTS, lab_only=False, columns=[
-            {"name": "Title", "kind": "text"},
-            {"name": "review_state", "kind": "state"}])
+            {"name": "Title", "kind": "text", "lab_only": False},
+            {"name": "review_state", "kind": "state", "lab_only": False}])
         name = custom.save(opened, self.as_user("manager"))["name"]
         contact = self.as_user("contact")
         dataset = get_dataset(name, contact)
         self.assertEqual([c.name for c in dataset.get_columns(contact)],
                          ["Title"])
-        self.assertRaises(QueryError, compute, "list", {
+        self.assertRaises(ValidationError, compute, "list", {
             "dataset": name, "columns": ["review_state"]}, contact)
         analyst = self.as_user("analyst")
         self.assertEqual(len(dataset.get_columns(analyst)), 2)
@@ -171,7 +159,7 @@ class CustomDatasetsTestCase(unittest.TestCase):
         wrong_type = dict(CLIENTS, portal_type="Document")
         for body in (wrong_index, wrong_kind, wrong_type,
                      dict(CLIENTS, title=u" ")):
-            self.assertRaises(QueryError, custom.save, body, manager)
+            self.assertRaises(ValidationError, custom.save, body, manager)
 
     def test_saving_again_keeps_the_name(self):
         manager = self.as_user("manager")
@@ -189,11 +177,12 @@ class CustomDatasetsTestCase(unittest.TestCase):
         manager = self.as_user("manager")
         record = custom.save(CLIENTS, manager)
         custom.remove(record["name"], manager)
-        self.assertRaises(QueryError, get_dataset, record["name"], manager)
+        self.assertRaises(ValidationError, get_dataset, record["name"],
+                          manager)
         self.assertRaises(NotFound, custom.remove, record["name"], manager)
 
     def test_usage_counts_global_dashboards(self):
         manager = self.as_user("manager")
         record = custom.save(CLIENTS, manager)
-        usage = custom.count_usage(record["name"], manager)
-        self.assertEqual(usage, {"dashboards": 0, "library": 0})
+        counts = usage.count_usage(record["name"], manager)
+        self.assertEqual(counts, {"dashboards": 0, "library": 0})

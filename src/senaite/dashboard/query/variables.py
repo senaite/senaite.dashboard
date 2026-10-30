@@ -15,7 +15,7 @@ y(ears); months and years are calendar months and years.
 import re
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import calendar_dates as cal
 
 VARIABLE_RE = re.compile(
@@ -55,8 +55,8 @@ def is_variable(value):
 
 
 def invalid(token):
-    return QueryError(_("Invalid placeholder ${name}",
-                        mapping={"name": token}))
+    return ValidationError(_("Invalid placeholder ${name}",
+                             mapping={"name": token}))
 
 
 def shift_date(date, amount, unit):

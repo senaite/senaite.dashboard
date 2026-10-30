@@ -1,9 +1,34 @@
 // Talks to the dashboard routes of senaite.jsonapi.
 
-export class ApiError extends Error {}
+import {format, t} from "./i18n";
+
+class ApiError extends Error {}
+
+function isJson(response) {
+  const type = response.headers.get("Content-Type") || "";
+  return type.includes("application/json");
+}
+
+// Why a request failed. A run-out session answers 401, or a sign-in
+// page instead of JSON, with 200 after a redirect.
+function failure(response) {
+  if (response.status === 401 || response.redirected || response.ok) {
+    return t("session_expired");
+  }
+  return format("request_failed", {status: response.status});
+}
+
+async function send(url, options) {
+  try {
+    return await fetch(url, options);
+  } catch (exc) {
+    throw new ApiError(t("network_error"));
+  }
+}
 
 export function createApi(baseUrl) {
-  // keepalive lets a save finish while the page is being left
+  // keepalive lets a save finish while the page is being left; only
+  // then, as the browser allows keepalive requests 64 KB in all
   async function request(path, body, keepalive = false) {
     const options = {
       credentials: "same-origin",
@@ -15,15 +40,16 @@ export function createApi(baseUrl) {
       options.headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(body);
     }
-    const response = await fetch(`${baseUrl}${path}`, options);
-    let data = {};
-    try {
-      data = await response.json();
-    } catch (error) {
-      throw new ApiError(response.statusText);
+    const response = await send(`${baseUrl}${path}`, options);
+    if (!isJson(response)) {
+      throw new ApiError(failure(response));
+    }
+    const data = await response.json();
+    if (response.status === 401) {
+      throw new ApiError(failure(response));
     }
     if (!response.ok || data.success === false) {
-      throw new ApiError(data.message || response.statusText);
+      throw new ApiError(data.message || failure(response));
     }
     return data;
   }
@@ -38,10 +64,10 @@ export function createApi(baseUrl) {
     data: (tiles) => request("/data", {tiles}),
     choices: (dataset, field) =>
       request(`/choices/${id(dataset)}/${id(field)}`),
-    save: (dashboardId, tiles) =>
-      request(`/save/${id(dashboardId)}`, {tiles}, true),
-    saveDraft: (dashboardId, tiles) =>
-      request(`/draft/${id(dashboardId)}`, {tiles}, true),
+    save: (dashboardId, tiles, leaving) =>
+      request(`/save/${id(dashboardId)}`, {tiles}, leaving),
+    saveDraft: (dashboardId, tiles, leaving) =>
+      request(`/draft/${id(dashboardId)}`, {tiles}, leaving),
     publish: (dashboardId) => request(`/publish/${id(dashboardId)}`, {}),
     discard: (dashboardId) => request(`/discard/${id(dashboardId)}`, {}),
     reset: (dashboardId) => request(`/reset/${id(dashboardId)}`, {}),

@@ -5,6 +5,7 @@ Below @@API/senaite/v1/dashboard/datasets; managers only. The checks
 of `route` apply as for every dashboard route.
 """
 
+from senaite.dashboard.dashboards import usage
 from senaite.dashboard.query import custom
 from senaite.dashboard.query import inspection
 from senaite.dashboard.routes.base import get_body
@@ -28,7 +29,7 @@ def inspect_type(env, request, portal_type):
 
 @route("/datasets/usage/<string:name>", ["GET"])
 def dataset_usage(env, request, name):
-    return custom.count_usage(name, env)
+    return usage.count_usage(name, env)
 
 
 @route("/datasets/save", ["POST"])

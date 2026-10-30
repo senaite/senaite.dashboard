@@ -8,7 +8,6 @@ site are made of them (see dashboards/defaults.py).
 
 from bika.lims import senaiteMessageFactory as _c
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.dashboards.model import new_id
 from senaite.dashboard.interfaces import IDashboardPresetProvider
 from senaite.dashboard.library.builders import LAST_30_DAYS
 from senaite.dashboard.library.builders import WEEKLY_TREND
@@ -22,7 +21,6 @@ from senaite.dashboard.library.builders import span
 from senaite.dashboard.library.builders import table
 from senaite.dashboard.library.builders import tile_params
 from senaite.dashboard.library.builders import to_presets
-from senaite.dashboard.library.builders import translate_tile
 from senaite.dashboard.library.builders import worksheets
 from zope.interface import implementer
 
@@ -258,25 +256,3 @@ class CorePresets(object):
             presets.extend(to_presets(
                 category, entries, configure=category == GENERAL))
         return presets
-
-
-def find_preset(preset_id):
-    """The tile of a preset senaite.dashboard ships with."""
-    for category, entries in PRESET_GROUPS:
-        for entry_id, description, tile in entries:
-            if entry_id == preset_id:
-                return tile
-    raise KeyError(preset_id)
-
-
-def make_tile(preset_id, x, y, w=None, h=None, languages=None):
-    """Return a new tile from a preset, placed on the grid."""
-    tile = translate_tile(find_preset(preset_id), languages)
-    tile["id"] = new_id()
-    tile["layout"] = {
-        "x": x,
-        "y": y,
-        "w": w or tile["layout"]["w"],
-        "h": h or tile["layout"]["h"],
-    }
-    return tile
