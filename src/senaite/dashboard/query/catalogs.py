@@ -20,7 +20,7 @@ from bika.lims import api
 from bika.lims import senaiteMessageFactory as _c
 from senaite.core.i18n import translate
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import fields as kinds
 
 # Catalogs that are not SENAITE's own: a type kept only there is a
@@ -125,8 +125,8 @@ def get_candidate(portal_type, candidates):
     for candidate in candidates:
         if candidate["portal_type"] == portal_type:
             return candidate
-    raise QueryError(_("A dataset cannot be made of ${type}",
-                       mapping={"type": portal_type}))
+    raise ValidationError(_("A dataset cannot be made of ${type}",
+                            mapping={"type": portal_type}))
 
 
 def get_offered_indexes(catalog_id):

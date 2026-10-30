@@ -8,14 +8,12 @@ the tile library and what the user may do, the page of the datasets
 what a manager may define datasets of.
 """
 
-from collections import OrderedDict
-
 from bika.lims import api
 from senaite.core.i18n import translate
-from senaite.dashboard import messagefactory as _
 from senaite.dashboard.access import can_customize
 from senaite.dashboard.access import can_manage
 from senaite.dashboard.dashboards import views
+from senaite.dashboard.env import ROLES
 from senaite.dashboard.library.presets import get_categories
 from senaite.dashboard.library.presets import get_presets
 from senaite.dashboard.query import catalogs
@@ -26,22 +24,6 @@ from senaite.dashboard.query.registry import get_datasets
 from senaite.dashboard.query.sources import MAX_GROUPS
 from senaite.dashboard.query.sources import MAX_ROWS
 from senaite.dashboard.strings import get_ui_strings
-
-# Roles a manager may give a global dashboard to, with the names users
-# know them by
-ASSIGNABLE_ROLES = OrderedDict([
-    ("LabManager", _("Lab managers")),
-    ("LabClerk", _("Lab clerks")),
-    ("Analyst", _("Analysts")),
-    ("Verifier", _("Verifiers")),
-    ("Publisher", _("Publishers")),
-    ("Sampler", _("Samplers")),
-    ("Preserver", _("Preservers")),
-    ("SamplingCoordinator", _("Sampling coordinators")),
-    ("RegulatoryInspector", _("Regulatory inspectors")),
-    ("Client", _("Client contacts")),
-    ("Manager", _("Site administrators")),
-])
 
 
 def get_page_data(env):
@@ -67,9 +49,10 @@ def get_limits():
 
 
 def get_assignable_roles():
+    """The roles a manager may give a global dashboard to."""
     valid = set(api.get_portal().validRoles())
     return [{"id": role, "title": translate(title, to_utf8=False)}
-            for role, title in ASSIGNABLE_ROLES.items() if role in valid]
+            for role, title in ROLES.items() if role in valid]
 
 
 def bootstrap(env):

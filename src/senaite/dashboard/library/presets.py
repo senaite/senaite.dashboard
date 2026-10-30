@@ -8,7 +8,7 @@ presets whose dataset and fields they may use.
 """
 
 from senaite.core.i18n import translate
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardPresetProvider
 from senaite.dashboard.library.builtin import CATEGORIES
 from senaite.dashboard.library.builtin import GENERAL_CATEGORY
@@ -45,7 +45,7 @@ def is_available(preset, env):
         dataset = get_dataset(params["dataset"], env)
         for name in get_used_fields(params):
             dataset.get_field(name, env)
-    except QueryError:
+    except ValidationError:
         return False
     return True
 

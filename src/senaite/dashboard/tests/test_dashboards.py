@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """Integration tests: who sees and changes which dashboard."""
 
-import unittest
-
-from bika.lims import api
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import login
 from plone.app.testing import setRoles
@@ -16,34 +13,18 @@ from senaite.dashboard.dashboards import views
 from senaite.dashboard.env import Environment
 from senaite.dashboard.exceptions import Forbidden
 from senaite.dashboard.exceptions import NotFound
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.library.presets import get_presets
 from senaite.dashboard.query.compute import compute
 from senaite.dashboard.query.compute import get_cost
-from senaite.dashboard.tests.layers import DASHBOARD_TESTING
+from senaite.dashboard.tests.base import DashboardTestCase
 
 NOTE = {"id": "note", "type": "note", "title": "Hello",
         "options": {"text": "Hi"}, "layout": {"x": 0, "y": 0, "w": 4,
                                               "h": 2}}
 
 
-def add_user(user_id, roles):
-    acl = api.get_tool("acl_users")
-    acl.userFolderAddUser(user_id, "secret-" + user_id, roles, [])
-
-
-class DashboardsTestCase(unittest.TestCase):
-    layer = DASHBOARD_TESTING
-
-    def setUp(self):
-        self.portal = self.layer["portal"]
-        add_user("manager", ["LabManager"])
-        add_user("analyst", ["Analyst"])
-        add_user("contact", ["Client"])
-
-    def as_user(self, user_id):
-        login(self.portal, user_id)
-        return Environment()
+class DashboardsTestCase(DashboardTestCase):
 
     def ids(self, env):
         return [d["id"] for d in views.list_dashboards(env)]
@@ -174,7 +155,7 @@ class DashboardsTestCase(unittest.TestCase):
 
     def test_empty_titles_are_refused(self):
         manager = self.as_user("manager")
-        self.assertRaises(QueryError, shared.create, {"en": u" "}, [],
+        self.assertRaises(ValidationError, shared.create, {"en": u" "}, [],
                           [], manager)
 
     def test_new_global_dashboard_starts_as_draft(self):
@@ -206,14 +187,14 @@ class DashboardsTestCase(unittest.TestCase):
                        {"dataset": "samples", "trend": "weekly"},
                        {"dataset": "samples", "group_by": {"a": 1}},
                        {"dataset": u"\xfc"}):
-            self.assertRaises(QueryError, compute, "group", params, env)
+            self.assertRaises(ValidationError, compute, "group", params, env)
 
     def test_a_source_must_be_a_name(self):
         setRoles(self.portal, TEST_USER_ID, ["LabManager"])
         login(self.portal, "test-user")
         env = Environment()
         for name in (["count"], {"a": 1}, None):
-            self.assertRaises(QueryError, compute, name, {}, env)
+            self.assertRaises(ValidationError, compute, name, {}, env)
             self.assertEqual(get_cost(name, {}), 1)
 
     def test_sources_answer(self):

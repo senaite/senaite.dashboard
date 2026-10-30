@@ -18,7 +18,8 @@ from senaite.dashboard import messagefactory as _
 from senaite.dashboard import storage
 from senaite.dashboard.access import check_manage
 from senaite.dashboard.exceptions import NotFound
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
+from senaite.dashboard.exceptions import check_limit
 from senaite.dashboard.query import catalogs
 from senaite.dashboard.query import fields as kinds
 from senaite.dashboard.query.datasets import COL_DATE
@@ -32,6 +33,7 @@ from senaite.dashboard.query.fields import Field
 from senaite.dashboard.titles import clean_title
 from senaite.dashboard.titles import slugify
 from senaite.dashboard.titles import title_text
+from senaite.dashboard.titles import unique_id
 
 # Names of datasets defined in the browser start with it, so that they
 # never stand in for a dataset of the code
@@ -58,39 +60,39 @@ def is_lab_only(item):
 def required_title(title, message):
     title = clean_title(title)
     if not title:
-        raise QueryError(message)
+        raise ValidationError(message)
     return title
 
 
 def clean_name(value, message):
     """The name of an index or a column; catalogs name them in ASCII."""
     if not isinstance(value, basestring) or not value:
-        raise QueryError(message)
+        raise ValidationError(message)
     try:
         return str(value)
     except UnicodeEncodeError:
-        raise QueryError(message)
+        raise ValidationError(message)
 
 
 def clean_field(item, indexes, candidates):
     """A field of a definition, checked against the catalog."""
     if not isinstance(item, dict):
-        raise QueryError(_("A field must be a mapping"))
+        raise ValidationError(_("A field must be a mapping"))
     name = clean_name(item.get("index"), _("A field needs an index"))
     index = indexes.get(name)
     if index is None:
-        raise QueryError(_("The index ${name} cannot be used",
-                           mapping={"name": name}))
+        raise ValidationError(_("The index ${name} cannot be used",
+                                mapping={"name": name}))
     kind = item.get("kind")
     if kind not in catalogs.FIELD_KINDS[index.meta_type]:
-        raise QueryError(_("${name} cannot be a field of kind ${kind}",
-                           mapping={"name": name, "kind": kind}))
+        raise ValidationError(_("${name} cannot be a field of kind ${kind}",
+                                mapping={"name": name, "kind": kind}))
     target = None
     if kind == kinds.REFERENCE:
         target = item.get("portal_type")
         if target not in [c["portal_type"] for c in candidates]:
-            raise QueryError(_("${name} needs the type it points to",
-                               mapping={"name": name}))
+            raise ValidationError(_("${name} needs the type it points to",
+                                    mapping={"name": name}))
     return {
         "index": name,
         "title": clean_title(item.get("title")) or name,
@@ -102,11 +104,11 @@ def clean_field(item, indexes, candidates):
 
 def clean_column(item, offered):
     if not isinstance(item, dict):
-        raise QueryError(_("A column must be a mapping"))
+        raise ValidationError(_("A column must be a mapping"))
     name = clean_name(item.get("name"), _("A column needs a name"))
     if name not in offered:
-        raise QueryError(_("The column ${name} cannot be shown",
-                           mapping={"name": name}))
+        raise ValidationError(_("The column ${name} cannot be shown",
+                                mapping={"name": name}))
     kind = item.get("kind")
     if kind not in COLUMN_KINDS:
         kind = COL_TEXT
@@ -127,12 +129,12 @@ def clean_span(item, offered, date_indexes):
     read from the metadata.
     """
     if not isinstance(item, dict):
-        raise QueryError(_("A span must be a mapping"))
+        raise ValidationError(_("A span must be a mapping"))
     title = required_title(item.get("title"), _("A span needs a title"))
     start, end = item.get("start"), item.get("end")
     dates = start in offered and end in offered
     if not dates or end not in date_indexes:
-        raise QueryError(_("A span needs two dates of the type"))
+        raise ValidationError(_("A span needs two dates of the type"))
     return {"name": span_name(title), "title": title,
             "start": start, "end": end}
 
@@ -140,8 +142,8 @@ def clean_span(item, offered, date_indexes):
 def clean_items(items, maximum, clean):
     """Checked items, the first of each name only."""
     if not isinstance(items, list) or len(items) > maximum:
-        raise QueryError(_("At most ${count} entries",
-                           mapping={"count": maximum}))
+        raise ValidationError(_("At most ${count} entries",
+                                mapping={"count": maximum}))
     seen = set()
     cleaned = []
     for item in map(clean, items):
@@ -155,7 +157,7 @@ def clean_items(items, maximum, clean):
 def clean_definition(body):
     """A definition as it is kept, every part checked."""
     if not isinstance(body, dict):
-        raise QueryError(_("A dataset must be a mapping"))
+        raise ValidationError(_("A dataset must be a mapping"))
     candidates = catalogs.get_candidates()
     candidate = catalogs.get_candidate(body.get("portal_type"), candidates)
     catalog_id = candidate["catalog"]
@@ -182,13 +184,8 @@ def clean_definition(body):
 
 def new_name(title):
     """A name for a new dataset that is not taken yet."""
-    base = PREFIX + slugify(title, "dataset")
-    name = base
-    number = 1
-    while storage.get_dataset(name) is not None:
-        number += 1
-        name = "{}-{}".format(base, number)
-    return name
+    return unique_id(PREFIX + slugify(title, "dataset"),
+                     lambda name: storage.get_dataset(name) is not None)
 
 
 def save(body, env):
@@ -198,9 +195,9 @@ def save(body, env):
     name = body.get("name")
     existing = storage.get_dataset(name) if is_custom(name) else None
     if existing is None:
-        if len(storage.list_datasets()) >= MAX_DATASETS:
-            raise QueryError(_("There can be at most ${count} datasets",
-                               mapping={"count": MAX_DATASETS}))
+        check_limit(len(storage.list_datasets()), MAX_DATASETS,
+                    _("There can be at most ${count} datasets",
+                      mapping={"count": MAX_DATASETS}))
         name = new_name(record["title"])
     record.update({
         "name": name,
@@ -299,30 +296,3 @@ def get_dataset(name):
 
 def get_datasets():
     return [to_dataset(record) for record in storage.list_datasets()]
-
-
-def uses_dataset(tile, name):
-    return (tile.get("params") or {}).get("dataset") == name
-
-
-def is_used_by(record, name):
-    """Whether a draft or the published version of a global dashboard
-    has a tile on the dataset."""
-    tiles = list(record["draft"]["tiles"])
-    tiles.extend((record.get("published") or {}).get("tiles") or [])
-    return any(uses_dataset(tile, name) for tile in tiles)
-
-
-def count_usage(name, env):
-    """How many global dashboards and saved tiles use the dataset.
-
-    Personal dashboards are not searched: they are many, and only their
-    owner sees the tile that has no dataset any more.
-    """
-    check_manage(env)
-    return {
-        "dashboards": len([record for record in storage.list_globals()
-                           if is_used_by(record, name)]),
-        "library": len([record for record in storage.list_library_tiles()
-                        if uses_dataset(record["tile"], name)]),
-    }

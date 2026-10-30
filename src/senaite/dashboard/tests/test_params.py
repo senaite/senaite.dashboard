@@ -5,7 +5,7 @@ import unittest
 
 from senaite.dashboard.dashboards.ids import is_dashboard_id
 from senaite.dashboard.dashboards.model import clean_tile_id
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query import params
 from senaite.dashboard.routes.base import parse_body
 from senaite.dashboard.titles import clean_title
@@ -32,10 +32,11 @@ class ParamsTestCase(unittest.TestCase):
                       {"columns": "getId"}, {"filters": ["x"]},
                       {"limit": "10"}, {"limit": True},
                       {"dataset": "samples\n"}):
-            self.assertRaises(QueryError, params.clean_params, value, SPEC)
+            self.assertRaises(ValidationError, params.clean_params,
+                              value, SPEC)
 
     def test_not_a_mapping(self):
-        self.assertRaises(QueryError, params.clean_params, [], SPEC)
+        self.assertRaises(ValidationError, params.clean_params, [], SPEC)
 
     def test_trend(self):
         cleaned = params.clean_trend({"trend": {
@@ -66,7 +67,7 @@ class IdsAndTitlesTestCase(unittest.TestCase):
 
     def test_too_many_languages(self):
         title = dict(("l%s" % chr(97 + i) + "x", u"t") for i in range(25))
-        self.assertRaises(QueryError, clean_title, title)
+        self.assertRaises(ValidationError, clean_title, title)
 
 
 class BodyTestCase(unittest.TestCase):

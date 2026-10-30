@@ -15,10 +15,12 @@ browser (custom.py). registry.py finds them all.
 from bika.lims import api
 from collections import OrderedDict
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.env import LabOnly
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardDataset
 from senaite.dashboard.interfaces import IDashboardDatasetExtension
 from senaite.dashboard.query.search import get_index_value
+from senaite.dashboard.query.search import get_metadata
 from senaite.dashboard.titles import display_title
 from zope.component import getUtilitiesFor
 from zope.interface import implementer
@@ -60,7 +62,7 @@ def choice_getter(field, getter=None):
     return title
 
 
-class Column(object):
+class Column(LabOnly):
     """A metadata column a list tile may show.
 
     :param guard: function(brain, env) deciding per row whether the
@@ -80,18 +82,13 @@ class Column(object):
         self.getter = getter
         self.lab_only = lab_only
 
-    def is_available(self, env):
-        """Whether the user may show the column in a table."""
-        return env.is_lab or not self.lab_only
-
     def is_readable(self, brain, env):
         return self.guard is None or self.guard(brain, env)
 
     def get_value(self, brain):
         if self.getter is not None:
             return self.getter(brain)
-        value = getattr(brain, self.name, None)
-        return value() if callable(value) else value
+        return get_metadata(brain, self.name)
 
     def describe(self):
         return {
@@ -120,7 +117,7 @@ class Span(object):
 
 
 @implementer(IDashboardDataset)
-class Dataset(object):
+class Dataset(LabOnly):
     """Objects of one portal type in one catalog.
 
     :param name: what a tile refers to the dataset by
@@ -182,9 +179,6 @@ class Dataset(object):
     def spans(self):
         return self.collect("spans")
 
-    def is_available(self, env):
-        return env.is_lab or not self.lab_only
-
     def get_fields(self, env):
         return [field for field in self.fields.values()
                 if field.is_available(env)]
@@ -192,8 +186,8 @@ class Dataset(object):
     def get_field(self, name, env):
         field = self.fields.get(name)
         if field is None or not field.is_available(env):
-            raise QueryError(_("Unknown field ${name}",
-                               mapping={"name": name}))
+            raise ValidationError(_("Unknown field ${name}",
+                                    mapping={"name": name}))
         return field
 
     def get_columns(self, env):
@@ -203,15 +197,15 @@ class Dataset(object):
     def get_column(self, name, env):
         column = self.columns.get(name)
         if column is None or not column.is_available(env):
-            raise QueryError(_("Unknown column ${name}",
-                               mapping={"name": name}))
+            raise ValidationError(_("Unknown column ${name}",
+                                    mapping={"name": name}))
         return column
 
     def get_span(self, name):
         span = self.spans.get(name)
         if span is None:
-            raise QueryError(_("Unknown span ${name}",
-                               mapping={"name": name}))
+            raise ValidationError(_("Unknown span ${name}",
+                                    mapping={"name": name}))
         return span
 
     def get_states(self):

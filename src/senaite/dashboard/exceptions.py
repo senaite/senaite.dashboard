@@ -6,10 +6,12 @@ class DashboardError(Exception):
     """Base of all dashboard errors."""
 
 
-class QueryError(DashboardError):
-    """A tile asks for something its dataset or source does not offer.
+class ValidationError(DashboardError):
+    """What a request sent is not valid: a tile asks for something its
+    dataset or source does not offer, a title is missing, a limit is
+    reached.
 
-    The message is shown in the tile, so it is written for the user.
+    The message is shown to the user, so it is written for them.
     """
 
 
@@ -19,3 +21,12 @@ class NotFound(DashboardError):
 
 class Forbidden(DashboardError):
     """The current user may not do this."""
+
+
+def check_limit(count, maximum, message):
+    """Refuse one more of what there are `count` of already.
+
+    :raises ValidationError: with the message when the maximum is reached
+    """
+    if count >= maximum:
+        raise ValidationError(message)

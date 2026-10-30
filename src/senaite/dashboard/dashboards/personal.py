@@ -12,7 +12,8 @@ from senaite.dashboard.access import check_customize
 from senaite.dashboard.dashboards import ids
 from senaite.dashboard.dashboards import model
 from senaite.dashboard.dashboards import shared
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
+from senaite.dashboard.exceptions import check_limit
 
 MAX_PERSONAL_DASHBOARDS = 20
 
@@ -37,9 +38,9 @@ def set_dashboard(dashboard, env):
 
 def check_room(env):
     """Refuse a new dashboard to a user who keeps enough of them."""
-    if len(list_dashboards(env)) >= MAX_PERSONAL_DASHBOARDS:
-        raise QueryError(_("You can keep at most ${count} dashboards",
-                           mapping={"count": MAX_PERSONAL_DASHBOARDS}))
+    check_limit(len(list_dashboards(env)), MAX_PERSONAL_DASHBOARDS,
+                _("You can keep at most ${count} dashboards",
+                  mapping={"count": MAX_PERSONAL_DASHBOARDS}))
 
 
 def create(title, tiles, env):
@@ -115,6 +116,6 @@ def get_active(env):
 def set_active(dashboard_id, env):
     """Remember the dashboard the user looked at last."""
     if not ids.is_dashboard_id(dashboard_id):
-        raise QueryError(_("Invalid dashboard id"))
+        raise ValidationError(_("Invalid dashboard id"))
     if get_active(env) != dashboard_id:
         storage.set_user_value(env.user_id, storage.ACTIVE, dashboard_id)

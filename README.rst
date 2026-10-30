@@ -340,7 +340,7 @@ tile)` entries into presets.
 
 A data source is called with the parameters of the tile and the
 `Environment` of the request, validates the parameters, raises
-`QueryError` for anything it does not accept, and searches with the
+`ValidationError` for anything it does not accept, and searches with the
 permissions of the current user.
 
 Tile types are registered in the browser, before the page loads:

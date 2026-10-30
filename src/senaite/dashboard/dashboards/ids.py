@@ -8,8 +8,9 @@ is.
 
 import re
 
-from senaite.dashboard.dashboards import model
+from senaite.dashboard.titles import new_id
 from senaite.dashboard.titles import slugify
+from senaite.dashboard.titles import unique_id
 
 PERSONAL_PREFIX = "personal-"
 GLOBAL_PREFIX = "global-"
@@ -36,12 +37,8 @@ def global_slug(title):
 
 def new_global_id(title, exists):
     """An id for a new global dashboard that is not taken yet."""
-    base = global_slug(title)
-    dashboard_id = base
-    while exists(dashboard_id):
-        dashboard_id = "{}-{}".format(base, model.new_id()[:4])
-    return dashboard_id
+    return unique_id(global_slug(title), exists)
 
 
 def new_personal_id():
-    return PERSONAL_PREFIX + model.new_id()
+    return PERSONAL_PREFIX + new_id()

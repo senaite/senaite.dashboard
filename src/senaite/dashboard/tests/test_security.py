@@ -4,8 +4,6 @@
 import unittest
 
 from bika.lims import api
-from plone.app.testing import login
-from senaite.dashboard.env import Environment
 from senaite.dashboard.query import catalogs
 from senaite.dashboard.query import custom
 from senaite.dashboard.query.builtin import ANALYSES
@@ -17,6 +15,7 @@ from senaite.dashboard.query.search import RETRACTED
 from senaite.dashboard.query.search import build_query
 from senaite.dashboard.query.search import exclude_value
 from senaite.dashboard.routes.base import error_text
+from senaite.dashboard.tests.base import DashboardTestCase
 from senaite.dashboard.tests.layers import DASHBOARD_TESTING
 
 
@@ -51,18 +50,7 @@ class ExcludeValueTestCase(unittest.TestCase):
         self.assertEqual(query, {"state": {"query": ["a"]}})
 
 
-class RestrictTestCase(unittest.TestCase):
-    layer = DASHBOARD_TESTING
-
-    def setUp(self):
-        self.portal = self.layer["portal"]
-        acl = api.get_tool("acl_users")
-        acl.userFolderAddUser("manager", "secret", ["LabManager"], [])
-        acl.userFolderAddUser("contact", "secret", ["Client"], [])
-
-    def as_user(self, user_id):
-        login(self.portal, user_id)
-        return Environment()
+class RestrictTestCase(DashboardTestCase):
 
     def test_internal_use_is_kept_from_client_contacts(self):
         query = build_query(SAMPLES, {}, self.as_user("contact"))

@@ -12,9 +12,10 @@ from senaite.dashboard.access import can_manage
 from senaite.dashboard.access import check_manage
 from senaite.dashboard.dashboards import model
 from senaite.dashboard.exceptions import NotFound
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import check_limit
 from senaite.dashboard.interfaces import IDashboardPresetProvider
 from senaite.dashboard.titles import clean_text_title
+from senaite.dashboard.titles import new_id
 from senaite.dashboard.titles import title_text
 from zope.interface import implementer
 
@@ -25,9 +26,9 @@ ID_PREFIX = "saved-"
 
 
 def check_room():
-    if len(storage.list_library_tiles()) >= MAX_SAVED_TILES:
-        raise QueryError(_("The library keeps at most ${count} saved tiles",
-                           mapping={"count": MAX_SAVED_TILES}))
+    check_limit(len(storage.list_library_tiles()), MAX_SAVED_TILES,
+                _("The library keeps at most ${count} saved tiles",
+                  mapping={"count": MAX_SAVED_TILES}))
 
 
 def to_library_tile(tile):
@@ -43,7 +44,7 @@ def save(tile, description, env):
     check_manage(env)
     check_room()
     record = {
-        "id": ID_PREFIX + model.new_id(),
+        "id": ID_PREFIX + new_id(),
         "description": clean_text_title(description),
         "tile": to_library_tile(tile),
         "created": env.now.ISO8601(),

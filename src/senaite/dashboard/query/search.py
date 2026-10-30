@@ -17,7 +17,7 @@ from bika.lims import api
 from bika.lims.interfaces import IInternalUse
 from senaite.core.permissions import ViewRetractedAnalyses
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query.fields import to_list
 from senaite.dashboard.query.fields import to_query
 from senaite.dashboard.query.variables import UNSET
@@ -81,7 +81,7 @@ def build_query(dataset, filters, env):
     :param filters: {index: value}, values may hold placeholders
     """
     if filters and not isinstance(filters, dict):
-        raise QueryError(_("Filters must be a mapping"))
+        raise ValidationError(_("Filters must be a mapping"))
     query = dict(dataset.base_query)
     query["portal_type"] = dataset.portal_type
     for name, value in (filters or {}).items():
@@ -110,6 +110,12 @@ def get_rids(results):
             isinstance(rid, (int, long)) for rid in rids):
         return rids
     return [brain.getRID() for brain in results]
+
+
+def get_metadata(brain, name):
+    """The value of a metadata column of a brain; a method is called."""
+    value = getattr(brain, name, None)
+    return value() if callable(value) else value
 
 
 def get_index(catalog_id, name):

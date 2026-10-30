@@ -19,7 +19,7 @@ from senaite.dashboard.dashboards import ids
 from senaite.dashboard.env import Environment
 from senaite.dashboard.exceptions import Forbidden
 from senaite.dashboard.exceptions import NotFound
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import ISenaiteDashboardLayer
 from senaite.dashboard.permissions import ViewDashboard
 from senaite.jsonapi import request as req
@@ -75,33 +75,54 @@ def check_dashboard_id(kwargs):
         raise NotFoundError(error_text(_("No such dashboard")))
 
 
+def check_request(request, methods, kwargs):
+    """Refuse a request the dashboard routes do not answer.
+
+    The add-on must be installed, the user must see the dashboard, and
+    a change must be a JSON body from this site.
+    """
+    if not ISenaiteDashboardLayer.providedBy(request):
+        raise NotFoundError(error_text(
+            _("senaite.dashboard is not installed")))
+    check_permission(ViewDashboard)
+    check_dashboard_id(kwargs)
+    if "POST" in methods:
+        check_post(request)
+        req.disable_csrf_protection()
+
+
+# Dashboard errors and the HTTP errors they become
+HTTP_ERRORS = (
+    (ValidationError, BadRequestError),
+    (NotFound, NotFoundError),
+    (Forbidden, ForbiddenError),
+)
+
+
+def to_http_error(exc):
+    """The HTTP error of senaite.jsonapi for a dashboard error."""
+    for error, http_error in HTTP_ERRORS:
+        if isinstance(exc, error):
+            return http_error(error_text(exc_text(exc)))
+    raise ValueError("Not a dashboard error: {!r}".format(exc))
+
+
 def route(path, methods):
     """Register a dashboard route that answers with JSON.
 
-    Checks that the add-on is installed and that the user may see the
-    dashboard, and turns dashboard errors into HTTP errors.
+    Checks the request (see `check_request`) and turns dashboard errors
+    into HTTP errors.
     """
     def decorator(func):
         @add_route(PREFIX + path, "senaite.dashboard." + func.__name__,
                    methods=methods)
         @functools.wraps(func)
         def wrapper(context, request, **kwargs):
-            if not ISenaiteDashboardLayer.providedBy(request):
-                raise NotFoundError(error_text(
-                    _("senaite.dashboard is not installed")))
-            check_permission(ViewDashboard)
-            check_dashboard_id(kwargs)
-            if "POST" in methods:
-                check_post(request)
-                req.disable_csrf_protection()
+            check_request(request, methods, kwargs)
             try:
                 return func(Environment(), request, **kwargs)
-            except QueryError as exc:
-                raise BadRequestError(error_text(exc_text(exc)))
-            except NotFound as exc:
-                raise NotFoundError(error_text(exc_text(exc)))
-            except Forbidden as exc:
-                raise ForbiddenError(error_text(exc_text(exc)))
+            except (ValidationError, NotFound, Forbidden) as exc:
+                raise to_http_error(exc)
         return wrapper
     return decorator
 
@@ -130,7 +151,7 @@ def get_body():
 def get_tiles(body):
     tiles = body.get("tiles")
     if not isinstance(tiles, list):
-        raise QueryError(_("The request needs a list of tiles"))
+        raise ValidationError(_("The request needs a list of tiles"))
     return tiles
 
 

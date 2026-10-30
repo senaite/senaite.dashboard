@@ -4,13 +4,13 @@
 Each data source declares the parameters it takes and their kinds.
 Parameters are reduced to those, so that unknown keys neither reach a
 source nor make every request a new cache entry, and a parameter of
-the wrong kind is a QueryError (a 400), never a TypeError (a 500).
+the wrong kind is a ValidationError (a 400), never a TypeError (a 500).
 """
 
 import re
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 
 # Kinds of parameters
 NAME = "name"
@@ -38,7 +38,8 @@ TREND_PARAMS = {
 
 
 def invalid(key):
-    return QueryError(_("Invalid parameter ${name}", mapping={"name": key}))
+    return ValidationError(_("Invalid parameter ${name}",
+                             mapping={"name": key}))
 
 
 def is_name(value):
@@ -92,10 +93,10 @@ def clean_params(params, spec):
     spelling.
 
     :param spec: {name: kind}
-    :raises QueryError: for a parameter of the wrong kind
+    :raises ValidationError: for a parameter of the wrong kind
     """
     if not isinstance(params, dict):
-        raise QueryError(_("Parameters must be a mapping"))
+        raise ValidationError(_("Parameters must be a mapping"))
     cleaned = {}
     for key, kind in spec.items():
         value = params.get(key)

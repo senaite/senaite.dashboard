@@ -7,7 +7,7 @@ are `Dataset` objects; nothing after this module tells them apart.
 """
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardDataset
 from senaite.dashboard.query import custom
 from zope.component import getUtilitiesFor
@@ -27,8 +27,8 @@ def get_dataset(name, env):
     """Return the dataset with the name if the user may use it."""
     dataset = find_dataset(name)
     if dataset is None or not dataset.is_available(env):
-        raise QueryError(_("Unknown dataset ${name}",
-                           mapping={"name": name}))
+        raise ValidationError(_("Unknown dataset ${name}",
+                                mapping={"name": name}))
     return dataset
 
 

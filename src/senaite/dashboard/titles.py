@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Titles, in one language or in several.
+"""Titles, in one language or in several, and ids made of them.
 
 A title is a message id of the code, a text, or {language: text} for
 what users write on a site with several languages: dashboards, tiles,
@@ -8,11 +8,12 @@ notes, datasets defined in the browser.
 
 import re
 import unicodedata
+import uuid
 
 from bika.lims import api
 from senaite.core.i18n import translate
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.exceptions import ValidationError
 from zope.i18nmessageid import Message
 
 MAX_TITLE_LENGTH = 200
@@ -39,7 +40,7 @@ def clean_title(title):
              if is_language(lang)}
     texts = {lang: text for lang, text in texts.items() if text}
     if len(texts) > MAX_TITLE_LANGUAGES:
-        raise QueryError(_("A title has too many languages"))
+        raise ValidationError(_("A title has too many languages"))
     return texts
 
 
@@ -74,3 +75,21 @@ def slugify(title, default):
     text = text.encode("ascii", "ignore").decode("ascii").lower()
     slug = re.sub(r"[^a-z0-9]+", "-", text)[:40].strip("-")
     return str(slug or default)
+
+
+def new_id():
+    """A short random id, for tiles and personal dashboards."""
+    return uuid.uuid4().hex[:8]
+
+
+def unique_id(base, exists):
+    """The base, or the base with a number, whichever is not taken.
+
+    :param exists: function(id) telling whether an id is taken
+    """
+    candidate = base
+    number = 1
+    while exists(candidate):
+        number += 1
+        candidate = "{}-{}".format(base, number)
+    return candidate
