@@ -26,6 +26,14 @@ The add-on takes the place of the SENAITE dashboard
          donut by status, a table of samples due and bars per analyst
 
 
+Requirements
+------------
+
+SENAITE 2.7 with `senaite.jsonapi`, on Python 2.7. Translations are
+compiled when the instance starts, with `zope_i18n_compile_mo_files`
+set, as the SENAITE buildouts and images do.
+
+
 Installation
 ------------
 
@@ -35,7 +43,18 @@ The installation creates three published dashboards: *Laboratory* and
 *My work* for the laboratory roles, *Overview* for client contacts.
 Installing again leaves the dashboards that are there alone; a manager
 brings back the ones that were deleted with *Restore default
-dashboards* in the menu of a dashboard.
+dashboards* in the menu of a dashboard. The titles of the default
+dashboards and their tiles are stored in every language the site
+offers.
+
+Uninstalling removes the dashboard page and its routes; SENAITE shows
+its own dashboard again. The dashboards, the library and the datasets
+stay on the site and are back when the add-on is installed again.
+
+Changes are refused when the Origin header of the browser names
+another site than the one SENAITE sees itself as. Behind a proxy that
+terminates TLS, set up virtual hosting so that SENAITE knows its
+public address.
 
 
 Who may do what
@@ -60,7 +79,9 @@ contact the samples of their client and the laboratory all samples.
 What keeps data where it belongs:
 
 - Every search goes through the catalog as the current user. The
-  dashboard shows what the SENAITE listings show, no more.
+  dashboard shows what the SENAITE listings show, no more: samples and
+  analyses for internal use are left out for users outside the
+  laboratory, retracted analyses for users who may not view them.
 - Seeing an analysis is not seeing its result: the result column is
   checked per row against *View Results*, so a client contact reads a
   result only once the workflow lets them.
@@ -80,9 +101,10 @@ What keeps data where it belongs:
   address only.
 - A dataset defined in the browser offers no index or metadata of
   the catalog itself, of who may see an object, of personal data or
-  of results, and is for the laboratory only unless opened. Columns of
-  fields for the laboratory only are not shown to client contacts
-  either.
+  of results, and is for the laboratory only unless opened. So is
+  each of its fields and columns; a column of a field for the
+  laboratory only stays so. Only catalogs that filter by who may see
+  an object are offered.
 
 
 Kinds of dashboards
@@ -141,6 +163,7 @@ the tile library. The web layer on top ties them together:
         |     shared.py     global dashboards: draft, publish
         |     personal.py   personal dashboards and overlays
         |     views.py      a dashboard as the page shows it
+        |     usage.py      where a dataset is used
         |     ids.py, defaults.py
         |
         +-- library/      the tile library
@@ -165,7 +188,8 @@ the tile library. The web layer on top ties them together:
 Next to the parts: `storage.py` keeps everything in an annotation on
 the site, `access.py` checks permissions, `env.py` is the current
 user and time of a request, `titles.py` handles titles in one or
-several languages, `interfaces.py` names what add-ons plug in.
+several languages, `interfaces.py` names what add-ons plug in and
+`api.py` what they build with. `upgrades/` keeps the upgrade steps.
 
 
 Where to start
@@ -259,7 +283,9 @@ Patient and the site itself. Indexes and metadata the catalog needs
 for itself, the roles and users that may see an object, personal data
 and results are never offered: the catalog knows no permission per
 field, so a dataset could not keep them from a user who may see the
-object. New datasets and their fields are for the laboratory only.
+object. New datasets, their fields and their columns are for the
+laboratory only, until a manager opens them to client contacts one by
+one.
 
 A saved dataset is offered on the dashboard once it is loaded again.
 Deleting one tells how many global dashboards and saved tiles use it;
@@ -269,7 +295,9 @@ their tiles then say the dataset is gone.
 Extending
 ---------
 
-Datasets, data sources and tile library entries are named utilities:
+Add-ons import what they build on from `senaite.dashboard.api`; the
+modules behind it may change, its names stay. Datasets, extensions of
+datasets, data sources and tile library entries are named utilities:
 
 .. code-block:: xml
 
@@ -288,22 +316,46 @@ Datasets, data sources and tile library entries are named utilities:
         provides="senaite.dashboard.interfaces.IDashboardPresetProvider"
         name="my.addon" />
 
-An add-on that indexes more about objects of an existing dataset adds
-fields, columns and spans to it instead of defining a dataset of its
-own:
+A dataset is an instance of `Dataset`: the catalog and portal type,
+the `Field`s a tile may filter and group by, the `Column`s a table may
+show and the `Span`s of time it may measure. Its name is what tiles
+refer to; names starting with `custom-` are taken by the datasets
+managers define in the browser.
 
 .. code-block:: python
 
-    from senaite.dashboard.query.datasets import Column
-    from senaite.dashboard.query.datasets import DatasetExtension
-    from senaite.dashboard.query.fields import TEXT
-    from senaite.dashboard.query.fields import Field
+    from senaite.core.catalog import SETUP_CATALOG
+    from senaite.dashboard import api
 
-    SAMPLES = DatasetExtension(
+    INSTRUMENTS = api.Dataset(
+        name="instruments",
+        title=_("Instruments"),
+        catalog=SETUP_CATALOG,
+        portal_type="Instrument",
+        lab_only=True,
+        fields=[api.Field("review_state", _("Status"), api.STATE),
+                api.Field("created", _("Created"), api.DATE)],
+        columns=[api.Column("Title", _("Instrument"))],
+    )
+
+An add-on that indexes more about objects of an existing dataset adds
+fields, columns and spans to it instead of defining a dataset of its
+own. A field of kind `choice` has a fixed list of values with titles;
+the tile editor offers them and grouped tiles show them in that order:
+
+.. code-block:: python
+
+    PRINTED = api.Field("getPrinted", _("Printed"), api.CHOICE,
+                        choices=[("0", _("Not printed")),
+                                 ("1", _("Printed")),
+                                 ("2", _("Printed, then republished"))])
+
+    SAMPLES = api.DatasetExtension(
         "samples",
-        fields=[Field("lab_order", _("Lab Order"), TEXT)],
-        columns=[Column("lab_order", _("Lab Order"),
-                        getter=read_lab_order)],
+        fields=[PRINTED],
+        columns=[api.Column("getClientOrderNumber", _("Order number")),
+                 api.Column("getPrinted", _("Printed"),
+                            getter=api.choice_getter(PRINTED))],
     )
 
 .. code-block:: xml
@@ -313,35 +365,58 @@ own:
         provides="senaite.dashboard.interfaces.IDashboardDatasetExtension"
         name="my.addon.samples" />
 
-A field of kind `choice` has a fixed list of values with titles; the
-tile editor offers them and grouped tiles show them in that order. A
-column with a `getter` shows a value the catalog keeps no metadata
+A field or column of the same name as one of the dataset replaces it.
+A column with a `getter` shows a value the catalog keeps no metadata
 column for; the getter runs for the shown rows only. Two getters come
 with the add-on: `index_getter(catalog, index)` reads the value from
 the index without waking the object, `choice_getter(field)` shows the
-title of the value of a choice field:
+title of the value of a choice field, read from the metadata column
+of the same name or from the getter it is given.
+
+A data source subclasses `DataSource`. It declares the parameters it
+takes by kind, is called with them and the `Environment` of the
+request, raises `ValidationError` for anything it does not accept, and
+searches with the permissions of the current user. `build_query` and
+`search` do the latter for a dataset:
 
 .. code-block:: python
 
-    RECEIPT = Field("receipt_status", _("Receipt"), CHOICE,
-                    choices=[("pending", _("Not sent")),
-                             ("sent", _("Sent"))])
+    class CalibrationSource(api.DataSource):
+        """Instruments whose calibration expires within some days."""
+        title = _("Calibration due")
+        output = "scalar"
+        params = api.with_dataset({"days": api.NUMBER})
 
-    Column("receipt_status", _("Receipt"),
-           getter=choice_getter(RECEIPT, getter=index_getter(
-               MY_CATALOG, "receipt_status")))
+        def clean(self, params):
+            if params.get("days", 30) > 365:
+                raise api.ValidationError(_("At most a year ahead"))
+            return params
 
-A preset provider with `categories`, `[(id, title)]`, gets categories
-of its own in the tile library. `library/builders.py` has the
+        def __call__(self, params, env):
+            ...
+            return {"value": count}
+
+The `output` of a source names the shape of its answer, and decides
+which tile types can show it:
+
+==========  ================================  ==================
+Output      Answer                            Tile types
+==========  ================================  ==================
+`scalar`    one number, maybe its course      `kpi`
+`items`     numbers per value of a field      `bar`, `donut`
+`series`    numbers per period                `chart`
+`rows`      the first objects, some columns   `table`
+==========  ================================  ==================
+
+A source that causes more than one catalog search says so in
+`cost(params)`; one request may cause only so many.
+
+A preset provider returns the tiles it adds to the library. With
+`categories`, `[(id, title)]`, it gets categories of its own. The
 builders the library itself is made of (`kpi`, `group`, `chart`,
-`table`, `span`, `tile_params`, `samples`) and
-`to_presets(category, entries)`, which turns `(id, description,
-tile)` entries into presets.
-
-A data source is called with the parameters of the tile and the
-`Environment` of the request, validates the parameters, raises
-`ValidationError` for anything it does not accept, and searches with the
-permissions of the current user.
+`table`, `span`, `tile_params`, `samples`, `analyses`, `worksheets`)
+and `to_presets(category, entries)`, which turns `(id, description,
+tile)` entries into presets, are in `senaite.dashboard.api` too.
 
 Tile types are registered in the browser, before the page loads:
 
@@ -356,6 +431,32 @@ A tile type that fails to render shows an error in its own tiles and
 nowhere else.
 
 
+JSON API
+--------
+
+The page talks to routes below `@@API/senaite/v1/dashboard`. Reads are
+GET, changes are POST with a JSON body. They are the page's own, not a
+stable API for other clients.
+
+- `GET /bootstrap`, `/list`, `/view/<id>`: what the page starts
+  from, the dashboards of the user, one dashboard as the user sees it
+  (`?draft=1` for the draft).
+- `POST /data`, `GET /choices/<dataset>/<field>`: the data of many
+  tiles at once, the values a filter offers.
+- `POST /save/<id>`, `/reset/<id>`, `/activate/<id>`, `/new`,
+  `/settings/<id>`, `/remove/<id>`: changes of a user to their
+  dashboards.
+- `POST /draft/<id>`, `/publish/<id>`, `/discard/<id>`,
+  `/unpublish/<id>`, `/defaults/restore`: global dashboards, for
+  managers.
+- `POST /library/save`, `/library/remove/<id>`: the tile library, for
+  managers.
+- `GET /datasets`, `/datasets/inspect/<type>`,
+  `/datasets/usage/<name>`, `POST /datasets/save`,
+  `/datasets/remove/<name>`: datasets defined in the browser, for
+  managers.
+
+
 Development
 -----------
 
@@ -367,32 +468,29 @@ The frontend lives in `webpack/` and builds into
     cd webpack
     yarn install
     yarn build      # or: yarn watch
-    yarn lint       # names used but never defined or imported
+    yarn lint       # ESLint, and names used but never defined
 
 React comes from `senaite.core` as a global; it is never bundled.
 Webpack builds a bundle that uses a name it never imports without a
-word; `yarn lint` finds those before the browser does.
+word; `yarn lint` finds those before the browser does. The built
+bundle is part of the package: build before a release.
 
-To bring back the default dashboards on a development database, with
-the instance stopped (this deletes all global dashboards first):
-
-.. code-block:: bash
-
-    bin/instance run \
-        src/senaite.dashboard/src/senaite/dashboard/devtools/reset_defaults.py \
-        senaite
-
-Tests, from the buildout:
+To start over with the default dashboards on a development database,
+with the instance stopped (this deletes all global dashboards first;
+managers restore missing ones in the browser too):
 
 .. code-block:: bash
 
-    TZ=Europe/Berlin bin/test-senaite -s senaite.dashboard
+    bin/instance run path/to/scripts/reset_defaults.py <site-id>
+
+Tests, with a test runner of a buildout that has the package, e.g.
+`bin/test -s senaite.dashboard`. They pass in any time zone; in one
+with summer time, such as `TZ=Europe/Berlin`, they cover the change
+of the clock too.
 
 Translations, from the package: the script rebuilds the catalog and
-syncs the languages; fill in the new German texts, then compile them.
+syncs the languages; then fill in the new texts of each language.
 
 .. code-block:: bash
 
     scripts/update_translations.sh
-    cd src/senaite/dashboard/locales/de/LC_MESSAGES
-    msgfmt -o senaite.dashboard.mo senaite.dashboard.po
