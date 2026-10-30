@@ -7,7 +7,7 @@ import Toast from "../components/Toast";
 import DatasetEditor from "./DatasetEditor";
 import {emptyDraft, toDefinition, toDraft} from "./draft";
 import {formatNumber} from "../format";
-import {t, titleText} from "../i18n";
+import {format, t, titleText} from "../i18n";
 
 function DatasetList({datasets, active, onOpen, onNew}) {
   return (
@@ -41,9 +41,10 @@ function usageText(usage) {
   if (!usage.dashboards && !usage.library) {
     return t("dataset_unused");
   }
-  const used = t("dataset_usage")
-    .replace("{dashboards}", formatNumber(usage.dashboards))
-    .replace("{library}", formatNumber(usage.library));
+  const used = format("dataset_usage", {
+    dashboards: formatNumber(usage.dashboards),
+    library: formatNumber(usage.library)
+  });
   return `${used} ${t("delete_dataset_confirm")}`;
 }
 
@@ -57,9 +58,18 @@ export default function DatasetsApp({api, boot}) {
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
   const [removing, setRemoving] = useState(null);
+  const [saving, setSaving] = useState(false);
   // The number of the latest draft asked for; an answer for an earlier
   // one comes too late and is dropped
   const latest = useRef(0);
+  // The definition as it was loaded or saved, to tell unsaved changes
+  const baseline = useRef(null);
+
+  const isDirty = () => Boolean(draft && inspection) &&
+    JSON.stringify(toDefinition(draft)) !== baseline.current;
+
+  // Leaving a draft with changes asks first
+  const mayLeave = () => !isDirty() || window.confirm(t("discard_changes"));
 
   const run = async (action) => {
     setError(null);
@@ -84,6 +94,7 @@ export default function DatasetsApp({api, boot}) {
         return;
       }
       const next = toDraft(answer, definition);
+      baseline.current = JSON.stringify(toDefinition(next));
       setDraft(title === undefined ? next : {...next, title});
       setInspection(answer);
     } finally {
@@ -94,23 +105,36 @@ export default function DatasetsApp({api, boot}) {
   });
 
   const startNew = () => {
+    if (!mayLeave()) {
+      return;
+    }
     latest.current += 1;
+    baseline.current = null;
     setLoading(false);
     setInspection(null);
     setDraft(emptyDraft());
   };
 
   // What was typed while the save was on its way stays; a new dataset
-  // takes the name the server gave it
-  const save = () => run(async () => {
-    const sent = draft;
-    const answer = await api.saveDataset(toDefinition(sent));
-    setDatasets(answer.datasets);
-    setDraft((current) => current && current.name === sent.name &&
-      current.portal_type === sent.portal_type
-      ? {...current, name: answer.saved} : current);
-    setNotice("dataset_saved");
-  });
+  // takes the name the server gave it. One save at a time: a second
+  // click on a new dataset would create it twice.
+  const save = () => {
+    if (saving) {
+      return null;
+    }
+    setSaving(true);
+    return run(async () => {
+      const sent = draft;
+      const answer = await api.saveDataset(toDefinition(sent));
+      baseline.current = JSON.stringify(
+        toDefinition({...sent, name: answer.saved}));
+      setDatasets(answer.datasets);
+      setDraft((current) => current && current.name === sent.name &&
+        current.portal_type === sent.portal_type
+        ? {...current, name: answer.saved} : current);
+      setNotice("dataset_saved");
+    }).finally(() => setSaving(false));
+  };
 
   const askRemove = () => run(async () => {
     const usage = await api.datasetUsage(draft.name);
@@ -143,8 +167,8 @@ export default function DatasetsApp({api, boot}) {
       <div className="sd-ds-body">
         <DatasetList datasets={datasets} active={draft && draft.name}
                      onNew={startNew}
-                     onOpen={(dataset) => load(dataset.portal_type,
-                                               dataset)}/>
+                     onOpen={(dataset) => mayLeave() &&
+                       load(dataset.portal_type, dataset)}/>
         <main className="sd-ds-main">
           {draft ? (
             <>
@@ -156,7 +180,8 @@ export default function DatasetsApp({api, boot}) {
               <footer className="sd-ds-foot">
                 {inspection ? (
                   <span className="sd-hint">
-                    {formatNumber(inspection.count)} {t("objects_visible")}
+                    {format("objects_visible",
+                            {count: formatNumber(inspection.count)})}
                   </span>
                 ) : null}
                 {draft.name ? (
@@ -166,7 +191,7 @@ export default function DatasetsApp({api, boot}) {
                   </button>
                 ) : null}
                 <button type="button" className="sd-btn is-primary"
-                        disabled={!inspection} onClick={save}>
+                        disabled={!inspection || saving} onClick={save}>
                   <Icon name="check" size={16}/> {t("save")}
                 </button>
               </footer>

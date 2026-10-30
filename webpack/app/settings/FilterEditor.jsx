@@ -148,6 +148,24 @@ function FilterRow({api, dataset, field, value, onChange, onRemove}) {
   );
 }
 
+// A filter on a field the dataset no longer offers, or the user may
+// not use: the tile still sends it, so it must be removable
+function MissingFilterRow({name, onRemove}) {
+  return (
+    <div className="sd-filter">
+      <div className="sd-filter-head">
+        <span className="sd-field-label"><code>{name}</code></span>
+        <button type="button" className="sd-iconbtn is-small"
+                aria-label={`${t("delete")} ${name}`}
+                onClick={onRemove}>
+          <Icon name="close" size={14}/>
+        </button>
+      </div>
+      <span className="sd-field-hint is-error">{t("field_missing")}</span>
+    </div>
+  );
+}
+
 // The filters of a tile, one row per field
 export default function FilterEditor({api, dataset, filters, onChange}) {
   const fields = dataset.fields;
@@ -164,7 +182,10 @@ export default function FilterEditor({api, dataset, filters, onChange}) {
       {used.map((name) => {
         const field = fields.find((item) => item.name === name);
         if (!field) {
-          return null;
+          return (
+            <MissingFilterRow key={name} name={name}
+                              onRemove={() => remove(name)}/>
+          );
         }
         return (
           <FilterRow key={name} api={api} dataset={dataset.name}

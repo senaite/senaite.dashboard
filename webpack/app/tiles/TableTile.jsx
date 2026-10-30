@@ -3,7 +3,7 @@ import React from "react";
 import {stateColor} from "../colors";
 import {formatDate, formatNumber, formatPercent,
         formatRelative} from "../format";
-import {t} from "../i18n";
+import {format, t} from "../i18n";
 
 function DateCell({value, column}) {
   if (!value) {
@@ -95,8 +95,8 @@ export default function TableTile({data, listing}) {
       </table>
       {data.total > data.rows.length ? (
         <div className="sd-table-foot">
-          {formatNumber(data.rows.length)} {t("of_total")}{" "}
-          {formatNumber(data.total)}
+          {format("of_total", {shown: formatNumber(data.rows.length),
+                               total: formatNumber(data.total)})}
           {listing ? <a href={listing}>{t("open_list")}</a> : null}
         </div>
       ) : null}

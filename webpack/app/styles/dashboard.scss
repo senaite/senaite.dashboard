@@ -693,7 +693,8 @@
     }
   }
 
-  @for $h from 3 through 12 {
+  // Up to the highest a tile may be (MAX_TILE_HEIGHT)
+  @for $h from 1 through 24 {
     &.is-h#{$h} {
       height: #{$h * 56}px;
     }

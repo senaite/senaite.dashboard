@@ -13,6 +13,13 @@ export function t(key) {
   return strings[key] || key;
 }
 
+// A text with placeholders such as {count} filled in, so that every
+// language puts them where its word order wants them
+export function format(key, values) {
+  return t(key).replace(/\{(\w+)\}/g, (match, name) =>
+    name in values ? String(values[name]) : match);
+}
+
 export function getLanguage() {
   return language;
 }

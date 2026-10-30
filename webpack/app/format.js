@@ -1,6 +1,6 @@
 // Numbers, dates and durations in the language of the page.
 
-import {getLanguage, t} from "./i18n";
+import {format, getLanguage, t} from "./i18n";
 
 export function formatNumber(value) {
   if (value === null || value === undefined) {
@@ -95,7 +95,7 @@ export function formatBucket(iso, interval, current) {
     return t(`current_${interval}`);
   }
   if (interval === "week") {
-    return `${t("week_of")} ${formatPeriod(iso, interval)}`;
+    return format("week_of", {date: formatPeriod(iso, interval)});
   }
   return formatPeriod(iso, interval, interval === "month");
 }
