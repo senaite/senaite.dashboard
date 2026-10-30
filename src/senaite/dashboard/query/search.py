@@ -4,19 +4,75 @@
 Every search goes through `searchResults`, so the catalog filters the
 results by the permissions of the current user. A tile on a global
 dashboard therefore shows each user the numbers of what they may see.
+
+Two things a user may see in the catalog are still kept from them,
+the way the listings of SENAITE do: objects for internal use, which
+keep the token of their client, and retracted analyses, which tell
+that a test was repeated.
 """
 
 from collections import Counter
 
 from bika.lims import api
+from bika.lims.interfaces import IInternalUse
+from senaite.core.permissions import ViewRetractedAnalyses
 from senaite.dashboard import messagefactory as _
 from senaite.dashboard.exceptions import QueryError
+from senaite.dashboard.query.fields import to_list
 from senaite.dashboard.query.fields import to_query
 from senaite.dashboard.query.variables import UNSET
 from senaite.dashboard.query.variables import resolve
 
 # Key of the count of objects without a value
 NONE = "__none__"
+
+# Marker of samples and analyses for internal use
+INTERNAL_USE = IInternalUse.__identifier__
+
+# State of an analysis that was retracted and tested again
+RETRACTED = "retracted"
+
+
+def exclude_value(query, index, value):
+    """Narrow the query of an index so that it leaves the value out.
+
+    A query of the index set already is narrowed rather than replaced:
+    a list of values loses the value, and the value is excluded in any
+    case. An object of a keyword index has many values, so one that
+    matches the list may still have the value.
+
+    :returns: a new query; the one passed in is left as it is
+    """
+    query = dict(query)
+    current = query.get(index)
+    if current is None:
+        query[index] = {"not": [value]}
+        return query
+    if not isinstance(current, dict):
+        current = {"query": current}
+    current = dict(current)
+    if "query" in current:
+        # A list emptied this way must still match nothing
+        values = [item for item in to_list(current["query"])
+                  if item != value]
+        current["query"] = values or [NONE]
+    current["not"] = to_list(current.get("not")) + [value]
+    query[index] = current
+    return query
+
+
+def get_indexes(catalog_id):
+    return api.get_tool(catalog_id).indexes()
+
+
+def restrict(query, dataset, env):
+    """The query with what the user must not see left out."""
+    indexes = get_indexes(dataset.catalog)
+    if not env.is_lab and "object_provides" in indexes:
+        query = exclude_value(query, "object_provides", INTERNAL_USE)
+    if not env.can(ViewRetractedAnalyses) and "review_state" in indexes:
+        query = exclude_value(query, "review_state", RETRACTED)
+    return query
 
 
 def build_query(dataset, filters, env):
@@ -33,7 +89,7 @@ def build_query(dataset, filters, env):
         index_query = to_query(field, resolve(value, env))
         if index_query is not UNSET:
             query[field.index] = index_query
-    return query
+    return restrict(query, dataset, env)
 
 
 def search(dataset, query):

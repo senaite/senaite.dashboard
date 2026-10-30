@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: senaite.dashboard\n"
-"POT-Creation-Date: 2026-10-25 10:23+0000\n"
+"POT-Creation-Date: 2026-10-30 09:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Domain: senaite.dashboard\n"
 "Language: de\n"
 
-#: senaite/dashboard/query/custom.py:82
+#: senaite/dashboard/query/custom.py:86
 msgid "${name} cannot be a field of kind ${kind}"
 msgstr "${name} kann kein Feld der Art ${kind} sein"
 
-#: senaite/dashboard/query/sources.py:115
+#: senaite/dashboard/query/sources.py:120
 msgid "${name} is not a date"
 msgstr "${name} ist kein Datum"
 
-#: senaite/dashboard/query/custom.py:88
+#: senaite/dashboard/query/custom.py:92
 msgid "${name} needs the type it points to"
 msgstr "${name} braucht den Typ, auf den es verweist"
 
@@ -38,11 +38,11 @@ msgstr "**fett**, *kursiv*, # Überschrift, - Liste, [Text](samples) für einen 
 msgid "90% within"
 msgstr "90 % innerhalb"
 
-#: senaite/dashboard/query/custom.py:101
+#: senaite/dashboard/query/custom.py:105
 msgid "A column must be a mapping"
 msgstr "Eine Spalte muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:102
+#: senaite/dashboard/query/custom.py:106
 msgid "A column needs a name"
 msgstr "Eine Spalte braucht einen Namen"
 
@@ -58,15 +58,15 @@ msgstr "Ein Dashboard fasst höchstens ${count} Kacheln"
 msgid "A dashboard needs a title"
 msgstr "Ein Dashboard braucht einen Titel"
 
-#: senaite/dashboard/query/catalogs.py:117
+#: senaite/dashboard/query/catalogs.py:128
 msgid "A dataset cannot be made of ${type}"
 msgstr "Aus ${type} lässt sich kein Dataset machen"
 
-#: senaite/dashboard/query/custom.py:154
+#: senaite/dashboard/query/custom.py:158
 msgid "A dataset must be a mapping"
 msgstr "Ein Dataset muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:163
+#: senaite/dashboard/query/custom.py:167
 msgid "A dataset needs a title"
 msgstr "Ein Dataset braucht einen Titel"
 
@@ -74,11 +74,11 @@ msgstr "Ein Dataset braucht einen Titel"
 msgid "A date filter needs a min or a max"
 msgstr "Ein Datumsfilter braucht einen Anfang oder ein Ende"
 
-#: senaite/dashboard/query/custom.py:74
+#: senaite/dashboard/query/custom.py:78
 msgid "A field must be a mapping"
 msgstr "Ein Feld muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:75
+#: senaite/dashboard/query/custom.py:79
 msgid "A field needs an index"
 msgstr "Ein Feld braucht einen Index"
 
@@ -86,15 +86,15 @@ msgstr "Ein Feld braucht einen Index"
 msgid "A filter takes at most ${count} values"
 msgstr "Ein Filter nimmt höchstens ${count} Werte"
 
-#: senaite/dashboard/query/custom.py:126
+#: senaite/dashboard/query/custom.py:130
 msgid "A span must be a mapping"
 msgstr "Eine Zeitspanne muss ein Mapping sein"
 
-#: senaite/dashboard/query/custom.py:127
+#: senaite/dashboard/query/custom.py:131
 msgid "A span needs a title"
 msgstr "Eine Zeitspanne braucht einen Titel"
 
-#: senaite/dashboard/query/custom.py:131
+#: senaite/dashboard/query/custom.py:135
 msgid "A span needs two dates of the type"
 msgstr "Eine Zeitspanne braucht zwei Datumsangaben des Typs"
 
@@ -215,7 +215,7 @@ msgstr "Kacheln nach eigenen Wünschen anordnen; für alle anderen bleibt es, wi
 msgid "Arrow keys move the tile, with Shift they resize it"
 msgstr "Pfeiltasten verschieben die Kachel, mit Umschalt ändern sie ihre Größe"
 
-#: senaite/dashboard/query/custom.py:139
+#: senaite/dashboard/query/custom.py:143
 msgid "At most ${count} entries"
 msgstr "Höchstens ${count} Einträge"
 
@@ -247,7 +247,7 @@ msgstr "Zwischen 1 und ${max} Zeiträume"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: senaite/dashboard/query/sources.py:122
+#: senaite/dashboard/query/sources.py:127
 msgid "Cannot group by ${name}"
 msgstr "Nach ${name} kann nicht gruppiert werden"
 
@@ -258,6 +258,10 @@ msgstr "Das Dashboard ändern, mit dem alle Benutzer starten"
 #: senaite/dashboard/strings.py:173
 msgid "Changes discarded. The draft is the published version again."
 msgstr "Änderungen verworfen. Der Entwurf entspricht wieder der veröffentlichten Fassung."
+
+#: senaite/dashboard/routes/base.py:69
+msgid "Changes from another site are refused"
+msgstr "Änderungen von einer anderen Seite werden abgelehnt"
 
 #: senaite/dashboard/library/builtin.py:224
 msgid "Choose yourself what the tile shows and how"
@@ -295,7 +299,7 @@ msgstr "Spalten für Tabellen"
 msgid "Configurable dashboards for SENAITE"
 msgstr "Konfigurierbare Dashboards für SENAITE"
 
-#: senaite/dashboard/query/sources.py:315
+#: senaite/dashboard/query/sources.py:320
 msgid "Count"
 msgstr "Anzahl"
 
@@ -407,7 +411,7 @@ msgstr "Kacheln am Titel ziehen, um sie zu verschieben, an der Ecke ziehen, um d
 msgid "Due next"
 msgstr "Als Nächstes fällig"
 
-#: senaite/dashboard/query/sources.py:455
+#: senaite/dashboard/query/sources.py:463
 msgid "Duration"
 msgstr "Dauer"
 
@@ -451,7 +455,7 @@ msgstr "Filterwerte müssen Text sein"
 msgid "Filters"
 msgstr "Filter"
 
-#: senaite/dashboard/query/search.py:28
+#: senaite/dashboard/query/search.py:79
 msgid "Filters must be a mapping"
 msgstr "Filter müssen ein Objekt sein"
 
@@ -487,7 +491,7 @@ msgstr "Guten Abend"
 msgid "Good morning"
 msgstr "Guten Morgen"
 
-#: senaite/dashboard/query/sources.py:355
+#: senaite/dashboard/query/sources.py:360
 msgid "Group"
 msgstr "Gruppierung"
 
@@ -579,7 +583,7 @@ msgstr "Link"
 msgid "Links"
 msgstr "Links"
 
-#: senaite/dashboard/query/sources.py:415
+#: senaite/dashboard/query/sources.py:423
 msgid "List"
 msgstr "Liste"
 
@@ -681,6 +685,10 @@ msgstr "Keine Daten"
 msgid "No global dashboard and no tile of the library uses it."
 msgstr "Kein globales Dashboard und keine Kachel der Bibliothek verwendet es."
 
+#: senaite/dashboard/routes/base.py:75
+msgid "No such dashboard"
+msgstr "Dieses Dashboard gibt es nicht"
+
 #: senaite/dashboard/strings.py:103
 msgid "Nobody selected: visible for everybody"
 msgstr "Keine Auswahl: für alle sichtbar"
@@ -693,7 +701,7 @@ msgstr "Keine"
 msgid "Not a date: ${value}"
 msgstr "Kein Datum: ${value}"
 
-#: senaite/dashboard/query/sources.py:151
+#: senaite/dashboard/query/sources.py:156
 msgid "Not assigned"
 msgstr "Nicht zugewiesen"
 
@@ -705,7 +713,7 @@ msgstr "Nicht veröffentlicht"
 msgid "Not saved"
 msgstr "Nicht gespeichert"
 
-#: senaite/dashboard/query/sources.py:151
+#: senaite/dashboard/query/sources.py:156
 msgid "Not set"
 msgstr "Nicht gesetzt"
 
@@ -790,11 +798,11 @@ msgstr "Mir zugewiesene offene Arbeitsblätter"
 msgid "Open worksheets per analyst"
 msgstr "Offene Arbeitsblätter pro Analyst"
 
-#: senaite/dashboard/query/sources.py:172
+#: senaite/dashboard/query/sources.py:177
 msgid "Other"
 msgstr "Andere"
 
-#: senaite/dashboard/query/sources.py:381
+#: senaite/dashboard/query/sources.py:389
 #: senaite/dashboard/strings.py:238
 msgid "Over time"
 msgstr "Zeitverlauf"
@@ -1088,6 +1096,14 @@ msgstr "Wird gespeichert"
 msgid "Search tiles"
 msgstr "Kacheln suchen"
 
+#: senaite/dashboard/routes/base.py:117
+msgid "Send a JSON object"
+msgstr "Senden Sie ein JSON-Objekt"
+
+#: senaite/dashboard/routes/base.py:64
+msgid "Send the request as application/json"
+msgstr "Senden Sie die Anfrage als application/json"
+
 #: senaite/dashboard/strings.py:214
 msgid "Settings"
 msgstr "Einstellungen"
@@ -1140,7 +1156,7 @@ msgstr "Tabelle"
 msgid "Text"
 msgstr "Text"
 
-#: senaite/dashboard/query/custom.py:104
+#: senaite/dashboard/query/custom.py:108
 msgid "The column ${name} cannot be shown"
 msgstr "Die Spalte ${name} kann nicht angezeigt werden"
 
@@ -1148,7 +1164,7 @@ msgstr "Die Spalte ${name} kann nicht angezeigt werden"
 msgid "The draft has changes that are not published yet. Everybody else sees this version."
 msgstr "Der Entwurf hat Änderungen, die noch nicht veröffentlicht sind. Alle anderen sehen diese Fassung."
 
-#: senaite/dashboard/query/custom.py:78
+#: senaite/dashboard/query/custom.py:82
 msgid "The index ${name} cannot be used"
 msgstr "Der Index ${name} kann nicht verwendet werden"
 
@@ -1161,6 +1177,10 @@ msgid "The most recently registered samples"
 msgstr "Die zuletzt registrierten Proben"
 
 #: senaite/dashboard/routes/base.py:115
+msgid "The request is no valid JSON"
+msgstr "Die Anfrage ist kein gültiges JSON"
+
+#: senaite/dashboard/routes/base.py:133
 msgid "The request needs a list of tiles"
 msgstr "Die Anfrage braucht eine Liste von Kacheln"
 
@@ -1180,7 +1200,7 @@ msgstr "Deren Kacheln zeigen dann, dass das Dataset fehlt."
 msgid "There are no datasets of your own yet."
 msgstr "Es gibt noch keine eigenen Datasets."
 
-#: senaite/dashboard/query/custom.py:198
+#: senaite/dashboard/query/custom.py:202
 msgid "There can be at most ${count} datasets"
 msgstr "Es kann höchstens ${count} Datasets geben"
 
@@ -1192,7 +1212,7 @@ msgstr "Das Dashboard ${id} gibt es nicht, oder es ist nicht für Sie bestimmt"
 msgid "There is no dashboard for you yet. Make one of your own."
 msgstr "Für Sie gibt es noch kein Dashboard. Legen Sie ein eigenes an."
 
-#: senaite/dashboard/query/custom.py:217
+#: senaite/dashboard/query/custom.py:221
 msgid "There is no dataset ${name}"
 msgstr "Es gibt kein Dataset ${name}"
 
@@ -1280,7 +1300,7 @@ msgstr "Heute"
 msgid "Too many tiles in one request"
 msgstr "Zu viele Kacheln in einer Anfrage"
 
-#: senaite/dashboard/query/sources.py:215
+#: senaite/dashboard/query/sources.py:220
 #: senaite/dashboard/strings.py:235
 msgid "Total"
 msgstr "Gesamt"
@@ -1437,3 +1457,7 @@ msgstr "von"
 #: senaite/dashboard/strings.py:186
 msgid "or ..."
 msgstr "oder ..."
+
+#: senaite/dashboard/routes/base.py:91
+msgid "senaite.dashboard is not installed"
+msgstr "senaite.dashboard ist nicht installiert"

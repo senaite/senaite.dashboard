@@ -58,6 +58,11 @@ MAX_ROWS = 50
 # A span is measured over the most recent objects only
 MAX_SPAN_OBJECTS = 5000
 
+# What a tile that reads every object it finds costs, in catalog
+# searches: a group reads the index value of each, a span the dates of
+# thousands
+SCAN_COST = 10
+
 DEFAULT_PERIODS = 12
 DEFAULT_LIMIT = 10
 # A list without columns of its own shows the first ones of its dataset
@@ -356,6 +361,9 @@ class GroupSource(object):
     output = "items"
     params = with_dataset({"group_by": NAME, "limit": NUMBER})
 
+    def cost(self, params):
+        return SCAN_COST
+
     def __call__(self, params, env):
         dataset, query = get_dataset_query(params, env)
         field = get_group_field(dataset, params.get("group_by"), env)
@@ -455,6 +463,9 @@ class SpanSource(object):
     title = _("Duration")
     output = "scalar"
     params = with_dataset({"span": NAME})
+
+    def cost(self, params):
+        return SCAN_COST
 
     def __call__(self, params, env):
         dataset, query = get_dataset_query(params, env)

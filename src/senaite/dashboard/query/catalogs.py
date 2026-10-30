@@ -68,10 +68,21 @@ def is_offered(name):
     return name not in INTERNAL_NAMES and not is_blocked(name)
 
 
+def is_secured(catalog):
+    """Whether the catalog filters its results by who may see them.
+
+    A catalog without the index of the roles and users that may see an
+    object would show every user everything it holds.
+    """
+    return "allowedRolesAndUsers" in catalog.indexes()
+
+
 def get_own_catalog(portal_type):
     """The catalog SENAITE keeps the type in, or None for CMS types."""
     for catalog in api.get_catalogs_for(portal_type):
-        if catalog.getId() not in GENERIC_CATALOGS:
+        if catalog.getId() in GENERIC_CATALOGS:
+            continue
+        if is_secured(catalog):
             return catalog.getId()
     return None
 

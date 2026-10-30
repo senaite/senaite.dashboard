@@ -103,6 +103,14 @@ class CustomDatasetsTestCase(unittest.TestCase):
         self.assertNotIn(record["name"],
                          self.names(self.as_user("contact")))
 
+    def test_columns_are_for_the_laboratory_unless_opened(self):
+        opened = dict(CLIENTS, lab_only=False, columns=[
+            {"name": "Title", "kind": "text"}])
+        name = custom.save(opened, self.as_user("manager"))["name"]
+        contact = self.as_user("contact")
+        dataset = get_dataset(name, contact)
+        self.assertEqual(dataset.get_columns(contact), [])
+
     def test_fields_are_for_the_laboratory_unless_opened(self):
         record = custom.save(dict(CLIENTS, lab_only=False),
                              self.as_user("manager"))
@@ -113,8 +121,8 @@ class CustomDatasetsTestCase(unittest.TestCase):
 
     def test_columns_of_lab_only_fields_are_for_the_laboratory(self):
         opened = dict(CLIENTS, lab_only=False, columns=[
-            {"name": "Title", "kind": "text"},
-            {"name": "review_state", "kind": "state"}])
+            {"name": "Title", "kind": "text", "lab_only": False},
+            {"name": "review_state", "kind": "state", "lab_only": False}])
         name = custom.save(opened, self.as_user("manager"))["name"]
         contact = self.as_user("contact")
         dataset = get_dataset(name, contact)

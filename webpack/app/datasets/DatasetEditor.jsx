@@ -90,6 +90,11 @@ function ColumnRow({offered, entry, onChange}) {
                 options={kindOptions(COLUMN_KINDS)}
                 onChange={(kind) => set({kind})}/>
       </td>
+      <td>
+        <input type="checkbox" checked={entry.lab_only}
+               aria-label={`${t("lab_only")} ${offered.name}`}
+               onChange={() => set({lab_only: !entry.lab_only})}/>
+      </td>
       <td><Samples values={offered.samples}/></td>
     </tr>
   );
@@ -143,6 +148,7 @@ function ColumnsSection({draft, inspection, setDraft}) {
               <th scope="col">{t("column")}</th>
               <th scope="col">{t("dashboard_title")}</th>
               <th scope="col">{t("kind")}</th>
+              <th scope="col">{t("lab_only")}</th>
               <th scope="col">{t("examples")}</th>
             </tr>
           </thead>

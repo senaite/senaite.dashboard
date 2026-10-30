@@ -63,9 +63,13 @@ def required_title(title, message):
 
 
 def clean_name(value, message):
+    """The name of an index or a column; catalogs name them in ASCII."""
     if not isinstance(value, basestring) or not value:
         raise QueryError(message)
-    return str(value)
+    try:
+        return str(value)
+    except UnicodeEncodeError:
+        raise QueryError(message)
 
 
 def clean_field(item, indexes, candidates):
@@ -107,7 +111,7 @@ def clean_column(item, offered):
     if kind not in COLUMN_KINDS:
         kind = COL_TEXT
     return {"name": name, "title": clean_title(item.get("title")) or name,
-            "kind": kind}
+            "kind": kind, "lab_only": is_lab_only(item)}
 
 
 def span_name(title):
@@ -251,9 +255,11 @@ def to_field(item):
 
 
 def to_column(item, lab_only_indexes):
-    """A column; lab-only when it shows the values of a lab-only field."""
+    """A column; lab-only unless it is opened to client contacts, and
+    always when it shows the values of a lab-only field."""
+    lab_only = is_lab_only(item) or item["name"] in lab_only_indexes
     return Column(item["name"], item["title"], item["kind"],
-                  lab_only=item["name"] in lab_only_indexes)
+                  lab_only=lab_only)
 
 
 def to_span(item):

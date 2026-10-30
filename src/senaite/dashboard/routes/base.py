@@ -32,9 +32,23 @@ from senaite.jsonapi.v1 import add_route
 PREFIX = "/dashboard"
 
 
+def exc_text(exc):
+    """The message id or text an exception was raised with."""
+    return exc.args[0] if exc.args else u""
+
+
 def message(exc):
     """The text of an exception, in the language of the user."""
-    return translate(exc.args[0], to_utf8=False) if exc.args else u""
+    return translate(exc_text(exc), to_utf8=False)
+
+
+def error_text(text):
+    """The text for an error of senaite.jsonapi, as UTF-8.
+
+    Its error handler calls `str()` on the error, which fails on text
+    that is not ASCII and turns the answer into a server error.
+    """
+    return translate(text, to_utf8=True)
 
 
 def origin_of(url):
@@ -46,17 +60,19 @@ def check_post(request):
     """Refuse a change that is no JSON or comes from another site."""
     content_type = (request.getHeader("Content-Type") or "").split(";")[0]
     if content_type.strip().lower() != "application/json":
-        raise BadRequestError("Send the request as application/json")
+        raise BadRequestError(error_text(
+            _("Send the request as application/json")))
     origin = request.getHeader("Origin")
     if origin and origin_of(origin) != origin_of(
             api.get_url(api.get_portal())):
-        raise ForbiddenError("Changes from another site are refused")
+        raise ForbiddenError(error_text(
+            _("Changes from another site are refused")))
 
 
 def check_dashboard_id(kwargs):
     dashboard_id = kwargs.get("dashboard_id")
     if dashboard_id is not None and not ids.is_dashboard_id(dashboard_id):
-        raise NotFoundError("No such dashboard")
+        raise NotFoundError(error_text(_("No such dashboard")))
 
 
 def route(path, methods):
@@ -71,7 +87,8 @@ def route(path, methods):
         @functools.wraps(func)
         def wrapper(context, request, **kwargs):
             if not ISenaiteDashboardLayer.providedBy(request):
-                raise NotFoundError("senaite.dashboard is not installed")
+                raise NotFoundError(error_text(
+                    _("senaite.dashboard is not installed")))
             check_permission(ViewDashboard)
             check_dashboard_id(kwargs)
             if "POST" in methods:
@@ -80,11 +97,11 @@ def route(path, methods):
             try:
                 return func(Environment(), request, **kwargs)
             except QueryError as exc:
-                raise BadRequestError(message(exc))
+                raise BadRequestError(error_text(exc_text(exc)))
             except NotFound as exc:
-                raise NotFoundError(message(exc))
+                raise NotFoundError(error_text(exc_text(exc)))
             except Forbidden as exc:
-                raise ForbiddenError(message(exc))
+                raise ForbiddenError(error_text(exc_text(exc)))
         return wrapper
     return decorator
 
@@ -94,9 +111,10 @@ def parse_body(text):
     try:
         body = json.loads(text or "{}")
     except ValueError:
-        raise BadRequestError("The request is no valid JSON")
+        raise BadRequestError(error_text(
+            _("The request is no valid JSON")))
     if not isinstance(body, dict):
-        raise BadRequestError("Send a JSON object")
+        raise BadRequestError(error_text(_("Send a JSON object")))
     return body
 
 

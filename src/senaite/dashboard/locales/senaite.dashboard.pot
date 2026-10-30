@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-10-25 10:23+0000\n"
+"POT-Creation-Date: 2026-10-30 09:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: senaite.dashboard\n"
 
-#: senaite/dashboard/query/custom.py:82
+#: senaite/dashboard/query/custom.py:86
 msgid "${name} cannot be a field of kind ${kind}"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:115
+#: senaite/dashboard/query/sources.py:120
 msgid "${name} is not a date"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:88
+#: senaite/dashboard/query/custom.py:92
 msgid "${name} needs the type it points to"
 msgstr ""
 
@@ -37,11 +37,11 @@ msgstr ""
 msgid "90% within"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:101
+#: senaite/dashboard/query/custom.py:105
 msgid "A column must be a mapping"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:102
+#: senaite/dashboard/query/custom.py:106
 msgid "A column needs a name"
 msgstr ""
 
@@ -57,15 +57,15 @@ msgstr ""
 msgid "A dashboard needs a title"
 msgstr ""
 
-#: senaite/dashboard/query/catalogs.py:117
+#: senaite/dashboard/query/catalogs.py:128
 msgid "A dataset cannot be made of ${type}"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:154
+#: senaite/dashboard/query/custom.py:158
 msgid "A dataset must be a mapping"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:163
+#: senaite/dashboard/query/custom.py:167
 msgid "A dataset needs a title"
 msgstr ""
 
@@ -73,11 +73,11 @@ msgstr ""
 msgid "A date filter needs a min or a max"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:74
+#: senaite/dashboard/query/custom.py:78
 msgid "A field must be a mapping"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:75
+#: senaite/dashboard/query/custom.py:79
 msgid "A field needs an index"
 msgstr ""
 
@@ -85,15 +85,15 @@ msgstr ""
 msgid "A filter takes at most ${count} values"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:126
+#: senaite/dashboard/query/custom.py:130
 msgid "A span must be a mapping"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:127
+#: senaite/dashboard/query/custom.py:131
 msgid "A span needs a title"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:131
+#: senaite/dashboard/query/custom.py:135
 msgid "A span needs two dates of the type"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "Arrow keys move the tile, with Shift they resize it"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:139
+#: senaite/dashboard/query/custom.py:143
 msgid "At most ${count} entries"
 msgstr ""
 
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:122
+#: senaite/dashboard/query/sources.py:127
 msgid "Cannot group by ${name}"
 msgstr ""
 
@@ -256,6 +256,10 @@ msgstr ""
 
 #: senaite/dashboard/strings.py:173
 msgid "Changes discarded. The draft is the published version again."
+msgstr ""
+
+#: senaite/dashboard/routes/base.py:69
+msgid "Changes from another site are refused"
 msgstr ""
 
 #: senaite/dashboard/library/builtin.py:224
@@ -294,7 +298,7 @@ msgstr ""
 msgid "Configurable dashboards for SENAITE"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:315
+#: senaite/dashboard/query/sources.py:320
 msgid "Count"
 msgstr ""
 
@@ -406,7 +410,7 @@ msgstr ""
 msgid "Due next"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:455
+#: senaite/dashboard/query/sources.py:463
 msgid "Duration"
 msgstr ""
 
@@ -450,7 +454,7 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
-#: senaite/dashboard/query/search.py:28
+#: senaite/dashboard/query/search.py:79
 msgid "Filters must be a mapping"
 msgstr ""
 
@@ -486,7 +490,7 @@ msgstr ""
 msgid "Good morning"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:355
+#: senaite/dashboard/query/sources.py:360
 msgid "Group"
 msgstr ""
 
@@ -578,7 +582,7 @@ msgstr ""
 msgid "Links"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:415
+#: senaite/dashboard/query/sources.py:423
 msgid "List"
 msgstr ""
 
@@ -680,6 +684,10 @@ msgstr ""
 msgid "No global dashboard and no tile of the library uses it."
 msgstr ""
 
+#: senaite/dashboard/routes/base.py:75
+msgid "No such dashboard"
+msgstr ""
+
 #: senaite/dashboard/strings.py:103
 msgid "Nobody selected: visible for everybody"
 msgstr ""
@@ -692,7 +700,7 @@ msgstr ""
 msgid "Not a date: ${value}"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:151
+#: senaite/dashboard/query/sources.py:156
 msgid "Not assigned"
 msgstr ""
 
@@ -704,7 +712,7 @@ msgstr ""
 msgid "Not saved"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:151
+#: senaite/dashboard/query/sources.py:156
 msgid "Not set"
 msgstr ""
 
@@ -789,11 +797,11 @@ msgstr ""
 msgid "Open worksheets per analyst"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:172
+#: senaite/dashboard/query/sources.py:177
 msgid "Other"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:381
+#: senaite/dashboard/query/sources.py:389
 #: senaite/dashboard/strings.py:238
 msgid "Over time"
 msgstr ""
@@ -1087,6 +1095,14 @@ msgstr ""
 msgid "Search tiles"
 msgstr ""
 
+#: senaite/dashboard/routes/base.py:117
+msgid "Send a JSON object"
+msgstr ""
+
+#: senaite/dashboard/routes/base.py:64
+msgid "Send the request as application/json"
+msgstr ""
+
 #: senaite/dashboard/strings.py:214
 msgid "Settings"
 msgstr ""
@@ -1139,7 +1155,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:104
+#: senaite/dashboard/query/custom.py:108
 msgid "The column ${name} cannot be shown"
 msgstr ""
 
@@ -1147,7 +1163,7 @@ msgstr ""
 msgid "The draft has changes that are not published yet. Everybody else sees this version."
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:78
+#: senaite/dashboard/query/custom.py:82
 msgid "The index ${name} cannot be used"
 msgstr ""
 
@@ -1160,6 +1176,10 @@ msgid "The most recently registered samples"
 msgstr ""
 
 #: senaite/dashboard/routes/base.py:115
+msgid "The request is no valid JSON"
+msgstr ""
+
+#: senaite/dashboard/routes/base.py:133
 msgid "The request needs a list of tiles"
 msgstr ""
 
@@ -1179,7 +1199,7 @@ msgstr ""
 msgid "There are no datasets of your own yet."
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:198
+#: senaite/dashboard/query/custom.py:202
 msgid "There can be at most ${count} datasets"
 msgstr ""
 
@@ -1191,7 +1211,7 @@ msgstr ""
 msgid "There is no dashboard for you yet. Make one of your own."
 msgstr ""
 
-#: senaite/dashboard/query/custom.py:217
+#: senaite/dashboard/query/custom.py:221
 msgid "There is no dataset ${name}"
 msgstr ""
 
@@ -1279,7 +1299,7 @@ msgstr ""
 msgid "Too many tiles in one request"
 msgstr ""
 
-#: senaite/dashboard/query/sources.py:215
+#: senaite/dashboard/query/sources.py:220
 #: senaite/dashboard/strings.py:235
 msgid "Total"
 msgstr ""
@@ -1435,4 +1455,8 @@ msgstr ""
 
 #: senaite/dashboard/strings.py:186
 msgid "or ..."
+msgstr ""
+
+#: senaite/dashboard/routes/base.py:91
+msgid "senaite.dashboard is not installed"
 msgstr ""

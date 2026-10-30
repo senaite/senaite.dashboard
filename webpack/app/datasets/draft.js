@@ -25,7 +25,10 @@ function columnEntry(offered, kept) {
   return {
     use: Boolean(kept),
     title: kept ? kept.title : offered.name,
-    kind: kept ? kept.kind : offered.kind
+    kind: kept ? kept.kind : offered.kind,
+    // Lab-only unless opened, like a field; definitions kept before
+    // columns had the flag are lab-only too
+    lab_only: kept ? kept.lab_only !== false : true
   };
 }
 
@@ -73,7 +76,7 @@ export function toDefinition(draft) {
       lab_only: entry.lab_only
     })),
     columns: used(draft.columns).map(([name, entry]) => ({
-      name, title: entry.title, kind: entry.kind
+      name, title: entry.title, kind: entry.kind, lab_only: entry.lab_only
     })),
     spans: draft.spans.filter((span) => span.start && span.end)
   };
