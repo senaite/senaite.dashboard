@@ -22,6 +22,12 @@ from BTrees.OOBTree import OOBTree
 from zope.annotation.interfaces import IAnnotations
 
 ANNOTATION_KEY = "senaite.dashboard"
+
+# Version of the format of the records; an upgrade step that changes
+# them raises it (see upgrades/)
+VERSION = 1
+VERSION_KEY = "version"
+
 GLOBALS = "globals"
 USERS = "users"
 LIBRARY = "library"
@@ -42,10 +48,17 @@ def get_root(create=False):
     root = annotations.get(ANNOTATION_KEY)
     if root is None and create:
         root = OOBTree()
+        root[VERSION_KEY] = VERSION
         root[GLOBALS] = OOBTree()
         root[USERS] = OOBTree()
         annotations[ANNOTATION_KEY] = root
     return root
+
+
+def get_version():
+    """The format version of the stored records, or None."""
+    root = get_root()
+    return root.get(VERSION_KEY) if root is not None else None
 
 
 def get_tree(name, create=False):

@@ -5,3 +5,4 @@ dist/
 build/
 .installed.cfg
 webpack/node_modules/
+*.mo
