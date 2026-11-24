@@ -10,6 +10,7 @@ from plone.app.testing import login
 from plone.app.testing import setRoles
 from senaite.core.catalog import CONTACT_CATALOG
 from senaite.dashboard import api
+from senaite.dashboard.browser import listing
 from senaite.dashboard.exceptions import NotFound
 from senaite.dashboard.interfaces import IDashboardDataset
 from senaite.dashboard.query import builtin
@@ -138,6 +139,37 @@ class DrillTestCase(unittest.TestCase):
         body = {"tile": self.tile(), "scope": {"review_state": "active"}}
         self.assertRaises(api.ValidationError, drill.drill, body, self.env)
 
+    def test_the_list_of_a_part_carries_its_request(self):
+        answer = drill.drill({"tile": self.tile(), "offset": 1}, self.env)
+        self.assertIn("/dashboard-objects?drill=", answer["listing"])
+        self.assertNotIn("offset", answer["listing"])
+
+    def test_the_list_finds_what_the_tile_counts(self):
+        dataset, uids = drill.select({"tile": self.tile()}, self.env)
+        self.assertEqual((dataset.name, len(uids)), ("drill-contacts", 2))
+
     def test_an_object_of_another_user_is_not_found(self):
         body = {"object": {"dataset": "samples", "uid": "0" * 32}}
         self.assertRaises(NotFound, drill.drill, body, self.env)
+
+
+class ListingTestCase(unittest.TestCase):
+    """The page that lists exactly the objects of a part of a tile."""
+
+    def test_the_request_is_read_from_the_query_string_of_a_post(self):
+        class FakeRequest(dict):
+            form = {}
+        request = FakeRequest(QUERY_STRING="drill=%7B%7D&title=Due")
+        self.assertEqual(listing.get_param(request, "drill"), "{}")
+        self.assertEqual(listing.get_param(request, "title"), "Due")
+
+    def test_a_request_that_is_no_json(self):
+        self.assertRaises(api.ValidationError, listing.parse_request, "{")
+        self.assertRaises(api.ValidationError, listing.parse_request, "")
+
+    def test_a_request_that_is_too_long(self):
+        self.assertRaises(api.ValidationError, listing.parse_request,
+                          "[" + "1," * listing.MAX_REQUEST + "1]")
+
+    def test_no_objects_match_nothing(self):
+        self.assertEqual(listing.uid_query([]), {"query": ["__none__"]})

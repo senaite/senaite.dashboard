@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: senaite.dashboard\n"
-"POT-Creation-Date: 2026-11-24 19:32+0000\n"
+"POT-Creation-Date: 2026-11-24 19:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,6 +158,7 @@ msgstr "Adresse"
 msgid "Advanced"
 msgstr "Erweitert"
 
+#: senaite/dashboard/browser/listing.py:130
 #: senaite/dashboard/strings.py:23
 msgid "All"
 msgstr "Alle"
@@ -319,7 +320,7 @@ msgstr "Anzahl"
 msgid "Create"
 msgstr "Anlegen"
 
-#: senaite/dashboard/query/builtin.py:208
+#: senaite/dashboard/query/builtin.py:210
 msgid "Created"
 msgstr "Angelegt"
 
@@ -543,7 +544,8 @@ msgstr "Intervall"
 msgid "Invalid dashboard id"
 msgstr "Ungültige Dashboard-ID"
 
-#: senaite/dashboard/query/drill.py:208
+#: senaite/dashboard/browser/listing.py:44
+#: senaite/dashboard/query/drill.py:210
 #: senaite/dashboard/query/params.py:41
 msgid "Invalid parameter ${name}"
 msgstr "Ungültiger Parameter ${name}"
@@ -888,7 +890,7 @@ msgstr "Eine Kachel auswählen, um sie dem Dashboard hinzuzufügen. Sie lässt s
 msgid "Plain"
 msgstr "Normal"
 
-#: senaite/dashboard/query/builtin.py:163
+#: senaite/dashboard/query/builtin.py:165
 msgid "Point of capture"
 msgstr "Erfassungsort"
 
@@ -944,7 +946,7 @@ msgstr "Eingegangene Proben, früheste Fälligkeit zuerst"
 msgid "Received to published"
 msgstr "Eingang bis Veröffentlichung"
 
-#: senaite/dashboard/query/builtin.py:185
+#: senaite/dashboard/query/builtin.py:187
 msgid "Received to result"
 msgstr "Eingang bis Ergebnis"
 
@@ -1020,11 +1022,11 @@ msgstr "Wiederherstellen"
 msgid "Restore default dashboards"
 msgstr "Standard-Dashboards wiederherstellen"
 
-#: senaite/dashboard/query/builtin.py:168
+#: senaite/dashboard/query/builtin.py:170
 msgid "Result captured"
 msgstr "Ergebnis erfasst"
 
-#: senaite/dashboard/query/builtin.py:175
+#: senaite/dashboard/query/builtin.py:177
 msgid "Result with unit"
 msgstr "Ergebnis mit Einheit"
 
@@ -1257,7 +1259,7 @@ msgstr "Die Bibliothek fasst höchstens ${count} gespeicherte Kacheln"
 msgid "The most recently registered samples"
 msgstr "Die zuletzt registrierten Proben"
 
-#: senaite/dashboard/query/drill.py:158
+#: senaite/dashboard/query/drill.py:160
 msgid "The object is gone or you may not see it"
 msgstr "Das Objekt gibt es nicht mehr oder Sie dürfen es nicht sehen"
 
@@ -1333,7 +1335,7 @@ msgstr "Das ist kein gültiges JSON; es wurde nichts geändert."
 msgid "This month"
 msgstr "Dieser Monat"
 
-#: senaite/dashboard/query/drill.py:80
+#: senaite/dashboard/query/drill.py:82
 msgid "This period is not shown any more. Refresh the dashboard."
 msgstr "Dieser Zeitraum wird nicht mehr gezeigt. Laden Sie das Dashboard neu."
 
@@ -1345,7 +1347,7 @@ msgstr "Das dauert länger als üblich."
 msgid "This tile cannot be shown. Check its settings or remove it."
 msgstr "Diese Kachel kann nicht angezeigt werden. Bitte ihre Einstellungen prüfen oder sie entfernen."
 
-#: senaite/dashboard/query/drill.py:133
+#: senaite/dashboard/query/drill.py:135
 msgid "This tile does not open"
 msgstr "Diese Kachel lässt sich nicht öffnen"
 
@@ -1430,7 +1432,7 @@ msgstr "Rückgängig"
 msgid "Undo all your changes to this dashboard?"
 msgstr "Alle eigenen Änderungen an diesem Dashboard zurücknehmen?"
 
-#: senaite/dashboard/query/datasets.py:270
+#: senaite/dashboard/query/datasets.py:275
 msgid "Unknown column ${name}"
 msgstr "Unbekannte Spalte ${name}"
 
@@ -1442,7 +1444,7 @@ msgstr "Unbekannte Datenquelle ${name}"
 msgid "Unknown dataset ${name}"
 msgstr "Unbekannte Datenmenge ${name}"
 
-#: senaite/dashboard/query/datasets.py:259
+#: senaite/dashboard/query/datasets.py:264
 msgid "Unknown field ${name}"
 msgstr "Unbekanntes Feld ${name}"
 
@@ -1450,7 +1452,7 @@ msgstr "Unbekanntes Feld ${name}"
 msgid "Unknown interval ${name}"
 msgstr "Unbekanntes Intervall ${name}"
 
-#: senaite/dashboard/query/datasets.py:309
+#: senaite/dashboard/query/datasets.py:314
 msgid "Unknown span ${name}"
 msgstr "Unbekannte Zeitspanne ${name}"
 
@@ -1506,7 +1508,7 @@ msgstr "Was eine Tabelle von jedem Objekt zeigen darf. Die Werte kommen aus dem 
 msgid "What a tile may filter and group by. Fields only for the laboratory are not offered to client contacts."
 msgstr "Wonach eine Kachel filtern und gruppieren darf. Felder nur für das Labor werden Kundenkontakten nicht angeboten."
 
-#: senaite/dashboard/query/builtin.py:211
+#: senaite/dashboard/query/builtin.py:213
 msgid "Worksheet"
 msgstr "Arbeitsblatt"
 

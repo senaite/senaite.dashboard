@@ -198,13 +198,17 @@ class Dataset(LabOnly):
         opened in a tile, e.g. the analyses of a sample
     :param parent: the `Link` to the object a row opens instead of its
         own, e.g. the sample of an analysis
+    :param drill_view: the page, below the site, that lists exactly the
+        objects of a part of a tile; by default a plain listing of the
+        columns of the dataset
     """
 
     def __init__(self, name, title, catalog, portal_type, fields,
                  columns=(), spans=(), states=(), base_query=None,
                  listing=None, url_column=None, icon=None,
                  lab_only=False, card=None, facts=(), facets=(),
-                 sort=None, children=None, parent=None):
+                 sort=None, children=None, parent=None,
+                 drill_view="dashboard-objects"):
         self.name = name
         self.title = title
         self.catalog = catalog
@@ -224,6 +228,7 @@ class Dataset(LabOnly):
         self.sort = sort or ("created", "descending")
         self.children = children
         self.parent = parent
+        self.drill_view = drill_view
 
     def get_extensions(self):
         return [extension for name, extension

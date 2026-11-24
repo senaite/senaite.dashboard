@@ -29,6 +29,24 @@
       layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
       />
 
+  <!-- Exactly the objects behind a part of a tile, as a listing: the
+       samples listing of SENAITE for samples, a plain one otherwise -->
+  <browser:page
+      for="senaite.core.interfaces.ISamples"
+      name="dashboard-samples"
+      class=".listing.DrillSamplesView"
+      permission="senaite.dashboard.ViewDashboard"
+      layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+
+  <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="dashboard-objects"
+      class=".listing.DrillObjectsView"
+      permission="senaite.dashboard.ViewDashboard"
+      layer="senaite.dashboard.interfaces.ISenaiteDashboardLayer"
+      />
+
   <browser:resourceDirectory
       name="senaite.dashboard"
       directory="static"

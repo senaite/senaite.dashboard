@@ -13,7 +13,9 @@ to other objects: a sample shows its analyses, an analysis opens its
 sample.
 """
 
+import json
 from collections import Counter
+from urllib import urlencode
 
 from bika.lims import api
 from senaite.dashboard import messagefactory as _
@@ -333,11 +335,30 @@ def get_offset(body):
     return offset
 
 
-def list_answer(dataset, rids, split_field, body, env, below=None):
-    """The rows of a page of the objects, with the facets to narrow by."""
+def narrow(dataset, rids, split_field, body, env):
+    """The objects narrowed by the facets picked, with the facets and
+    what was picked."""
     facets = get_facets(dataset, split_field, env)
     scope = clean_scope(body.get("scope") or {}, facets)
-    narrowed = narrow_by_scope(dataset, rids, facets, scope)
+    return narrow_by_scope(dataset, rids, facets, scope), facets, scope
+
+
+def listing_url(dataset, body, env):
+    """The page that lists exactly the objects of a part of a tile.
+
+    The request of the tile goes along in the URL; the page searches
+    again with it, as the user who opens it.
+    """
+    request = {key: body[key] for key in ("tile", "pick", "scope")
+               if body.get(key)}
+    query = urlencode({"drill": json.dumps(request, sort_keys=True)})
+    portal_url = api.get_url(env.portal)
+    return "{}/{}?{}".format(portal_url, dataset.drill_view, query)
+
+
+def list_answer(dataset, rids, split_field, body, env, below=None):
+    """The rows of a page of the objects, with the facets to narrow by."""
+    narrowed, facets, scope = narrow(dataset, rids, split_field, body, env)
     offset = get_offset(body)
     page = sort_rids(dataset, narrowed)[offset:offset + PAGE_SIZE]
     described = [describe_facet(dataset, narrowed, field, scope, env)
@@ -349,7 +370,6 @@ def list_answer(dataset, rids, split_field, body, env, below=None):
         "facets": [facet for facet in described if facet],
         "rows": [to_row(get_brain(dataset, rid), dataset, env, below)
                  for rid in page],
-        "listing": dataset.describe(env)["listing"],
     }
 
 
@@ -377,15 +397,8 @@ def open_object(body, env):
     return answer
 
 
-def drill(body, env):
-    """The objects behind a part of a tile, or an object opened in it.
-
-    Body: {"tile": {"source", "params"}, "pick": {"key", "bucket"}} or
-    {"object": {"dataset", "uid"}}, and in both cases "scope": {facet
-    name: value} and "offset".
-    """
-    if "object" in body:
-        return open_object(body, env)
+def check_tile_request(body):
+    """The tile and the part of it a request asks for."""
     tile = body.get("tile")
     pick = body.get("pick") or {}
     if not isinstance(tile, dict) or not isinstance(pick, dict):
@@ -396,5 +409,34 @@ def drill(body, env):
         if value is not None and not isinstance(value, basestring):
             raise ValidationError(_("Invalid parameter ${name}",
                                     mapping={"name": name}))
+    return tile, pick
+
+
+def select(body, env):
+    """The dataset and the UIDs of the objects of a part of a tile,
+    narrowed by the facets picked; for the page that lists them."""
+    if not isinstance(body, dict):
+        raise ValidationError(_("Invalid parameter ${name}",
+                                mapping={"name": "drill"}))
+    tile, pick = check_tile_request(body)
     dataset, rids, field = select_tile(tile, pick, env)
-    return list_answer(dataset, rids, field, body, env)
+    narrowed, facets, scope = narrow(dataset, rids, field, body, env)
+    uids = [get_index_value(dataset.catalog, "UID", rid)
+            for rid in sort_rids(dataset, narrowed)]
+    return dataset, [uid for uid in uids if uid]
+
+
+def drill(body, env):
+    """The objects behind a part of a tile, or an object opened in it.
+
+    Body: {"tile": {"source", "params"}, "pick": {"key", "bucket"}} or
+    {"object": {"dataset", "uid"}}, and in both cases "scope": {facet
+    name: value} and "offset".
+    """
+    if "object" in body:
+        return open_object(body, env)
+    tile, pick = check_tile_request(body)
+    dataset, rids, field = select_tile(tile, pick, env)
+    answer = list_answer(dataset, rids, field, body, env)
+    answer["listing"] = listing_url(dataset, body, env)
+    return answer
