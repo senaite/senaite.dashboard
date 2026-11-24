@@ -20,9 +20,9 @@ import json
 import re
 
 from senaite.dashboard import messagefactory as _
-from senaite.dashboard.titles import new_id
 from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.titles import clean_title
+from senaite.dashboard.titles import new_id
 
 GRID_COLUMNS = 12
 MAX_ROWS = 400

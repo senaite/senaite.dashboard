@@ -31,6 +31,13 @@ from senaite.jsonapi.v1 import add_route
 
 PREFIX = "/dashboard"
 
+# Dashboard errors and the HTTP errors they become
+HTTP_ERRORS = (
+    (ValidationError, BadRequestError),
+    (NotFound, NotFoundError),
+    (Forbidden, ForbiddenError),
+)
+
 
 def exc_text(exc):
     """The message id or text an exception was raised with."""
@@ -89,14 +96,6 @@ def check_request(request, methods, kwargs):
     if "POST" in methods:
         check_post(request)
         req.disable_csrf_protection()
-
-
-# Dashboard errors and the HTTP errors they become
-HTTP_ERRORS = (
-    (ValidationError, BadRequestError),
-    (NotFound, NotFoundError),
-    (Forbidden, ForbiddenError),
-)
 
 
 def to_http_error(exc):
