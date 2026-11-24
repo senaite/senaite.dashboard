@@ -45,14 +45,69 @@ def can_view_result(brain, env):
     return env.can(ViewResults, api.get_object(brain))
 
 
-def result_with_unit(brain):
-    """The result of an analysis with its unit, or None without one."""
-    result = brain.getResult
-    if result in (None, ""):
+# HTML of a result as SENAITE formats it, and the text that stands for
+# it in a line of text
+RESULT_MARKUP = (
+    ("<br/>", u", "),
+    ("\n", u" "),
+)
+
+# Scientific notations with a superscript, and the same in plain text
+PLAIN_NOTATIONS = {3: 2, 5: 4}
+
+
+def get_result_format():
+    """The decimal mark and the scientific notation of the laboratory,
+    in a notation that needs no markup."""
+    setup = api.get_bika_setup()
+    notation = api.to_int(setup.getScientificNotationResults(), 1)
+    return {
+        "decimalmark": setup.getResultsDecimalMark(),
+        "sciformat": PLAIN_NOTATIONS.get(notation, notation),
+    }
+
+
+def to_line(text):
+    """The formatted result on one line of text."""
+    for markup, plain in RESULT_MARKUP:
+        text = text.replace(markup, plain)
+    return text.strip()
+
+
+def get_formatted_result(analysis):
+    """The result as the sample shows it, for every type of result: the
+    text of the options chosen, a date in the format of the language, a
+    number with its precision, a detection limit or "Not detected"."""
+    text = analysis.getFormattedResult(html=False, **get_result_format())
+    return to_line(api.safe_unicode(text or u""))
+
+
+def result_text(brain):
+    """The result of an analysis as the sample shows it, or None."""
+    if brain.getResult in (None, ""):
         return None
+    return get_formatted_result(api.get_object(brain)) or None
+
+
+def has_digit(text):
+    return any(char.isdigit() for char in text)
+
+
+def result_with_unit(brain):
+    """The result of an analysis with its unit, or None without one.
+
+    Only a number has a unit: the text of an option, a date or a text
+    stands for itself, and so does "Not detected".
+    """
+    text = result_text(brain)
+    if text is None:
+        return None
+    analysis = api.get_object(brain)
     unit = brain.getUnit
-    return u" ".join(api.safe_unicode(part) for part in (result, unit)
-                     if part)
+    if analysis.getResultType() != "numeric" or not unit \
+            or not has_digit(text):
+        return text
+    return u"{} {}".format(text, api.safe_unicode(unit))
 
 
 def own_uid(brain, dataset):
@@ -173,7 +228,8 @@ ANALYSES = Dataset(
         Column("Title", _c("Analysis")),
         Column("getRequestID", _c("Sample ID")),
         Column("getClientTitle", _c("Client")),
-        Column("getResult", _c("Result"), guard=can_view_result),
+        Column("getResult", _c("Result"), guard=can_view_result,
+               getter=result_text),
         Column("result_with_unit", _("Result with unit"),
                guard=can_view_result, getter=result_with_unit),
         Column("getUnit", _c("Unit")),

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-11-24 19:48+0000\n"
+"POT-Creation-Date: 2026-11-24 20:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,7 +171,7 @@ msgid "An empty dashboard"
 msgstr ""
 
 #: senaite/dashboard/library/builtin.py:31
-#: senaite/dashboard/query/builtin.py:113
+#: senaite/dashboard/query/builtin.py:168
 msgid "Analyses"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:210
+#: senaite/dashboard/query/builtin.py:266
 msgid "Created"
 msgstr ""
 
@@ -889,7 +889,7 @@ msgstr ""
 msgid "Plain"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:165
+#: senaite/dashboard/query/builtin.py:220
 msgid "Point of capture"
 msgstr ""
 
@@ -921,11 +921,11 @@ msgstr ""
 msgid "Quick links"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:97
+#: senaite/dashboard/query/builtin.py:152
 msgid "Received"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:96
+#: senaite/dashboard/query/builtin.py:151
 msgid "Received by"
 msgstr ""
 
@@ -941,11 +941,11 @@ msgstr ""
 msgid "Received samples, the earliest due date first"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:124
+#: senaite/dashboard/query/builtin.py:179
 msgid "Received to published"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:187
+#: senaite/dashboard/query/builtin.py:243
 msgid "Received to result"
 msgstr ""
 
@@ -969,11 +969,11 @@ msgstr ""
 msgid "Refreshing"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:98
+#: senaite/dashboard/query/builtin.py:153
 msgid "Registered"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:95
+#: senaite/dashboard/query/builtin.py:150
 msgid "Registered by"
 msgstr ""
 
@@ -1021,11 +1021,11 @@ msgstr ""
 msgid "Restore default dashboards"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:170
+#: senaite/dashboard/query/builtin.py:225
 msgid "Result captured"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:177
+#: senaite/dashboard/query/builtin.py:233
 msgid "Result with unit"
 msgstr ""
 
@@ -1061,7 +1061,7 @@ msgstr ""
 msgid "SENAITE DASHBOARD (uninstall)"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:126
+#: senaite/dashboard/query/builtin.py:181
 msgid "Sampled to received"
 msgstr ""
 
@@ -1070,7 +1070,7 @@ msgid "Samplers"
 msgstr ""
 
 #: senaite/dashboard/library/builtin.py:30
-#: senaite/dashboard/query/builtin.py:75
+#: senaite/dashboard/query/builtin.py:130
 msgid "Samples"
 msgstr ""
 
@@ -1411,7 +1411,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:122
+#: senaite/dashboard/query/builtin.py:177
 msgid "Turnaround (received to verified)"
 msgstr ""
 
@@ -1507,7 +1507,7 @@ msgstr ""
 msgid "What a tile may filter and group by. Fields only for the laboratory are not offered to client contacts."
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:213
+#: senaite/dashboard/query/builtin.py:269
 msgid "Worksheet"
 msgstr ""
 

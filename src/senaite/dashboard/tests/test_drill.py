@@ -173,3 +173,23 @@ class ListingTestCase(unittest.TestCase):
 
     def test_no_objects_match_nothing(self):
         self.assertEqual(listing.uid_query([]), {"query": ["__none__"]})
+
+
+class ResultTextTestCase(unittest.TestCase):
+    """A result on a line of a row, as the sample shows it."""
+
+    def test_the_options_of_a_multiple_choice_on_one_line(self):
+        self.assertEqual(builtin.to_line(u"Positive<br/>Negative"),
+                         u"Positive, Negative")
+
+    def test_a_text_of_many_lines_on_one(self):
+        self.assertEqual(builtin.to_line(u"line one\nline two"),
+                         u"line one line two")
+
+    def test_notations_with_a_superscript_become_plain_ones(self):
+        self.assertEqual(builtin.PLAIN_NOTATIONS.get(3), 2)
+        self.assertEqual(builtin.PLAIN_NOTATIONS.get(5), 4)
+
+    def test_only_a_number_takes_the_unit(self):
+        self.assertTrue(builtin.has_digit(u"< 0.50"))
+        self.assertFalse(builtin.has_digit(u"Not detected"))

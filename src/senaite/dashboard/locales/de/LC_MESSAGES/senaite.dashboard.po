@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: senaite.dashboard\n"
-"POT-Creation-Date: 2026-11-24 19:48+0000\n"
+"POT-Creation-Date: 2026-11-24 20:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,7 +172,7 @@ msgid "An empty dashboard"
 msgstr "Einem leeren Dashboard"
 
 #: senaite/dashboard/library/builtin.py:31
-#: senaite/dashboard/query/builtin.py:113
+#: senaite/dashboard/query/builtin.py:168
 msgid "Analyses"
 msgstr "Analysen"
 
@@ -320,7 +320,7 @@ msgstr "Anzahl"
 msgid "Create"
 msgstr "Anlegen"
 
-#: senaite/dashboard/query/builtin.py:210
+#: senaite/dashboard/query/builtin.py:266
 msgid "Created"
 msgstr "Angelegt"
 
@@ -890,7 +890,7 @@ msgstr "Eine Kachel auswählen, um sie dem Dashboard hinzuzufügen. Sie lässt s
 msgid "Plain"
 msgstr "Normal"
 
-#: senaite/dashboard/query/builtin.py:165
+#: senaite/dashboard/query/builtin.py:220
 msgid "Point of capture"
 msgstr "Erfassungsort"
 
@@ -922,11 +922,11 @@ msgstr "Veröffentlicher"
 msgid "Quick links"
 msgstr "Schnellzugriff"
 
-#: senaite/dashboard/query/builtin.py:97
+#: senaite/dashboard/query/builtin.py:152
 msgid "Received"
 msgstr "Eingegangen"
 
-#: senaite/dashboard/query/builtin.py:96
+#: senaite/dashboard/query/builtin.py:151
 msgid "Received by"
 msgstr "Angenommen von"
 
@@ -942,11 +942,11 @@ msgstr "Eingegangene Proben ohne alle Ergebnisse"
 msgid "Received samples, the earliest due date first"
 msgstr "Eingegangene Proben, früheste Fälligkeit zuerst"
 
-#: senaite/dashboard/query/builtin.py:124
+#: senaite/dashboard/query/builtin.py:179
 msgid "Received to published"
 msgstr "Eingang bis Veröffentlichung"
 
-#: senaite/dashboard/query/builtin.py:187
+#: senaite/dashboard/query/builtin.py:243
 msgid "Received to result"
 msgstr "Eingang bis Ergebnis"
 
@@ -970,11 +970,11 @@ msgstr "Aktualisieren"
 msgid "Refreshing"
 msgstr "Wird aktualisiert"
 
-#: senaite/dashboard/query/builtin.py:98
+#: senaite/dashboard/query/builtin.py:153
 msgid "Registered"
 msgstr "Registriert"
 
-#: senaite/dashboard/query/builtin.py:95
+#: senaite/dashboard/query/builtin.py:150
 msgid "Registered by"
 msgstr "Registriert von"
 
@@ -1022,11 +1022,11 @@ msgstr "Wiederherstellen"
 msgid "Restore default dashboards"
 msgstr "Standard-Dashboards wiederherstellen"
 
-#: senaite/dashboard/query/builtin.py:170
+#: senaite/dashboard/query/builtin.py:225
 msgid "Result captured"
 msgstr "Ergebnis erfasst"
 
-#: senaite/dashboard/query/builtin.py:177
+#: senaite/dashboard/query/builtin.py:233
 msgid "Result with unit"
 msgstr "Ergebnis mit Einheit"
 
@@ -1062,7 +1062,7 @@ msgstr "SENAITE DASHBOARD"
 msgid "SENAITE DASHBOARD (uninstall)"
 msgstr "SENAITE DASHBOARD (Deinstallation)"
 
-#: senaite/dashboard/query/builtin.py:126
+#: senaite/dashboard/query/builtin.py:181
 msgid "Sampled to received"
 msgstr "Probenahme bis Eingang"
 
@@ -1071,7 +1071,7 @@ msgid "Samplers"
 msgstr "Probenehmer"
 
 #: senaite/dashboard/library/builtin.py:30
-#: senaite/dashboard/query/builtin.py:75
+#: senaite/dashboard/query/builtin.py:130
 msgid "Samples"
 msgstr "Proben"
 
@@ -1412,7 +1412,7 @@ msgstr "Zu viele Kacheln in einer Anfrage"
 msgid "Total"
 msgstr "Gesamt"
 
-#: senaite/dashboard/query/builtin.py:122
+#: senaite/dashboard/query/builtin.py:177
 msgid "Turnaround (received to verified)"
 msgstr "Durchlaufzeit (Eingang bis Verifizierung)"
 
@@ -1508,7 +1508,7 @@ msgstr "Was eine Tabelle von jedem Objekt zeigen darf. Die Werte kommen aus dem 
 msgid "What a tile may filter and group by. Fields only for the laboratory are not offered to client contacts."
 msgstr "Wonach eine Kachel filtern und gruppieren darf. Felder nur für das Labor werden Kundenkontakten nicht angeboten."
 
-#: senaite/dashboard/query/builtin.py:213
+#: senaite/dashboard/query/builtin.py:269
 msgid "Worksheet"
 msgstr "Arbeitsblatt"
 
