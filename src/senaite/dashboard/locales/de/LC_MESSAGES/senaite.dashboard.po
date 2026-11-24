@@ -1529,3 +1529,15 @@ msgstr "{count} Objekte, die Sie sehen dürfen"
 #: senaite/dashboard/strings.py:195
 msgid "{shown} of {total}"
 msgstr "{shown} von {total}"
+
+#: senaite/dashboard/strings.py
+msgid "Like the system"
+msgstr "Wie im System"
+
+#: senaite/dashboard/strings.py
+msgid "Dark"
+msgstr "Dunkel"
+
+#: senaite/dashboard/strings.py
+msgid "Light"
+msgstr "Hell"

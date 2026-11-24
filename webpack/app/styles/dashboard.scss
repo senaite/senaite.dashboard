@@ -1,3 +1,5 @@
+@use "themes";
+
 // SENAITE dashboard. Everything is scoped below .sd-app, so the page
 // around it keeps its own styles.
 
@@ -7,22 +9,9 @@
 .sd-app,
 .sd-drawer,
 .sd-dialog {
-  --sd-canvas: #f3f5f7;
-  --sd-surface: #ffffff;
-  --sd-ink: #18212b;
-  --sd-ink-2: #4a5663;
-  --sd-muted: #7b848e;
-  --sd-line: #e2e6ea;
-  --sd-line-strong: #cfd6dd;
-  --sd-accent: #1f5fbf;
-  --sd-accent-soft: #e8f0fb;
-  --sd-draft: #9a5b00;
-  --sd-draft-soft: #fff4de;
-  --sd-danger: #c2352f;
-  --sd-late: #b42318;
-  --sd-radius: 10px;
-  --sd-radius-small: 7px;
-  --sd-focus: 0 0 0 3px rgba(31, 95, 191, 0.28);
+  --sd-radius: 6px;
+  --sd-radius-small: 4px;
+  --sd-focus-ring: 0 0 0 3px var(--sd-focus-ring);
   color: var(--sd-ink);
   font-size: 14px;
   line-height: 1.45;
@@ -40,12 +29,12 @@
 
 .sd-boot {
   padding: 48px;
-  color: #7b848e;
+  color: var(--sd-muted);
 }
 
 .sd-app {
   container-type: inline-size;
-  background: var(--sd-canvas);
+  background: var(--sd-band);
   border-radius: 14px;
   padding: 24px 24px 32px;
   min-height: 70vh;
@@ -102,7 +91,7 @@
 
   &:hover {
     color: var(--sd-ink);
-    background: rgba(24, 33, 43, 0.05);
+    background: var(--sd-hover);
   }
 
   &.is-busy {
@@ -221,13 +210,13 @@
   font-weight: 500;
   padding: 1px 8px;
   border-radius: 999px;
-  background: rgba(24, 33, 43, 0.06);
+  background: var(--sd-hover);
   color: var(--sd-ink-2);
   white-space: nowrap;
 
   &.is-draft {
-    background: var(--sd-draft-soft);
-    color: var(--sd-draft);
+    background: var(--sd-warning-soft);
+    color: var(--sd-warning);
   }
 }
 
@@ -249,7 +238,7 @@
   cursor: pointer;
 
   &:hover {
-    border-color: #aeb8c2;
+    border-color: var(--sd-muted);
   }
 
   &:disabled {
@@ -260,17 +249,17 @@
   &.is-primary {
     background: var(--sd-accent);
     border-color: var(--sd-accent);
-    color: #fff;
+    color: var(--sd-on-accent);
 
     &:hover {
-      background: #194f9f;
+      background: var(--sd-accent-strong);
     }
   }
 
   &.is-danger {
     background: var(--sd-danger);
     border-color: var(--sd-danger);
-    color: #fff;
+    color: var(--sd-on-accent);
   }
 
   &.is-small {
@@ -280,8 +269,8 @@
   }
 
   &.is-done {
-    color: #1a7f37;
-    border-color: #a8d5b5;
+    color: var(--sd-success);
+    border-color: var(--sd-success-line);
   }
 }
 
@@ -298,13 +287,13 @@
   cursor: pointer;
 
   &:hover {
-    background: rgba(24, 33, 43, 0.07);
+    background: var(--sd-hover);
     color: var(--sd-ink);
   }
 
   &.is-danger:hover {
     color: var(--sd-danger);
-    background: #fdecea;
+    background: var(--sd-danger-soft);
   }
 
   &.is-small {
@@ -323,7 +312,7 @@
   textarea:focus-visible,
   summary:focus-visible {
     outline: none;
-    box-shadow: var(--sd-focus);
+    box-shadow: var(--sd-focus-ring);
   }
 }
 
@@ -349,7 +338,7 @@
   background: var(--sd-surface);
   border: 1px solid var(--sd-line);
   border-radius: var(--sd-radius);
-  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.14);
+  box-shadow: 0 12px 32px var(--sd-shadow);
 
   button {
     display: flex;
@@ -365,7 +354,7 @@
     cursor: pointer;
 
     &:hover {
-      background: var(--sd-canvas);
+      background: var(--sd-hover);
     }
 
     &.is-danger {
@@ -405,16 +394,16 @@
   border: 1px solid;
 
   &.is-edit {
-    background: #eef4fc;
-    border-color: #c5d8f3;
+    background: var(--sd-info-soft);
+    border-color: var(--sd-info-line);
   }
 
   &.is-draft {
-    background: var(--sd-draft-soft);
-    border-color: #f0d49c;
+    background: var(--sd-warning-soft);
+    border-color: var(--sd-warning-line);
 
     strong {
-      color: var(--sd-draft);
+      color: var(--sd-warning);
     }
   }
 
@@ -444,7 +433,7 @@
   color: var(--sd-muted);
 
   &.is-saved {
-    color: #1a7f37;
+    color: var(--sd-success);
   }
 
   &.is-error {
@@ -459,8 +448,8 @@
   padding: 8px 8px 8px 14px;
   margin-bottom: 16px;
   border-radius: var(--sd-radius);
-  background: #fdecea;
-  color: #8a1c17;
+  background: var(--sd-danger-soft);
+  color: var(--sd-danger-ink);
 
   span {
     flex: 1;
@@ -497,8 +486,8 @@
     bottom: 6px;
     width: 9px;
     height: 9px;
-    border-right: 2px solid #7f9cc7;
-    border-bottom: 2px solid #7f9cc7;
+    border-right: 2px solid var(--sd-muted);
+    border-bottom: 2px solid var(--sd-muted);
     border-radius: 0 0 2px 0;
   }
 
@@ -530,7 +519,7 @@
 
   &.is-editing {
     border-style: dashed;
-    border-color: #9fb9de;
+    border-color: var(--sd-accent);
 
     .sd-tile-head {
       cursor: grab;
@@ -546,12 +535,12 @@
   0%,
   40% {
     border-color: var(--sd-accent);
-    box-shadow: 0 0 0 4px rgba(31, 95, 191, 0.25);
+    box-shadow: 0 0 0 4px var(--sd-accent-soft);
   }
 }
 
 .react-draggable-dragging .sd-tile {
-  box-shadow: 0 16px 40px rgba(16, 24, 40, 0.18);
+  box-shadow: 0 16px 40px var(--sd-shadow);
   cursor: grabbing;
 }
 
@@ -643,7 +632,8 @@
     display: block;
     height: 12px;
     border-radius: 6px;
-    background: linear-gradient(90deg, #eef1f4, #f7f8fa, #eef1f4);
+    background: linear-gradient(90deg, var(--sd-skeleton), var(--sd-band),
+      var(--sd-skeleton));
     background-size: 200% 100%;
     animation: sd-shimmer 1.4s infinite linear;
 
@@ -790,7 +780,7 @@
   min-width: 4px;
   max-width: 12px;
   border-radius: 2px 2px 0 0;
-  background: #d9dee3;
+  background: var(--sd-line-strong);
   cursor: default;
 }
 
@@ -899,7 +889,7 @@
     }
 
     li.is-active {
-      background: var(--sd-canvas);
+      background: var(--sd-hover);
     }
   }
 }
@@ -995,7 +985,7 @@
 }
 
 .sd-hoverband {
-  fill: rgba(24, 33, 43, 0.045);
+  fill: var(--sd-hover);
 }
 
 .sd-tooltip {
@@ -1006,7 +996,7 @@
   background: var(--sd-surface);
   border: 1px solid var(--sd-line);
   border-radius: var(--sd-radius-small);
-  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+  box-shadow: 0 8px 24px var(--sd-shadow);
   pointer-events: none;
   font-size: 12px;
 }
@@ -1067,7 +1057,7 @@
 
   td {
     padding: 7px 8px 7px 0;
-    border-bottom: 1px solid #eef1f3;
+    border-bottom: 1px solid var(--sd-line);
     white-space: nowrap;
     max-width: 220px;
     overflow: hidden;
@@ -1110,7 +1100,7 @@
 }
 
 .sd-late {
-  color: var(--sd-late);
+  color: var(--sd-danger);
   font-weight: 500;
 }
 
@@ -1137,14 +1127,14 @@
   width: 64px;
   height: 6px;
   border-radius: 3px;
-  background: #e8ecef;
+  background: var(--sd-band);
   vertical-align: middle;
   overflow: hidden;
 
   span {
     display: block;
     height: 100%;
-    background: #2a78d6;
+    background: var(--sd-accent);
   }
 }
 
@@ -1169,7 +1159,7 @@
     text-decoration: none;
 
     &:hover {
-      background: var(--sd-canvas);
+      background: var(--sd-hover);
       color: var(--sd-accent);
     }
   }
@@ -1232,7 +1222,7 @@
   code {
     padding: 1px 4px;
     border-radius: 4px;
-    background: var(--sd-canvas);
+    background: var(--sd-hover);
     color: var(--sd-ink);
     font-size: 0.92em;
   }
@@ -1256,8 +1246,8 @@
   }
 
   &.is-warning {
-    border-color: var(--sd-draft);
-    background: var(--sd-draft-soft);
+    border-color: var(--sd-warning);
+    background: var(--sd-warning-soft);
   }
 }
 
@@ -1273,27 +1263,27 @@
   padding: 10px 10px 10px 16px;
   border-radius: var(--sd-radius);
   background: var(--sd-ink);
-  color: #fff;
-  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.24);
+  color: var(--sd-bg);
+  box-shadow: 0 12px 32px var(--sd-shadow-strong);
   transform: translateX(-50%);
   animation: sd-rise 0.2s ease-out;
 
   .sd-iconbtn {
-    color: #c9d1da;
+    color: var(--sd-inverse-muted);
   }
 }
 
 .sd-toast-action {
   border: 0;
   background: none;
-  color: #9cc3ff;
+  color: var(--sd-inverse-action);
   font-weight: 600;
   padding: 4px 6px;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--sd-inverse-hover);
   }
 }
 
@@ -1318,7 +1308,7 @@
   max-width: 100vw;
   background: var(--sd-surface);
   border-left: 1px solid var(--sd-line);
-  box-shadow: -12px 0 32px rgba(16, 24, 40, 0.1);
+  box-shadow: -12px 0 32px var(--sd-shadow);
   animation: sd-slide-in 0.18s ease-out;
 }
 
@@ -1379,7 +1369,7 @@
   color: var(--sd-muted);
 
   &:focus-within {
-    box-shadow: var(--sd-focus);
+    box-shadow: var(--sd-focus-ring);
     border-color: var(--sd-accent);
   }
 
@@ -1415,13 +1405,13 @@
   &[aria-pressed="true"] {
     background: var(--sd-ink);
     border-color: var(--sd-ink);
-    color: #fff;
+    color: var(--sd-bg);
   }
 
   &.is-value {
     cursor: default;
     background: var(--sd-accent-soft);
-    border-color: #c5d8f3;
+    border-color: var(--sd-info-line);
     color: var(--sd-ink);
     padding-right: 4px;
 
@@ -1435,7 +1425,7 @@
       cursor: pointer;
 
       &:hover {
-        background: rgba(24, 33, 43, 0.1);
+        background: var(--sd-hover);
       }
     }
   }
@@ -1470,7 +1460,7 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: var(--sd-canvas);
+  background: var(--sd-hover);
   color: var(--sd-ink-2);
   flex: none;
 }
@@ -1567,7 +1557,7 @@
   padding: 3px;
   gap: 2px;
   border-radius: 9px;
-  background: #eaedf0;
+  background: var(--sd-band);
 
   button {
     display: inline-flex;
@@ -1585,7 +1575,7 @@
     &[aria-checked="true"] {
       background: var(--sd-surface);
       color: var(--sd-ink);
-      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.12);
+      box-shadow: 0 1px 2px var(--sd-shadow);
     }
   }
 }
@@ -1642,7 +1632,7 @@
   padding: 8px 10px 10px;
   border: 1px solid var(--sd-line);
   border-radius: var(--sd-radius-small);
-  background: #fafbfc;
+  background: var(--sd-band);
 }
 
 .sd-filter-head {
@@ -1697,11 +1687,11 @@
   padding: 0;
   border: 0;
   border-radius: 14px;
-  box-shadow: 0 24px 64px rgba(16, 24, 40, 0.24);
+  box-shadow: 0 24px 64px var(--sd-shadow-strong);
   background: var(--sd-surface);
 
   &::backdrop {
-    background: rgba(16, 24, 40, 0.4);
+    background: var(--sd-overlay);
   }
 
   form {
@@ -1873,9 +1863,9 @@
   gap: 8px;
   margin: 12px 0 0;
   padding: 10px 12px;
-  border-left: 4px solid var(--sd-draft);
+  border-left: 4px solid var(--sd-warning);
   border-radius: var(--sd-radius-small);
-  background: var(--sd-draft-soft);
+  background: var(--sd-warning-soft);
   color: var(--sd-ink-2);
 }
 

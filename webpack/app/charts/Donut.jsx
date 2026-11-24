@@ -34,7 +34,7 @@ export default function Donut({items, kind, width, height}) {
           <g transform={`translate(${radius},${radius})`}>
             {slices.map((slice) => (
               <path key={slice.data.key} d={shape(slice)}
-                    fill={colors[slice.data.key]}
+                    style={{fill: colors[slice.data.key]}}
                     opacity={active && active !== slice.data.key ? 0.3 : 1}
                     onMouseEnter={() => setActive(slice.data.key)}/>
             ))}

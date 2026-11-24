@@ -1528,3 +1528,15 @@ msgstr ""
 #: senaite/dashboard/strings.py:195
 msgid "{shown} of {total}"
 msgstr ""
+
+#: senaite/dashboard/strings.py
+msgid "Like the system"
+msgstr ""
+
+#: senaite/dashboard/strings.py
+msgid "Dark"
+msgstr ""
+
+#: senaite/dashboard/strings.py
+msgid "Light"
+msgstr ""

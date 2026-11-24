@@ -3,6 +3,7 @@ import React from "react";
 import Icon from "./Icon";
 import Menu from "./Menu";
 import {t} from "../i18n";
+import {THEMES} from "../theme";
 
 // The ways to change a global dashboard: for oneself, and for
 // everybody if the user manages dashboards
@@ -47,11 +48,20 @@ function moreItems(view, permissions, datasetsUrl, onDialog) {
   ].filter(Boolean);
 }
 
+// The themes to choose from, the one on screen checked
+function themeItems(theme, onTheme) {
+  return THEMES.map((name) => ({
+    key: name, icon: name === theme ? "check" : "blank",
+    label: t(`theme_${name}`), onClick: () => onTheme(name)
+  }));
+}
+
 // The actions of the dashboard on screen, depending on what it is and
 // what the user may do. One way to customize is a button, two are a
 // menu; a personal dashboard is customized in place.
 export default function ViewActions({view, permissions, datasetsUrl,
-                                     onEdit, onEditDraft, onDialog}) {
+                                     onEdit, onEditDraft, onDialog,
+                                     theme, onTheme}) {
   const customize = customizeItems(view, permissions, onEdit, onEditDraft);
   const more = moreItems(view, permissions, datasetsUrl, onDialog);
   const personal = view.kind !== "global" && permissions.customize;
@@ -72,6 +82,8 @@ export default function ViewActions({view, permissions, datasetsUrl,
           <Icon name="edit" size={16}/> {t("customize")}
         </button>
       ) : null}
+      <Menu icon="theme" ariaLabel={t("theme")}
+            items={themeItems(theme, onTheme)} className="is-compact"/>
       {more.length ? <Menu icon="more" ariaLabel={t("more")} items={more}
                            className="is-compact"/> : null}
     </div>

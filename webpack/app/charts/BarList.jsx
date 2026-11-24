@@ -1,7 +1,6 @@
 import React from "react";
 
-import {BLUE_ACCENT} from "./theme";
-import {NEUTRAL, OTHER_KEYS} from "../colors";
+import {ACCENT, NEUTRAL, OTHER_KEYS} from "../colors";
 import {formatNumber, formatPercent} from "../format";
 
 // One measure across categories: horizontal bars in one color, the
@@ -21,7 +20,7 @@ export default function BarList({items, total}) {
             <span className="sd-barlist-track">
               <span className="sd-barlist-bar" style={{
                 width: `${(item.value / max) * 100}%`,
-                background: other ? NEUTRAL : BLUE_ACCENT
+                background: other ? NEUTRAL : ACCENT
               }}/>
             </span>
             <span className="sd-barlist-value">
