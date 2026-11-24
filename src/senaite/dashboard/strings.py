@@ -147,6 +147,7 @@ UI_STRINGS = OrderedDict([
     ("link", _("Link")),
     ("link_hint", _("Page the title leads to, e.g. samples")),
     ("loading", _("Loading")),
+    ("loading_progress", _("Loading data, {done} of {total} ready")),
     ("manage_datasets", _("Manage datasets")),
     ("manage_datasets_hint", _("Make more types available to tiles")),
     ("markdown_hint", _("**bold**, *italic*, # heading, - list, "
@@ -229,6 +230,7 @@ UI_STRINGS = OrderedDict([
     ("session_expired", _("Your session has expired. Please reload the "
                           "page and sign in again.")),
     ("settings", _("Settings")),
+    ("slow_tile", _("This takes longer than usual.")),
     ("sort_on", _("Sort by")),
     ("source", _("Kind of data")),
     ("span", _("Measure")),
