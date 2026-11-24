@@ -17,3 +17,9 @@ export function newTileId() {
   return Array.from(bytes, (byte) =>
     byte.toString(16).padStart(2, "0")).join("");
 }
+
+// A new tile from a preset of the library, with an id of its own
+export function tileFromPreset(preset) {
+  const tile = normalizeTile(JSON.parse(JSON.stringify(preset.tile)));
+  return {...tile, id: newTileId()};
+}
