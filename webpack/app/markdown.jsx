@@ -30,6 +30,16 @@ const SAFE_SCHEME = /^(https?|mailto):/i;
 // Headings of a note sit below the title of the tile (h3)
 const HEADING_TAGS = ["h4", "h5", "h6"];
 
+// The kinds of block a line may start, tried in this order; a line
+// that starts none of them is part of a paragraph
+const BLOCK_RULES = [
+  [HEADING, (match) => ({
+    kind: "heading", level: match[1].length, text: match[2]})],
+  [BULLET, (match) => ({kind: "ul", text: match[1]})],
+  [NUMBER, (match) => ({kind: "ol", text: match[1]})],
+  [QUOTE, (match) => ({kind: "quote", text: match[1]})]
+];
+
 // Where a link may lead, or null for an address that is not safe
 function linkTarget(url, portalUrl) {
   if (SCHEME.test(url)) {
@@ -99,21 +109,11 @@ function renderInline(text, portalUrl) {
 }
 
 function blockOf(line) {
-  let match = HEADING.exec(line);
-  if (match) {
-    return {kind: "heading", level: match[1].length, text: match[2]};
-  }
-  match = BULLET.exec(line);
-  if (match) {
-    return {kind: "ul", text: match[1]};
-  }
-  match = NUMBER.exec(line);
-  if (match) {
-    return {kind: "ol", text: match[1]};
-  }
-  match = QUOTE.exec(line);
-  if (match) {
-    return {kind: "quote", text: match[1]};
+  for (const [pattern, toBlock] of BLOCK_RULES) {
+    const match = pattern.exec(line);
+    if (match) {
+      return toBlock(match);
+    }
   }
   return {kind: "p", text: line};
 }

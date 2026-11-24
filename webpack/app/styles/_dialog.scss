@@ -1,0 +1,36 @@
+// Dialog
+
+.sd-dialog {
+  width: min(480px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 24px 64px var(--sd-shadow-strong);
+  background: var(--sd-surface);
+
+  &::backdrop {
+    background: var(--sd-overlay);
+  }
+
+  form {
+    padding: 22px 24px 20px;
+  }
+}
+
+.sd-dialog-title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sd-dialog-body p {
+  margin: 0;
+  color: var(--sd-ink-2);
+}
+
+.sd-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}

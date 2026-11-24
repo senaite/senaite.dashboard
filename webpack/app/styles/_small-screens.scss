@@ -1,0 +1,48 @@
+// Small screens
+
+// A container cannot query itself; its own padding follows the window
+@media (max-width: 720px) {
+  .sd-app {
+    padding: 16px;
+    border-radius: 0;
+  }
+}
+
+// Everything inside follows the width of the dashboard
+@container (max-width: 720px) {
+  .sd-hello {
+    font-size: 22px;
+  }
+
+  .sd-tabs {
+    gap: 4px;
+  }
+
+  .sd-tab-add span {
+    display: none;
+  }
+
+  .sd-greeting {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sd-viewactions {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-app,
+  .sd-drawer,
+  .sd-skeleton span,
+  .sd-spinner,
+  .sd-progress::before,
+  .sd-toast,
+  .sd-tile,
+  .sd-refresh svg,
+  .react-grid-item {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,66 @@
+// Time chart
+
+.sd-timechart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sd-timechart-plot {
+  position: relative;
+
+  svg {
+    display: block;
+    overflow: visible;
+  }
+}
+
+.sd-axis {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sd-hoverband {
+  fill: var(--sd-hover);
+}
+
+.sd-tooltip {
+  position: absolute;
+  z-index: 5;
+  min-width: 160px;
+  padding: 8px 10px;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-radius-small);
+  box-shadow: 0 8px 24px var(--sd-shadow);
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.sd-tooltip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sd-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.is-strong {
+    border-top: 1px solid var(--sd-line);
+    margin-top: 4px;
+    padding-top: 4px;
+    font-weight: 600;
+  }
+}
+
+.sd-tooltip-label {
+  flex: 1;
+  color: var(--sd-ink-2);
+}
+
+.sd-tooltip-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}

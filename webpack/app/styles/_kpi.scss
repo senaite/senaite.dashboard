@@ -1,0 +1,112 @@
+// Number tile
+
+// A number sits on the grey band, its label above it in secondary ink
+.sd-tile-kpi {
+  background: var(--sd-band);
+
+  .sd-tile-head {
+    min-height: 0;
+    padding: 14px 16px 0;
+    margin-bottom: 6px;
+    border-bottom: 0;
+  }
+
+  .sd-tile-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--sd-ink-2);
+  }
+
+  .sd-tile-body,
+  &.is-editing .sd-tile-body {
+    margin: 0 16px 14px;
+  }
+}
+
+// The state or color a number stands for
+.sd-marker {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--sd-marker);
+}
+
+.sd-kpi {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 4px;
+}
+
+.sd-kpi-value {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--sd-ink);
+}
+
+.sd-kpi-unit {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 3px;
+  color: var(--sd-ink-2);
+  letter-spacing: 0;
+}
+
+.sd-kpi-facts {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  font-size: 12px;
+
+  dt {
+    color: var(--sd-muted);
+    font-weight: 400;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--sd-ink-2);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.sd-spark {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sd-spark-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 28px;
+  flex: 0 1 120px;
+}
+
+.sd-spark-bar {
+  flex: 1;
+  min-width: 4px;
+  max-width: 12px;
+  border-radius: 2px 2px 0 0;
+  background: var(--sd-line-strong);
+  cursor: default;
+}
+
+.sd-spark-caption {
+  font-size: 12px;
+  color: var(--sd-muted);
+  white-space: nowrap;
+  text-align: right;
+
+  strong {
+    color: var(--sd-ink-2);
+    font-weight: 600;
+  }
+}

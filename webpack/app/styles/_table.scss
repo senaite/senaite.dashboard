@@ -1,0 +1,108 @@
+// Table
+
+.sd-table-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+}
+
+.sd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    position: sticky;
+    top: 0;
+    background: var(--sd-surface);
+    text-align: left;
+    font-weight: 500;
+    color: var(--sd-muted);
+    padding: 4px 8px 6px 0;
+    border-bottom: 1px solid var(--sd-line);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 7px 8px 7px 0;
+    border-bottom: 1px solid var(--sd-line);
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .is-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  a {
+    color: var(--sd-accent);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.sd-table-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 12px;
+  color: var(--sd-muted);
+
+  a {
+    color: var(--sd-accent);
+    font-weight: 500;
+  }
+}
+
+.sd-late {
+  color: var(--sd-danger);
+  font-weight: 500;
+}
+
+.sd-muted {
+  color: var(--sd-muted);
+}
+
+.sd-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sd-state-color);
+  }
+}
+
+.sd-progress {
+  display: inline-block;
+  width: 64px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sd-band);
+  vertical-align: middle;
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background: var(--sd-accent);
+  }
+}

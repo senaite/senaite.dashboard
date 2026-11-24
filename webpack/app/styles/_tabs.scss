@@ -1,0 +1,141 @@
+// Tabs
+
+.sd-tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--sd-line-strong);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  // Scrolls sideways when the tabs do not fit, without a scrollbar;
+  // it overlaps the line below so the active tab underlines it
+  > ul {
+    display: flex;
+    gap: 4px;
+    margin: 0 0 -1px;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  // A short line between the dashboards and what can be done with them
+  > ul + .sd-tab-add {
+    position: relative;
+    margin-left: 9px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: -9px;
+      top: 50%;
+      width: 1px;
+      height: 18px;
+      transform: translateY(-50%);
+      background: var(--sd-line-strong);
+    }
+  }
+
+  .sd-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: none;
+    padding: 10px 12px;
+    border-bottom: 2px solid transparent;
+    color: var(--sd-ink-2);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--sd-ink);
+    }
+
+    &[aria-current="page"] {
+      color: var(--sd-ink);
+      border-bottom-color: var(--sd-accent);
+    }
+  }
+}
+
+.sd-tab-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  color: var(--sd-accent);
+  padding: 8px 10px;
+  border-radius: var(--sd-radius-small);
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--sd-accent-soft);
+  }
+}
+
+.sd-viewactions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+}
+
+.sd-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--sd-hover);
+  color: var(--sd-ink-2);
+  white-space: nowrap;
+
+  &.is-draft {
+    background: var(--sd-warning-soft);
+    color: var(--sd-warning);
+  }
+}
+
+// A thin line running along the rule under the tabs while data loads
+.sd-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 30%;
+    background: var(--sd-accent);
+    animation: sd-slide 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes sd-slide {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(340%);
+  }
+}

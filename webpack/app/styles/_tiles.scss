@@ -1,0 +1,282 @@
+// Grid and tiles
+
+.sd-grid {
+  position: relative;
+  min-height: 200px;
+}
+
+.sd-cell {
+  display: flex;
+}
+
+.sd-app.is-editing .sd-grid {
+  user-select: none;
+}
+
+// The resize corner: a clear grip, only while editing
+.sd-cell > .react-resizable-handle {
+  z-index: 3;
+  width: 22px;
+  height: 22px;
+  right: 2px;
+  bottom: 2px;
+  background: none;
+  cursor: nwse-resize;
+
+  &::after {
+    right: 6px;
+    bottom: 6px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--sd-muted);
+    border-bottom: 2px solid var(--sd-muted);
+    border-radius: 0 0 2px 0;
+  }
+
+  &:hover::after {
+    border-color: var(--sd-accent);
+  }
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: var(--sd-accent);
+  opacity: 0.12;
+  border-radius: var(--sd-radius);
+}
+
+.sd-tile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: var(--sd-radius);
+  overflow: hidden;
+
+  &.is-editing {
+    border-style: dashed;
+    border-color: var(--sd-line-strong);
+
+    .sd-tile-head {
+      cursor: grab;
+    }
+  }
+}
+
+.sd-tile.is-spotlight {
+  animation: sd-spotlight 1.6s ease-out;
+}
+
+@keyframes sd-spotlight {
+  0%,
+  40% {
+    border-color: var(--sd-accent);
+    box-shadow: 0 0 0 4px var(--sd-accent-soft);
+  }
+}
+
+.react-draggable-dragging .sd-tile {
+  box-shadow: 0 16px 40px var(--sd-shadow);
+  cursor: grabbing;
+}
+
+// A section is set apart by the rule under its heading, as in the
+// SENAITE listings, not by a box
+.sd-tile-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 0 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--sd-line-strong);
+}
+
+.sd-tile.is-editing .sd-tile-head {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.sd-tile-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--sd-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--sd-accent);
+      text-decoration: underline;
+    }
+  }
+}
+
+.sd-tile-grip {
+  display: inline-flex;
+  padding: 2px;
+  margin-left: -8px;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--sd-muted);
+  cursor: grab;
+}
+
+.sd-tile-tools {
+  display: flex;
+  gap: 2px;
+}
+
+.sd-tile-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 0 0 8px;
+}
+
+.sd-tile.is-editing .sd-tile-body {
+  margin: 0 8px 8px;
+}
+
+.sd-tile-content {
+  height: 100%;
+  transition: opacity 0.2s;
+
+  &.is-pending {
+    opacity: 0.55;
+  }
+}
+
+.sd-empty,
+.sd-tile-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  margin: 0;
+  color: var(--sd-muted);
+}
+
+.sd-tile-error {
+  color: var(--sd-danger);
+  align-items: flex-start;
+}
+
+// Placeholders while a tile waits for its data, in the shape of what
+// comes: a number, bars or rows
+.sd-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+
+  span {
+    display: block;
+    height: 12px;
+    border-radius: 3px;
+    background: var(--sd-skeleton);
+    animation: sd-pulse 1.4s ease-in-out infinite;
+  }
+
+  &.is-kpi span {
+    width: 3.5ch;
+    height: 32px;
+  }
+
+  &.is-bars span {
+    height: 10px;
+  }
+}
+
+@keyframes sd-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+// Shown in a tile that waits longer than usual
+.sd-slow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--sd-ink-2);
+}
+
+.sd-spinner {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--sd-accent-soft);
+  border-top-color: var(--sd-accent);
+  border-radius: 50%;
+  animation: sd-turn 0.8s linear infinite;
+}
+
+// Narrow screens: one column, numbers two by two
+.sd-stack {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sd-stack-item {
+  grid-column: span 2;
+  min-height: 150px;
+
+  &.is-half {
+    grid-column: span 1;
+    min-height: 0;
+    height: 132px;
+
+    .sd-kpi-value {
+      font-size: 32px;
+    }
+
+    .sd-spark-caption {
+      display: none;
+    }
+  }
+
+  // Up to the highest a tile may be (MAX_TILE_HEIGHT)
+  @for $h from 1 through 24 {
+    &.is-h#{$h} {
+      height: #{$h * 56}px;
+    }
+  }
+}
+
+.sd-emptyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 72px 24px;
+  border: 1px dashed var(--sd-line-strong);
+  border-radius: var(--sd-radius);
+  color: var(--sd-muted);
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 15px;
+  }
+}
+
+.sd-emptyboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
