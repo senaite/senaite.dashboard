@@ -59,8 +59,10 @@ export const NAMED = {
 
 export const OTHER_KEYS = ["__other__", "__none__"];
 
+// A color by its name, or the color of a workflow state, so that a
+// number of samples in a state is marked in the color of the state
 export function namedColor(name) {
-  return NAMED[name] || NAMED.slate;
+  return NAMED[name] || STATE_COLORS[name] || NAMED.slate;
 }
 
 // The color of a workflow state, by its meaning
