@@ -64,8 +64,8 @@
   min-width: 0;
 }
 
-// The loader of the SENAITE listings: four dots that circle each other,
-// with how far the data has come below them
+// The loader: three cells of the logo hexagon that light up one after
+// the other, with how far the data has come below them
 .sd-loader {
   display: flex;
   flex-direction: column;
@@ -73,38 +73,39 @@
   gap: 8px;
 }
 
-.sd-loader-dots {
-  position: relative;
-  width: 44px;
-  height: 8px;
+.sd-loader-cells {
+  display: flex;
+  gap: 3px;
 
-  span {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: var(--sd-loader-dot);
+  svg {
+    display: block;
+    width: 14px;
+    height: 16px;
   }
 
-  span:nth-child(1) {
-    left: 12px;
-    background: var(--sd-loader-accent);
-    animation: sd-dot-a 1.5s linear infinite;
+  polygon {
+    fill: var(--sd-loader-cell);
+    animation: sd-cell 1.5s ease-in-out infinite;
   }
 
-  span:nth-child(2) {
-    left: 24px;
-    animation: sd-dot-b 1.5s linear 0.5s infinite;
+  svg:nth-child(2) polygon {
+    animation-delay: 0.25s;
   }
 
-  span:nth-child(3) {
-    left: 12px;
-    animation: sd-dot-c 1.5s linear infinite;
+  svg:nth-child(3) polygon {
+    animation-delay: 0.5s;
+  }
+}
+
+@keyframes sd-cell {
+  0%,
+  60%,
+  100% {
+    fill: var(--sd-loader-cell);
   }
 
-  span:nth-child(4) {
-    left: 24px;
-    animation: sd-dot-d 1.5s linear 0.5s infinite;
+  25% {
+    fill: var(--sd-loader-active);
   }
 }
 
@@ -112,27 +113,3 @@
   font-size: 12px;
   color: var(--sd-muted);
 }
-
-// A dot turns half a circle around the middle between two dots, rests,
-// and turns back; a and c clockwise, b and d the other way
-@mixin sd-dot-turn($name, $angle, $offset) {
-  @keyframes #{$name} {
-    0% {
-      transform: rotate(0deg) translateX($offset);
-    }
-
-    25%,
-    75% {
-      transform: rotate($angle) translateX($offset);
-    }
-
-    100% {
-      transform: rotate($angle * 2) translateX($offset);
-    }
-  }
-}
-
-@include sd-dot-turn(sd-dot-a, 180deg, -12px);
-@include sd-dot-turn(sd-dot-b, -180deg, -12px);
-@include sd-dot-turn(sd-dot-c, 180deg, 12px);
-@include sd-dot-turn(sd-dot-d, -180deg, 12px);
