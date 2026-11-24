@@ -101,15 +101,13 @@ export default function Tile(props) {
   const articleRef = useSpotlight(spotlight);
   const title = titleText(tile.title);
   const link = editing ? null : resolveLink(tile, context);
-  const cap = tile.type === "kpi" && tile.options.color
+  const marker = tile.type === "kpi" && tile.options.color
     ? namedColor(tile.options.color) : null;
   return (
     <article ref={articleRef}
              className={`sd-tile sd-tile-${tile.type}` +
                         (editing ? " is-editing" : "") +
-                        (spotlight ? " is-spotlight" : "") +
-                        (cap ? " has-cap" : "")}
-             style={cap ? {"--sd-cap": cap} : null}
+                        (spotlight ? " is-spotlight" : "")}
              aria-label={title}>
       <header className="sd-tile-head">
         {editing ? (
@@ -119,6 +117,10 @@ export default function Tile(props) {
                   onKeyDown={(event) => onKey(event, tile, props.onNudge)}>
             <Icon name="grip" size={16}/>
           </button>
+        ) : null}
+        {marker ? (
+          <span className="sd-marker" aria-hidden="true"
+                style={{"--sd-marker": marker}}/>
         ) : null}
         <h3 className="sd-tile-title">
           {link ? <a href={link}>{title}</a> : title}
