@@ -1,0 +1,61 @@
+// Menu
+
+.sd-menu {
+  position: relative;
+
+  &.is-compact .sd-btn {
+    padding: 0 8px;
+  }
+}
+
+.sd-menu-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  min-width: 260px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--sd-surface);
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-radius);
+  box-shadow: 0 12px 32px var(--sd-shadow);
+
+  button {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: var(--sd-radius-small);
+    background: none;
+    text-align: left;
+    color: var(--sd-ink);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--sd-hover);
+    }
+
+    &.is-danger {
+      color: var(--sd-danger);
+    }
+
+    .sd-icon {
+      margin-top: 2px;
+    }
+  }
+
+  strong {
+    display: block;
+    font-weight: 500;
+  }
+
+  small {
+    display: block;
+    color: var(--sd-muted);
+    font-size: 12px;
+  }
+}

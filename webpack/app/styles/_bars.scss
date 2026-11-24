@@ -1,0 +1,77 @@
+// Bars
+
+.sd-bar {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px 10px 16px;
+  margin-bottom: 16px;
+  border-radius: var(--sd-radius);
+  border: 1px solid;
+
+  &.is-edit {
+    background: var(--sd-info-soft);
+    border-color: var(--sd-info-line);
+  }
+
+  &.is-draft {
+    background: var(--sd-warning-soft);
+    border-color: var(--sd-warning-line);
+
+    strong {
+      color: var(--sd-warning);
+    }
+  }
+
+  // A notice, not a mode: it scrolls away with the page
+  &.is-static {
+    position: static;
+  }
+}
+
+.sd-bar-text {
+  margin: 0;
+  flex: 1 1 280px;
+  color: var(--sd-ink-2);
+}
+
+.sd-bar-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sd-savestate {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--sd-muted);
+
+  &.is-saved {
+    color: var(--sd-success);
+  }
+
+  &.is-error {
+    color: var(--sd-danger);
+  }
+}
+
+.sd-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 14px;
+  margin-bottom: 16px;
+  border-radius: var(--sd-radius);
+  background: var(--sd-danger-soft);
+  color: var(--sd-danger-ink);
+
+  span {
+    flex: 1;
+  }
+}

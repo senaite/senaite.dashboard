@@ -1,0 +1,46 @@
+// What every part of the dashboard builds on
+
+.sd-app,
+.sd-drawer,
+.sd-dialog {
+  --sd-radius: 6px;
+  --sd-radius-small: 4px;
+  --sd-focus-ring: 0 0 0 3px var(--sd-focus-ring);
+  color: var(--sd-ink);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sd-app *,
+.sd-drawer *,
+.sd-dialog * {
+  box-sizing: border-box;
+}
+
+.sd-mount {
+  margin: 0 -15px;
+}
+
+.sd-boot {
+  padding: 48px;
+  color: var(--sd-muted);
+}
+
+.sd-app {
+  container-type: inline-size;
+  background: var(--sd-bg);
+  padding: 8px 0 32px;
+  min-height: 70vh;
+  transition: margin-right 0.2s ease;
+}
+
+@media (min-width: 1100px) {
+  .sd-app.has-panel {
+    margin-right: 420px;
+  }
+}
+
+.sd-icon {
+  flex: none;
+  display: block;
+}

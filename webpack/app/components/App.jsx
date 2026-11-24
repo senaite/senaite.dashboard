@@ -1,22 +1,21 @@
 import React, {useMemo, useState} from "react";
 
 import Alert from "./Alert";
-import {EditBar, DraftBar, PendingBar} from "./Bars";
-import {ConfirmDialog, DashboardSettingsDialog,
-        NewDashboardDialog} from "./Dialogs";
+import DashboardDialogs from "./DashboardDialogs";
 import EmptyState from "./EmptyState";
 import Grid from "./Grid";
 import {Greeting, Tabs} from "./Header";
 import Icon from "./Icon";
 import Library from "./Library";
+import ModeBars from "./ModeBars";
 import Toast from "./Toast";
 import ViewActions from "./ViewActions";
 import TileSettings from "../settings/TileSettings";
 import useDashboard from "../hooks/useDashboard";
 import useTheme from "../hooks/useTheme";
-import {findFreePlace, nudgeTile, settle} from "../layout";
-import {newTileId, normalizeTile} from "../model";
-import {t, withTitle} from "../i18n";
+import {nudgeTile, placeTile, settle} from "../layout";
+import {newTileId, tileFromPreset} from "../model";
+import {t} from "../i18n";
 
 function byName(items) {
   const map = {};
@@ -78,12 +77,8 @@ export default function App({api, boot}) {
   };
 
   const addTile = (preset) => {
-    const tile = normalizeTile(JSON.parse(JSON.stringify(preset.tile)));
-    tile.id = newTileId();
-    actions.setTiles((tiles) => {
-      tile.layout = findFreePlace(tiles, tile.layout.w, tile.layout.h);
-      return tiles.concat(tile);
-    });
+    const tile = tileFromPreset(preset);
+    actions.setTiles((tiles) => tiles.concat(placeTile(tiles, tile)));
     setSpotlight(tile.id);
     // A tile that shows nothing yet is filled in right away
     if (preset.configure) {
@@ -105,11 +100,8 @@ export default function App({api, boot}) {
     if (panel && panel.tileId === tileId) {
       setPanel(null);
     }
-    let before = null;
-    actions.setTiles((tiles) => {
-      before = tiles;
-      return settle(tiles.filter((tile) => tile.id !== tileId));
-    });
+    const before = view.tiles;
+    actions.setTiles(settle(before.filter((tile) => tile.id !== tileId)));
     setUndo({key: viewKey(view), tiles: before});
     actions.notify("tile_removed");
   };
@@ -162,24 +154,15 @@ export default function App({api, boot}) {
 
       <Alert message={error} onClose={actions.dismissError}/>
 
-      {view && draft ? (
-        <DraftBar view={view} saveState={saveState}
-                  onAdd={() => setPanel({kind: "library"})}
-                  onPublish={() => { close(); actions.publish(); }}
-                  onDiscard={actions.discard}
-                  onLeave={() => open(view.id)}/>
-      ) : null}
-      {view && !isEditing && permissions.manage && view.kind === "global" &&
-       view.published && view.has_changes ? (
-        <PendingBar onOpenDraft={() => open(view.id, true)}/>
-      ) : null}
-      {view && editing && !draft ? (
-        <EditBar saveState={saveState}
-                 customized={view.kind === "global" && view.customized}
-                 onAdd={() => setPanel({kind: "library"})}
-                 onReset={() => setDialog("reset")}
-                 onDone={() => { close(); setEditing(false); }}/>
-      ) : null}
+      <ModeBars view={view} editing={editing}
+                manage={permissions.manage} saveState={saveState}
+                onAdd={() => setPanel({kind: "library"})}
+                onPublish={() => { close(); actions.publish(); }}
+                onDiscard={actions.discard}
+                onLeave={() => open(view.id)}
+                onOpenDraft={() => open(view.id, true)}
+                onReset={() => setDialog("reset")}
+                onDone={() => { close(); setEditing(false); }}/>
 
       <main className="sd-main">
         {view && view.tiles.length ? (
@@ -226,45 +209,23 @@ export default function App({api, boot}) {
       <Toast message={notice} onUndo={onUndo}
              onClose={() => { setUndo(null); actions.dismissNotice(); }}/>
 
-      {dialog === "new" ? (
-        <NewDashboardDialog manage={permissions.manage}
-                            canCopy={Boolean(view && view.tiles.length)}
-                            onCreate={create} onClose={close}/>
-      ) : null}
-      {dialog === "settings" ? (
-        <DashboardSettingsDialog
-          view={view} roles={boot.roles} onClose={close}
-          onSave={({title, roles}) => {
-            close();
-            actions.settings({title: withTitle(view.title, title), roles});
-          }}/>
-      ) : null}
-      {dialog === "delete" ? (
-        <ConfirmDialog title={t("delete_dashboard")}
-                       text={t("delete_confirm")} label={t("delete")}
-                       onClose={close}
-                       onConfirm={() => { close(); actions.remove(); }}/>
-      ) : null}
-      {dialog === "defaults" ? (
-        <ConfirmDialog title={t("restore_defaults")}
-                       text={t("restore_defaults_confirm")}
-                       label={t("restore")} danger={false}
-                       onClose={close}
-                       onConfirm={() => {
-                         close();
-                         setEditing(false);
-                         actions.restoreDefaults();
-                       }}/>
-      ) : null}
-      {dialog === "reset" ? (
-        <ConfirmDialog title={t("reset")} text={t("reset_confirm")}
-                       label={t("reset")} onClose={close}
-                       onConfirm={() => {
-                         close();
-                         setEditing(false);
-                         actions.reset();
-                       }}/>
-      ) : null}
+      <DashboardDialogs
+        dialog={dialog} view={view} roles={boot.roles}
+        manage={permissions.manage}
+        canCopy={Boolean(view && view.tiles.length)}
+        onClose={close} onCreate={create}
+        onSettings={(settings) => { close(); actions.settings(settings); }}
+        onDelete={() => { close(); actions.remove(); }}
+        onRestoreDefaults={() => {
+          close();
+          setEditing(false);
+          actions.restoreDefaults();
+        }}
+        onReset={() => {
+          close();
+          setEditing(false);
+          actions.reset();
+        }}/>
     </div>
   );
 }

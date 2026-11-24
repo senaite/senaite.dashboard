@@ -8,6 +8,26 @@ import {t, titleText} from "../i18n";
 import {getTileType} from "../tiles/registry";
 import {resolveUrl} from "../urls";
 
+// A tile that waits longer than this says so
+const SLOW_MS = 4000;
+
+// The placeholders of a tile while it waits, in the shape of what
+// comes: a number, bars or rows
+const SKELETONS = {
+  kpi: {className: "is-kpi", widths: [null]},
+  bar: {className: "is-bars", widths: [100, 85, 60, 45, 30]},
+  donut: {className: "is-bars", widths: [100, 70, 45]},
+  chart: {className: "is-bars", widths: [100, 90, 75, 55]}
+};
+const ROWS = {className: "", widths: [92, 85, 88, 70]};
+
+const ARROWS = {
+  ArrowLeft: [-1, 0],
+  ArrowRight: [1, 0],
+  ArrowUp: [0, -1],
+  ArrowDown: [0, 1]
+};
+
 function isEmpty(data) {
   if (data.items) {
     return !data.items.length;
@@ -30,19 +50,6 @@ function resolveLink(tile, context) {
   const dataset = context.datasets[tile.params.dataset];
   return dataset ? dataset.listing : null;
 }
-
-// A tile that waits longer than this says so
-const SLOW_MS = 4000;
-
-// The placeholders of a tile while it waits, in the shape of what
-// comes: a number, bars or rows
-const SKELETONS = {
-  kpi: {className: "is-kpi", widths: [null]},
-  bar: {className: "is-bars", widths: [100, 85, 60, 45, 30]},
-  donut: {className: "is-bars", widths: [100, 70, 45]},
-  chart: {className: "is-bars", widths: [100, 90, 75, 55]}
-};
-const ROWS = {className: "", widths: [92, 85, 88, 70]};
 
 function useSlow() {
   const [slow, setSlow] = useState(false);
@@ -97,13 +104,6 @@ function Body({tile, data, pending, size, context, listing}) {
     </div>
   );
 }
-
-const ARROWS = {
-  ArrowLeft: [-1, 0],
-  ArrowRight: [1, 0],
-  ArrowUp: [0, -1],
-  ArrowDown: [0, 1]
-};
 
 // Arrow keys move the tile by one cell, with Shift they resize it
 function onKey(event, tile, onNudge) {

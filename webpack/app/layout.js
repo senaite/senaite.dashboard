@@ -123,3 +123,9 @@ export function findFreePlace(tiles, w, h) {
   }
   return {x: 0, y: bottom, w, h};
 }
+
+// The tile at the first free place among the others
+export function placeTile(tiles, tile) {
+  const {w, h} = tile.layout;
+  return {...tile, layout: findFreePlace(tiles, w, h)};
+}

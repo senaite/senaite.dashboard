@@ -1,0 +1,186 @@
+// Drawer
+
+.sd-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1060;
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  max-width: 100vw;
+  background: var(--sd-surface);
+  border-left: 1px solid var(--sd-line);
+  box-shadow: -12px 0 32px var(--sd-shadow);
+  animation: sd-slide-in 0.18s ease-out;
+}
+
+@keyframes sd-slide-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+
+.sd-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px 20px;
+  border-bottom: 1px solid var(--sd-line);
+
+  h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+}
+
+.sd-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 24px;
+}
+
+.sd-drawer-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--sd-line);
+
+  // A second action keeps to the left of the main one
+  > :first-child:not(:last-child) {
+    margin-right: auto;
+  }
+}
+
+.sd-hint {
+  margin: 0 0 12px;
+  color: var(--sd-ink-2);
+}
+
+.sd-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--sd-line-strong);
+  border-radius: var(--sd-radius-small);
+  color: var(--sd-muted);
+
+  &:focus-within {
+    box-shadow: var(--sd-focus-ring);
+    border-color: var(--sd-accent);
+  }
+
+  input {
+    flex: 1;
+    border: 0;
+    outline: none;
+    font-size: 14px;
+    background: none;
+    color: var(--sd-ink);
+  }
+}
+
+.sd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.sd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--sd-line-strong);
+  border-radius: 999px;
+  background: var(--sd-surface);
+  color: var(--sd-ink-2);
+  font-size: 13px;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    background: var(--sd-ink);
+    border-color: var(--sd-ink);
+    color: var(--sd-bg);
+  }
+
+  &.is-value {
+    cursor: default;
+    background: var(--sd-accent-soft);
+    border-color: var(--sd-info-line);
+    color: var(--sd-ink);
+    padding-right: 4px;
+
+    button {
+      display: inline-flex;
+      border: 0;
+      background: none;
+      padding: 2px;
+      border-radius: 50%;
+      color: var(--sd-ink-2);
+      cursor: pointer;
+
+      &:hover {
+        background: var(--sd-hover);
+      }
+    }
+  }
+}
+
+.sd-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sd-preset {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 12px;
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-radius);
+
+  &:hover {
+    border-color: var(--sd-line-strong);
+  }
+}
+
+.sd-preset-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--sd-hover);
+  color: var(--sd-ink-2);
+  flex: none;
+}
+
+.sd-preset-text {
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    display: block;
+    font-weight: 600;
+  }
+
+  span {
+    display: block;
+    font-size: 13px;
+    color: var(--sd-muted);
+  }
+}

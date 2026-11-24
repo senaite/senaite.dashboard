@@ -28,20 +28,25 @@ def view(env, request, dashboard_id):
     return views.get_view(dashboard_id, env, draft=draft)
 
 
+def dashboards_answer(env, **extra):
+    """The dashboards of the user and the one to show, with `extra`."""
+    items = views.list_dashboards(env)
+    answer = {"dashboards": items,
+              "active": views.get_active_id(env, items)}
+    answer.update(extra)
+    return answer
+
+
 @route("/list", ["GET"])
 def list_dashboards(env, request):
-    items = views.list_dashboards(env)
-    return {"dashboards": items,
-            "active": views.get_active_id(env, items)}
+    return dashboards_answer(env)
 
 
 @route("/defaults/restore", ["POST"])
 def restore_defaults(env, request):
     """Create the default dashboards that are missing, as drafts."""
     created = defaults.restore_defaults(env)
-    items = views.list_dashboards(env)
-    return {"created": created, "dashboards": items,
-            "active": views.get_active_id(env, items)}
+    return dashboards_answer(env, created=created)
 
 
 @route("/save/<string:dashboard_id>", ["POST"])

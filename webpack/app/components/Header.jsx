@@ -4,6 +4,10 @@ import Icon from "./Icon";
 import {formatDateTime, formatToday} from "../format";
 import {format, t, titleText} from "../i18n";
 
+// The answers are often cached and back at once: the button turns at
+// least this long, so that a click is seen to do something
+const REFRESH_MIN_MS = 600;
+
 function greeting(now) {
   const hour = new Date(now).getHours();
   if (hour < 12) {
@@ -11,10 +15,6 @@ function greeting(now) {
   }
   return hour < 18 ? t("good_afternoon") : t("good_evening");
 }
-
-// The answers are often cached and back at once: the button turns at
-// least this long, so that a click is seen to do something
-const REFRESH_MIN_MS = 600;
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));

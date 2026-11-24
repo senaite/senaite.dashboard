@@ -92,6 +92,17 @@ def create(title, tiles, roles, env, default=None):
     }
     if default:
         record["default"] = default
+    return store(record, env)
+
+
+def get_for_change(dashboard_id, env):
+    """Return the record of a global dashboard a manager is to change."""
+    check_manage(env)
+    return get(dashboard_id, env)
+
+
+def store(record, env):
+    """Mark the record as changed by the user, keep it and return it."""
     touch(record, env)
     storage.set_global(record)
     return record
@@ -103,53 +114,41 @@ def save_draft(dashboard_id, env, tiles=None, title=None, roles=None):
     Only the tiles have a draft: a new title or new roles apply at once,
     to the published version too, like the settings of a page.
     """
-    check_manage(env)
-    record = get(dashboard_id, env)
+    record = get_for_change(dashboard_id, env)
     if tiles is not None:
         record["draft"] = {"tiles": model.clean_tiles(tiles)}
     if title is not None:
         record["title"] = model.clean_dashboard_title(title)
     if roles is not None:
         record["roles"] = clean_roles(roles)
-    touch(record, env)
-    storage.set_global(record)
-    return record
+    return store(record, env)
 
 
 def publish(dashboard_id, env):
     """Make the draft what everybody sees."""
-    check_manage(env)
-    record = get(dashboard_id, env)
+    record = get_for_change(dashboard_id, env)
     record["published"] = {
         "tiles": copy.deepcopy(record["draft"]["tiles"]),
         "date": env.now.ISO8601(),
         "by": env.user_id,
     }
     record["revision"] = record.get("revision", 0) + 1
-    touch(record, env)
-    storage.set_global(record)
-    return record
+    return store(record, env)
 
 
 def discard_draft(dashboard_id, env):
     """Throw the draft away and start again from what is published."""
-    check_manage(env)
-    record = get(dashboard_id, env)
+    record = get_for_change(dashboard_id, env)
     if not is_published(record):
         raise ValidationError(_("There is nothing published to go back to"))
     record["draft"] = {"tiles": copy.deepcopy(record["published"]["tiles"])}
-    touch(record, env)
-    storage.set_global(record)
-    return record
+    return store(record, env)
 
 
 def unpublish(dashboard_id, env):
-    check_manage(env)
-    record = get(dashboard_id, env)
+    record = get_for_change(dashboard_id, env)
     record["published"] = None
-    touch(record, env)
-    storage.set_global(record)
-    return record
+    return store(record, env)
 
 
 def delete(dashboard_id, env):

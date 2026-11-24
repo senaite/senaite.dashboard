@@ -1,0 +1,182 @@
+// Datasets defined in the browser
+
+// Read by screen readers, not shown
+.sd-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.sd-ds-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sd-ds-body {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 860px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sd-ds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.sd-ds-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--sd-radius-small);
+  background: none;
+  color: var(--sd-ink);
+  text-align: left;
+  cursor: pointer;
+
+  span {
+    color: var(--sd-muted);
+    font-size: 12px;
+  }
+
+  &:hover {
+    background: var(--sd-surface);
+  }
+
+  &[aria-current] {
+    border-color: var(--sd-line-strong);
+    background: var(--sd-surface);
+  }
+}
+
+.sd-ds-main {
+  min-width: 0;
+  padding: 4px 20px 16px;
+  border: 1px solid var(--sd-line);
+  border-radius: var(--sd-radius);
+  background: var(--sd-surface);
+}
+
+.sd-ds-empty {
+  margin: 24px 0;
+  color: var(--sd-muted);
+}
+
+.sd-ds-type {
+  display: block;
+  padding: 6px 0;
+  color: var(--sd-ink);
+  font-weight: 600;
+}
+
+.sd-ds-warning {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--sd-warning);
+  border-radius: var(--sd-radius-small);
+  background: var(--sd-warning-soft);
+  color: var(--sd-ink-2);
+}
+
+.sd-ds-tablewrap {
+  overflow-x: auto;
+}
+
+.sd-ds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    padding: 4px 8px 4px 0;
+    border-bottom: 1px solid var(--sd-line);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  thead th {
+    color: var(--sd-muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  tbody th {
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  // What is not used recedes
+  tbody tr:not(.is-used) {
+    color: var(--sd-muted);
+
+    .sd-input {
+      opacity: 0.6;
+    }
+  }
+
+  .sd-input {
+    min-width: 120px;
+  }
+
+  code {
+    color: var(--sd-ink);
+  }
+}
+
+.sd-ds-samples {
+  display: inline-block;
+  max-width: 260px;
+  overflow: hidden;
+  color: var(--sd-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sd-ds-span {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.sd-ds-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sd-line);
+
+  // The count keeps to the left of the actions
+  > .sd-hint {
+    margin: 0 auto 0 0;
+  }
+}

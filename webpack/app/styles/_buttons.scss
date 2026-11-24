@@ -1,0 +1,95 @@
+// Buttons
+
+.sd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--sd-line-strong);
+  border-radius: var(--sd-radius-small);
+  background: var(--sd-surface);
+  color: var(--sd-ink);
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--sd-muted);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &.is-primary {
+    background: var(--sd-accent);
+    border-color: var(--sd-accent);
+    color: var(--sd-on-accent);
+
+    &:hover {
+      background: var(--sd-accent-strong);
+    }
+  }
+
+  &.is-danger {
+    background: var(--sd-danger);
+    border-color: var(--sd-danger);
+    color: var(--sd-on-accent);
+  }
+
+  &.is-small {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
+  &.is-done {
+    color: var(--sd-success);
+    border-color: var(--sd-success-line);
+  }
+}
+
+.sd-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: var(--sd-radius-small);
+  background: none;
+  color: var(--sd-ink-2);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--sd-hover);
+    color: var(--sd-ink);
+  }
+
+  &.is-danger:hover {
+    color: var(--sd-danger);
+    background: var(--sd-danger-soft);
+  }
+
+  &.is-small {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.sd-app,
+.sd-drawer,
+.sd-dialog {
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: none;
+    box-shadow: var(--sd-focus-ring);
+  }
+}
