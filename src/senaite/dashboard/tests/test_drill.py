@@ -186,9 +186,13 @@ class ResultTextTestCase(unittest.TestCase):
         self.assertEqual(builtin.to_line(u"line one\nline two"),
                          u"line one line two")
 
-    def test_notations_with_a_superscript_become_plain_ones(self):
-        self.assertEqual(builtin.PLAIN_NOTATIONS.get(3), 2)
-        self.assertEqual(builtin.PLAIN_NOTATIONS.get(5), 4)
+    def test_a_unit_with_a_superscript(self):
+        self.assertEqual(builtin.to_supsub(u"cm^2"), u"cm\xb2")
+        self.assertEqual(builtin.to_supsub(u"kg^(-1)"), u"kg\u207b\xb9")
+
+    def test_a_scientific_notation_with_a_superscript(self):
+        self.assertEqual(builtin.to_supsub(u"1.2x10<sup>-5</sup>"),
+                         u"1.2x10\u207b\u2075")
 
     def test_only_a_number_takes_the_unit(self):
         self.assertTrue(builtin.has_digit(u"< 0.50"))
