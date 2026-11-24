@@ -5,6 +5,8 @@ const PATHS = {
   plus: "M12 5v14M5 12h14",
   close: "M6 6l12 12M18 6L6 18",
   check: "M5 12.5l4.5 4.5L19 7.5",
+  blank: "",
+  theme: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 3v18",
   edit: "M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4",
   sliders: "M4 7h10M18 7h2M4 17h4M12 17h8M16 5v4M10 15v4",
   grip: "M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01",

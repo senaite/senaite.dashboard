@@ -13,6 +13,7 @@ import Toast from "./Toast";
 import ViewActions from "./ViewActions";
 import TileSettings from "../settings/TileSettings";
 import useDashboard from "../hooks/useDashboard";
+import useTheme from "../hooks/useTheme";
 import {findFreePlace, nudgeTile, settle} from "../layout";
 import {newTileId, normalizeTile} from "../model";
 import {t, withTitle} from "../i18n";
@@ -40,6 +41,7 @@ export default function App({api, boot}) {
     presets: boot.presets, categories: boot.categories
   });
   const permissions = boot.permissions;
+  const [theme, setTheme] = useTheme();
 
   const context = useMemo(() => ({
     api,
@@ -142,7 +144,8 @@ export default function App({api, boot}) {
                        datasetsUrl={boot.datasets_url}
                        onEdit={() => setEditing(true)}
                        onEditDraft={() => open(view.id, true)}
-                       onDialog={setDialog}/>
+                       onDialog={setDialog}
+                       theme={theme} onTheme={setTheme}/>
         ) : null}
       </Tabs>
 

@@ -3,7 +3,7 @@ import {scaleBand, scaleLinear} from "d3-scale";
 import {area, curveMonotoneX, line} from "d3-shape";
 
 import Tooltip, {TooltipRow} from "./Tooltip";
-import {AXIS, BLUE_ACCENT, GRID, MUTED, SURFACE} from "./theme";
+import {ACCENT, AXIS, GRID, MUTED, SURFACE} from "./theme";
 import {groupColors} from "../colors";
 import {formatNumber, formatPeriod} from "../format";
 import {t} from "../i18n";
@@ -37,8 +37,8 @@ function Axis({ticks, scale, width}) {
     <g className="sd-axis">
       {ticks.map((tick) => (
         <g key={tick} transform={`translate(0,${scale(tick)})`}>
-          <line x1={0} x2={width} stroke={tick ? GRID : AXIS}/>
-          <text x={-8} dy="0.32em" textAnchor="end" fill={MUTED}>
+          <line x1={0} x2={width} style={{stroke: tick ? GRID : AXIS}}/>
+          <text x={-8} dy="0.32em" textAnchor="end" style={{fill: MUTED}}>
             {formatNumber(tick)}
           </text>
         </g>
@@ -52,7 +52,7 @@ function Columns({stacked, x, y, colors, active}) {
   const width = Math.min(MAX_BAR, band * 0.72);
   const offset = (band - width) / 2;
   return stacked.map((serie, layer) => (
-    <g key={serie.key} fill={colors[serie.key]}>
+    <g key={serie.key} style={{fill: colors[serie.key]}}>
       {serie.values.map((value, index) => {
         if (!value) {
           return null;
@@ -87,9 +87,9 @@ function Lines({stacked, series, x, y, colors, style}) {
       .y1(top)(serie.values) : null;
     return (
       <g key={serie.key}>
-        {fill ? <path d={fill} fill={colors[serie.key]}
+        {fill ? <path d={fill} style={{fill: colors[serie.key]}}
                       opacity={series.length > 1 ? 0.22 : 0.12}/> : null}
-        <path d={path} fill="none" stroke={colors[serie.key]}
+        <path d={path} fill="none" style={{stroke: colors[serie.key]}}
               strokeWidth={2} strokeLinejoin="round"
               strokeLinecap="round"/>
       </g>
@@ -104,8 +104,8 @@ function Markers({stacked, series, x, y, colors, style, index}) {
   const source = style === "area" ? stacked : series;
   const cx = x(index) + x.bandwidth() / 2;
   return source.map((serie) => (
-    <circle key={serie.key} cx={cx} r={4} fill={colors[serie.key]}
-            stroke={SURFACE} strokeWidth={2}
+    <circle key={serie.key} cx={cx} r={4} strokeWidth={2}
+            style={{fill: colors[serie.key], stroke: SURFACE}}
             cy={y(style === "area" ? serie.highs[index]
                   : serie.values[index])}/>
   ));
@@ -118,7 +118,7 @@ function XLabels({buckets, x, interval, height, every}) {
     }
     return (
       <text key={bucket} className="sd-axis" x={x(index) + x.bandwidth() / 2}
-            y={height + 16} textAnchor="middle" fill={MUTED}>
+            y={height + 16} textAnchor="middle" style={{fill: MUTED}}>
         {formatPeriod(bucket, interval)}
       </text>
     );
@@ -147,7 +147,7 @@ export default function TimeChart({data, style, width, height}) {
   const [active, setActive] = useState(null);
   const {buckets, series, interval, kind} = data;
   const colors = series.length > 1 ? groupColors(series, kind)
-    : {[series[0].key]: BLUE_ACCENT};
+    : {[series[0].key]: ACCENT};
   const innerWidth = Math.max(10, width - MARGIN.left - MARGIN.right);
   const innerHeight = Math.max(10, height - MARGIN.top - MARGIN.bottom);
   const stacked = stackSeries(series, buckets.length);

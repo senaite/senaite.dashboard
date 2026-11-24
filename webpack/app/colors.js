@@ -1,79 +1,75 @@
-// Colors of the data. Validated for color vision deficiencies in the
-// order they are used; see the README.
+// Colors of the data. They are references to the custom properties of
+// the theme (styles/_themes.scss), so the charts follow the theme.
+// Set them as style, not as SVG attribute: `fill="var(...)"` is not
+// resolved by every browser.
 //
-// Workflow states keep one color everywhere, by meaning: waiting,
-// in work, to verify, verified, published. Other groupings use the
-// categorical slots in fixed order. Whatever does not fit is "Other"
-// in a neutral gray.
+// Workflow states keep one color everywhere, by meaning, as in the
+// SENAITE listings. Other groupings use the categorical slots in fixed
+// order. Whatever does not fit is "Other" in a neutral gray.
 
-const YELLOW = "#eda100";
-const BLUE = "#2a78d6";
-const ORANGE = "#eb6834";
-const AQUA = "#1baf7a";
-const GREEN = "#008300";
-const VIOLET = "#6250d6";
-const MAGENTA = "#e87ba4";
-const RED = "#e34948";
-export const NEUTRAL = "#a8a7a0";
-const SLATE = "#5b6b7c";
+function token(name) {
+  return `var(--sd-${name})`;
+}
 
-const CATEGORICAL = [
-  BLUE, ORANGE, AQUA, YELLOW, MAGENTA, GREEN, VIOLET, RED
-];
+export const NEUTRAL = token("neutral");
+export const ACCENT = token("accent");
 
-const STATE_COLORS = {
+const CATEGORICAL = [1, 2, 3, 4, 5, 6, 7, 8].map(
+  (slot) => token(`cat-${slot}`));
+
+// The color group of each workflow state
+const STATE_GROUPS = {
   // before the laboratory has the sample, or an order not taken on
-  to_be_sampled: VIOLET,
-  pending: VIOLET,
-  scheduled_sampling: VIOLET,
-  to_be_preserved: VIOLET,
-  registered: VIOLET,
+  "state-new": [
+    "to_be_sampled", "pending", "scheduled_sampling", "to_be_preserved",
+    "registered"
+  ],
   // waiting for somebody
-  sample_due: YELLOW,
-  unassigned: YELLOW,
-  attachment_due: YELLOW,
-  todo: YELLOW,
+  "state-due": ["sample_due", "attachment_due", "todo"],
+  "state-unassigned": ["unassigned"],
   // in work
-  sample_received: BLUE,
-  assigned: BLUE,
-  open: BLUE,
-  in_work: BLUE,
+  "state-in-work": ["sample_received", "assigned", "open", "in_work"],
   // done, to be checked
-  to_be_verified: ORANGE,
-  complete: ORANGE,
-  // checked
-  verified: AQUA,
-  // out of the door
-  published: GREEN,
+  "state-to-be-verified": ["to_be_verified", "complete"],
+  "state-verified": ["verified"],
+  "state-published": ["published"],
   // left the workflow
-  rejected: NEUTRAL,
-  invalid: NEUTRAL,
-  retracted: NEUTRAL,
-  cancelled: NEUTRAL
+  "state-retracted": ["retracted"],
+  "state-invalid": ["invalid"],
+  "state-rejected": ["rejected"],
+  "state-cancelled": ["cancelled"]
 };
 
-// Colors a tile may be given by name, e.g. the cap of a number tile
+const STATE_COLORS = Object.fromEntries(
+  Object.entries(STATE_GROUPS).flatMap(([name, states]) =>
+    states.map((state) => [state, token(name)])));
+
+// Colors a tile may be given by name, e.g. the marker of a number tile
 export const NAMED = {
-  yellow: YELLOW,
-  blue: BLUE,
-  orange: ORANGE,
-  aqua: AQUA,
-  green: GREEN,
-  violet: VIOLET,
-  magenta: MAGENTA,
-  red: RED,
-  slate: SLATE
+  blue: token("cat-1"),
+  orange: token("cat-2"),
+  aqua: token("cat-3"),
+  yellow: token("cat-4"),
+  magenta: token("cat-5"),
+  green: token("cat-6"),
+  violet: token("cat-7"),
+  red: token("cat-8"),
+  slate: token("ink-2")
 };
 
 export const OTHER_KEYS = ["__other__", "__none__"];
 
 export function namedColor(name) {
-  return NAMED[name] || SLATE;
+  return NAMED[name] || NAMED.slate;
 }
 
 // The color of a workflow state, by its meaning
 export function stateColor(state) {
   return STATE_COLORS[state] || NEUTRAL;
+}
+
+function isOther(item) {
+  return OTHER_KEYS.includes(item.key);
 }
 
 // Colors for the groups of a result, by their key. States by meaning,
@@ -82,7 +78,7 @@ export function groupColors(items, kind) {
   const colors = {};
   let slot = 0;
   for (const item of items) {
-    if (OTHER_KEYS.includes(item.key)) {
+    if (isOther(item)) {
       colors[item.key] = NEUTRAL;
     } else if (kind === "state") {
       colors[item.key] = stateColor(item.key);

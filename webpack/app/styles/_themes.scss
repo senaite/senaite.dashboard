@@ -1,0 +1,171 @@
+// Themes of the dashboard. Every color the dashboard uses is a custom
+// property defined here, so a theme is one map below and nothing else.
+//
+// The light theme follows SENAITE: the ink and greys of senaite.core
+// (webpack/app/scss/base.scss), the light grey of the logo (#d6dadb,
+// senaite.ci) and the link blue as accent. The workflow states take
+// the colors of the SENAITE listings, which are Material colors; where
+// the listing tone is too pale for a mark on white (sample due, to be
+// verified), the stronger A700 tone of the same color is used.
+//
+// A theme is picked with `data-sd-theme` on the root element: "light",
+// "dark" or "auto", which follows the system setting. The name of a
+// theme is also its `color-scheme`, so form controls and scrollbars
+// follow it.
+
+@use "sass:map";
+
+$sd-themes: (
+  light: (
+    // surfaces
+    bg: #ffffff,
+    surface: #ffffff,
+    band: #f2f2f2,
+    band-hover: #eaecec,
+    hover: rgba(41, 51, 51, 0.06),
+    // text
+    ink: #293333,
+    ink-2: #606969,
+    muted: #7d8686,
+    // lines
+    line: #e4e7e8,
+    line-strong: #d6dadb,
+    // accent
+    accent: #428aaf,
+    accent-strong: #33708f,
+    accent-soft: rgba(66, 138, 175, 0.14),
+    on-accent: #ffffff,
+    // feedback
+    success: #2e7d32,
+    success-line: #a5d6a7,
+    danger: #c62828,
+    danger-soft: #fdecea,
+    danger-ink: #8a1c17,
+    warning: #9a5b00,
+    warning-soft: #fff4de,
+    warning-line: #f0d49c,
+    info-soft: #eaf3f8,
+    info-line: #bcd6e4,
+    // depth
+    shadow: rgba(16, 24, 40, 0.14),
+    shadow-strong: rgba(16, 24, 40, 0.24),
+    overlay: rgba(16, 24, 40, 0.4),
+    focus: rgba(66, 138, 175, 0.35),
+    // the toast is drawn in ink, its text in the page color
+    inverse-muted: #c9d1d1,
+    inverse-action: #9cc3ff,
+    inverse-hover: rgba(255, 255, 255, 0.1),
+    // loading
+    skeleton: #e6e9e9,
+    // charts
+    chart-grid: #e8ebeb,
+    chart-axis: #c9cfd0,
+    // workflow states
+    state-new: #90a4ae,
+    state-due: #ffd600,
+    state-unassigned: #ced4da,
+    state-in-work: #a1887f,
+    state-to-be-verified: #00b8d4,
+    state-verified: #0091ea,
+    state-published: #00c853,
+    state-retracted: #ff6f00,
+    state-invalid: #e65100,
+    state-rejected: #6c757d,
+    state-cancelled: #293333,
+    // groups without a meaning of their own, in this order
+    cat-1: #428aaf,
+    cat-2: #eb6834,
+    cat-3: #1baf7a,
+    cat-4: #eda100,
+    cat-5: #e87ba4,
+    cat-6: #008300,
+    cat-7: #6250d6,
+    cat-8: #e34948,
+    neutral: #a8adad,
+  ),
+  dark: (
+    bg: #1c2222,
+    surface: #222a2a,
+    band: #2a3232,
+    band-hover: #323b3b,
+    hover: rgba(255, 255, 255, 0.06),
+    ink: #e4e9e9,
+    ink-2: #b2bbbb,
+    muted: #8b9696,
+    line: #313a3a,
+    line-strong: #435050,
+    accent: #6fb0d2,
+    accent-strong: #93c5df,
+    accent-soft: rgba(111, 176, 210, 0.18),
+    on-accent: #10191c,
+    success: #81c784,
+    success-line: #2e5a33,
+    danger: #ef7a72,
+    danger-soft: #3b2423,
+    danger-ink: #f6b8b3,
+    warning: #f0b75a,
+    warning-soft: #3a2f1b,
+    warning-line: #6b5228,
+    info-soft: #1f3340,
+    info-line: #2f5468,
+    shadow: rgba(0, 0, 0, 0.35),
+    shadow-strong: rgba(0, 0, 0, 0.5),
+    overlay: rgba(0, 0, 0, 0.55),
+    focus: rgba(111, 176, 210, 0.45),
+    inverse-muted: #4b5757,
+    inverse-action: #2b6585,
+    inverse-hover: rgba(0, 0, 0, 0.08),
+    skeleton: #2f3838,
+    chart-grid: #303939,
+    chart-axis: #4a5656,
+    state-new: #b0bec5,
+    state-due: #ffea00,
+    state-unassigned: #78868c,
+    state-in-work: #bcaaa4,
+    state-to-be-verified: #18ffff,
+    state-verified: #40c4ff,
+    state-published: #00e676,
+    state-retracted: #ffab40,
+    state-invalid: #ff6e40,
+    state-rejected: #9aa5ad,
+    state-cancelled: #e4e9e9,
+    cat-1: #6fb0d2,
+    cat-2: #f08a5d,
+    cat-3: #3cc795,
+    cat-4: #f5bd3b,
+    cat-5: #f19bbd,
+    cat-6: #4cb04c,
+    cat-7: #8f81ea,
+    cat-8: #f07473,
+    neutral: #7f8a8a,
+  ),
+);
+
+// The custom properties of one theme
+@mixin sd-theme($name) {
+  @each $token, $value in map.get($sd-themes, $name) {
+    --sd-#{$token}: #{$value};
+  }
+}
+
+// Everything the dashboard draws: the page and what it opens on top
+$sd-roots: ".sd-app, .sd-drawer, .sd-dialog";
+
+#{$sd-roots} {
+  @include sd-theme(light);
+  color-scheme: light;
+}
+
+@each $name, $tokens in $sd-themes {
+  :root[data-sd-theme="#{$name}"] :is(#{$sd-roots}) {
+    @include sd-theme($name);
+    color-scheme: #{$name};
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-sd-theme="auto"] :is(#{$sd-roots}) {
+    @include sd-theme(dark);
+    color-scheme: dark;
+  }
+}
