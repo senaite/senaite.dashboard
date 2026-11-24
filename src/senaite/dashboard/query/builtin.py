@@ -35,6 +35,20 @@ from senaite.dashboard.query.fields import USER
 from senaite.dashboard.query.fields import Field
 from senaite.dashboard.query.search import get_index_value
 
+try:
+    # senaite.core 2.7 and later
+    from senaite.core.utils import format_supsub_unicode
+except ImportError:
+    def format_supsub_unicode(text):
+        return text
+
+# HTML of a result as SENAITE formats it, and the text that stands for
+# it in a line of text
+RESULT_MARKUP = (
+    ("<br/>", u", "),
+    ("\n", u" "),
+)
+
 
 def can_view_result(brain, env):
     """Whether the user may read the result of an analysis.
@@ -45,14 +59,75 @@ def can_view_result(brain, env):
     return env.can(ViewResults, api.get_object(brain))
 
 
-def result_with_unit(brain):
-    """The result of an analysis with its unit, or None without one."""
-    result = brain.getResult
-    if result in (None, ""):
-        return None
+def get_result_format():
+    """The decimal mark and the scientific notation of the laboratory."""
+    setup = api.get_bika_setup()
+    return {
+        "decimalmark": setup.getResultsDecimalMark(),
+        "sciformat": api.to_int(setup.getScientificNotationResults(), 1),
+    }
+
+
+def to_supsub(text):
+    """Superscripts and subscripts as characters, e.g. of "kg^-1" or
+    "x10<sup>5</sup>", for a line of text that shows no markup."""
+    return api.safe_unicode(format_supsub_unicode(text) or u"")
+
+
+def unit_text(brain):
+    """The unit of an analysis as SENAITE shows it, e.g. "Bq/kg⁻¹"."""
     unit = brain.getUnit
-    return u" ".join(api.safe_unicode(part) for part in (result, unit)
-                     if part)
+    return to_supsub(unit) if unit else None
+
+
+def to_line(text):
+    """The formatted result on one line of text."""
+    for markup, plain in RESULT_MARKUP:
+        text = text.replace(markup, plain)
+    return text.strip()
+
+
+def get_formatted_result(analysis):
+    """The result as the sample shows it, for every type of result: the
+    text of the options chosen, a date in the format of the language, a
+    number with its precision, a detection limit or "Not detected".
+
+    The scientific notation of a number keeps its superscript; a text
+    is left as it is, so that an underscore in it stays one.
+    """
+    text = analysis.getFormattedResult(html=False, **get_result_format())
+    text = api.safe_unicode(text or u"")
+    if analysis.getResultType() == "numeric":
+        text = to_supsub(text)
+    return to_line(text)
+
+
+def result_text(brain):
+    """The result of an analysis as the sample shows it, or None."""
+    if brain.getResult in (None, ""):
+        return None
+    return get_formatted_result(api.get_object(brain)) or None
+
+
+def has_digit(text):
+    return any(char.isdigit() for char in text)
+
+
+def result_with_unit(brain):
+    """The result of an analysis with its unit, or None without one.
+
+    Only a number has a unit: the text of an option, a date or a text
+    stands for itself, and so does "Not detected".
+    """
+    text = result_text(brain)
+    if text is None:
+        return None
+    analysis = api.get_object(brain)
+    unit = unit_text(brain)
+    if analysis.getResultType() != "numeric" or not unit \
+            or not has_digit(text):
+        return text
+    return u"{} {}".format(text, unit)
 
 
 def own_uid(brain, dataset):
@@ -173,10 +248,11 @@ ANALYSES = Dataset(
         Column("Title", _c("Analysis")),
         Column("getRequestID", _c("Sample ID")),
         Column("getClientTitle", _c("Client")),
-        Column("getResult", _c("Result"), guard=can_view_result),
+        Column("getResult", _c("Result"), guard=can_view_result,
+               getter=result_text),
         Column("result_with_unit", _("Result with unit"),
                guard=can_view_result, getter=result_with_unit),
-        Column("getUnit", _c("Unit")),
+        Column("getUnit", _c("Unit"), getter=unit_text),
         Column("review_state", _c("Status"), COL_STATE),
         Column("getMethodTitle", _c("Method")),
         Column("getDateReceived", _c("Date Received"), COL_DATE),
