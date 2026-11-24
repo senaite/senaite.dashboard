@@ -19,6 +19,7 @@ from senaite.dashboard.env import LabOnly
 from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.interfaces import IDashboardDataset
 from senaite.dashboard.interfaces import IDashboardDatasetExtension
+from senaite.dashboard.query.fields import STATE
 from senaite.dashboard.query.search import get_index_value
 from senaite.dashboard.query.search import get_metadata
 from senaite.dashboard.titles import display_title
@@ -116,6 +117,56 @@ class Span(object):
         }
 
 
+class Card(object):
+    """How an object shows as a row when a tile is opened.
+
+    :param title: the column of the first line
+    :param subtitle: the columns of the second line, joined
+    :param detail: columns of which the first with a value is shown on
+        the right
+    :param note: the column below the detail
+    """
+
+    def __init__(self, title, subtitle=(), detail=(), note=None):
+        self.title = title
+        self.subtitle = list(subtitle)
+        self.detail = list(detail)
+        self.note = note
+
+    def names(self):
+        """The names of all columns of the card."""
+        names = [self.title] + self.subtitle + self.detail
+        return names + ([self.note] if self.note else [])
+
+
+class Link(object):
+    """The objects of another dataset an object leads to.
+
+    :param dataset: the name of the other dataset
+    :param index: the index of the other dataset that holds the value
+    :param value: function(brain, dataset) returning the value of the
+        object, e.g. its UID
+    :param title: what the objects are called below the object
+    """
+
+    def __init__(self, dataset, index, value, title=None):
+        self.dataset = dataset
+        self.index = index
+        self.value = value
+        self.title = title
+
+
+def default_card(columns):
+    """A card from the columns: the first as title, the next two below
+    it and the first date on the right."""
+    names = [column.name for column in columns]
+    dates = [column.name for column in columns
+             if column.kind in (COL_DATE, COL_DUE)]
+    texts = [name for name in names[1:] if name not in dates]
+    return Card(names[0] if names else "Title", subtitle=texts[:2],
+                detail=dates[:1])
+
+
 @implementer(IDashboardDataset)
 class Dataset(LabOnly):
     """Objects of one portal type in one catalog.
@@ -135,12 +186,25 @@ class Dataset(LabOnly):
         sample)
     :param lab_only: hide the dataset from users outside the
         laboratory
+    :param card: the `Card` of an object when a tile is opened; by
+        default one made of the first columns
+    :param facts: the columns shown of an object opened in a tile; by
+        default those of the card
+    :param facets: the names of the fields a list in a tile can be
+        narrowed by; by default the first two that can be grouped by
+    :param sort: (index, "ascending" or "descending") of a list in a
+        tile; by default the newest first
+    :param children: the `Link` to the objects shown below an object
+        opened in a tile, e.g. the analyses of a sample
+    :param parent: the `Link` to the object a row opens instead of its
+        own, e.g. the sample of an analysis
     """
 
     def __init__(self, name, title, catalog, portal_type, fields,
                  columns=(), spans=(), states=(), base_query=None,
                  listing=None, url_column=None, icon=None,
-                 lab_only=False):
+                 lab_only=False, card=None, facts=(), facets=(),
+                 sort=None, children=None, parent=None):
         self.name = name
         self.title = title
         self.catalog = catalog
@@ -154,6 +218,12 @@ class Dataset(LabOnly):
         self.url_column = url_column
         self.icon = icon
         self.lab_only = lab_only
+        self.card = card
+        self.facts = list(facts)
+        self.facets = list(facets)
+        self.sort = sort or ("created", "descending")
+        self.children = children
+        self.parent = parent
 
     def get_extensions(self):
         return [extension for name, extension
@@ -200,6 +270,38 @@ class Dataset(LabOnly):
             raise ValidationError(_("Unknown column ${name}",
                                     mapping={"name": name}))
         return column
+
+    def find_columns(self, names, env):
+        """The columns of the names the user may see, in their order."""
+        columns = self.columns
+        return [columns[name] for name in names
+                if name in columns and columns[name].is_available(env)]
+
+    def get_card(self, env):
+        """The card, without the columns the user may not see."""
+        card = self.card or default_card(self.get_columns(env))
+        available = {column.name for column
+                     in self.find_columns(card.names(), env)}
+        return Card(
+            card.title if card.title in available else None,
+            subtitle=[name for name in card.subtitle if name in available],
+            detail=[name for name in card.detail if name in available],
+            note=card.note if card.note in available else None)
+
+    def get_facts(self, env):
+        """The columns shown of an object opened in a tile."""
+        if self.facts:
+            return self.find_columns(self.facts, env)
+        card = self.get_card(env)
+        return self.find_columns(card.names()[1:], env)
+
+    def get_facets(self, env):
+        """The fields a list in a tile can be narrowed by."""
+        fields = [field for field in self.get_fields(env)
+                  if field.groupable]
+        if self.facets:
+            return [field for field in fields if field.name in self.facets]
+        return [field for field in fields if field.kind != STATE][:2]
 
     def get_span(self, name):
         span = self.spans.get(name)

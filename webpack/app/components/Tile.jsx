@@ -1,12 +1,16 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 
 import Icon from "./Icon";
+import {DrillHead, DrillLevel} from "./Drill";
 import TileBoundary from "./TileBoundary";
 import useSize from "../hooks/useSize";
-import {namedColor} from "../colors";
+import {namedColor, stateColor} from "../colors";
 import {t, titleText} from "../i18n";
 import {getTileType} from "../tiles/registry";
 import {resolveUrl} from "../urls";
+
+// The sources whose tiles open to the objects behind their numbers
+const DRILLABLE = ["count", "group", "timeseries"];
 
 // A tile that waits longer than this says so
 const SLOW_MS = 4000;
@@ -75,7 +79,7 @@ function Skeleton({type}) {
   );
 }
 
-function Body({tile, data, pending, size, context, listing}) {
+function Body({tile, data, pending, size, context, listing, onPick}) {
   const type = getTileType(tile.type);
   if (!type) {
     return <p className="sd-empty">{tile.type}</p>;
@@ -97,7 +101,8 @@ function Body({tile, data, pending, size, context, listing}) {
   return (
     <div className={"sd-tile-content" + (pending ? " is-pending" : "")}>
       <Component tile={tile} data={data || {}} size={size}
-                 portalUrl={context.portalUrl} listing={listing}/>
+                 portalUrl={context.portalUrl} listing={listing}
+                 onPick={onPick}/>
     </div>
   );
 }
@@ -124,56 +129,181 @@ function useSpotlight(active) {
   return ref;
 }
 
-export default function Tile(props) {
-  const {tile, editing, onSettings, onRemove, context, spotlight} = props;
-  const [ref, size] = useSize();
-  const articleRef = useSpotlight(spotlight);
-  const title = titleText(tile.title);
-  const link = editing ? null : resolveLink(tile, context);
+// The levels a tile was opened to, like a navigation stack: a part of
+// the tile first, then objects opened from its rows
+function useDrill(tile, context, editing, onOpenChange) {
+  const [stack, setStack] = useState([]);
+  const forward = useRef(true);
+  const open = stack.length > 0;
+
+  useEffect(() => {
+    if (editing) {
+      setStack([]);
+    }
+  }, [editing]);
+
+  useEffect(() => {
+    if (onOpenChange) {
+      onOpenChange(tile.id, open);
+    }
+  }, [open]);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  const push = useCallback((level) => {
+    forward.current = true;
+    setStack((prev) => prev.concat({scope: {}, ...level}));
+  }, []);
+
+  const canPick = !editing && DRILLABLE.includes(tile.source);
+  // A part without a title of its own, e.g. the number of a count, is
+  // all objects of the dataset the tile counts
+  const dataset = context.datasets[tile.params.dataset];
+  const fallback = dataset ? dataset.title : "";
+  const pick = useCallback((part, title, color) => push({
+    title: title || fallback, color,
+    request: {tile: {source: tile.source, params: tile.params}, pick: part}
+  }), [push, tile.source, tile.params, fallback]);
+
+  const actions = {
+    // A row of a level opens its object
+    openRow: (row) => push({
+      title: row.title,
+      color: row.state ? stateColor(row.state) : null,
+      request: {object: {dataset: row.dataset, uid: row.uid}}
+    }),
+    back: () => {
+      forward.current = false;
+      setStack((prev) => prev.slice(0, -1));
+    },
+    setScope: (name, value) => setStack((prev) => {
+      const top = prev[prev.length - 1];
+      return prev.slice(0, -1).concat(
+        {...top, scope: {...top.scope, [name]: value}});
+    }),
+    // What the server answered, for the head of the tile. A row may
+    // open another object than its own, e.g. an analysis its sample;
+    // the level is named after what it shows.
+    keepAnswer: (depth, answer) => setStack((prev) => prev.map(
+      (level, index) => (index === depth - 1 ? named(level, answer)
+        : level)))
+  };
+  return {stack, forward: forward.current, pick: canPick ? pick : null,
+          actions};
+}
+
+function named(level, answer) {
+  const object = answer.object;
+  if (!object) {
+    return {...level, answer};
+  }
+  return {...level, answer, title: object.title,
+          color: object.state ? stateColor(object.state) : level.color};
+}
+
+// Esc and the way back take the focus along
+function useDrillFocus(articleRef, depth) {
+  useEffect(() => {
+    if (depth && articleRef.current) {
+      const back = articleRef.current.querySelector(".sd-drill-back");
+      if (back) {
+        back.focus({preventScroll: true});
+      }
+    }
+  }, [articleRef, depth]);
+}
+
+function DrillBody({stack, forward, context, actions}) {
+  const depth = stack.length;
+  const level = stack[depth - 1];
+  return (
+    <div key={depth}
+         className={"sd-drill " + (forward ? "is-forward" : "is-back")}>
+      <DrillLevel api={context.api} level={level}
+                  onScope={actions.setScope} onOpen={actions.openRow}
+                  onAnswer={(answer) => actions.keepAnswer(depth, answer)}/>
+    </div>
+  );
+}
+
+// The head of a tile at rest: its title, and its tools while editing
+function TileHead({tile, title, link, editing, props}) {
   const marker = tile.type === "kpi" && tile.options.color
     ? namedColor(tile.options.color) : null;
+  return (
+    <header className="sd-tile-head">
+      {editing ? (
+        <button type="button" className="sd-tile-grip"
+                title={t("keyboard_hint")}
+                aria-label={`${title}: ${t("keyboard_hint")}`}
+                onKeyDown={(event) => onKey(event, tile, props.onNudge)}>
+          <Icon name="grip" size={16}/>
+        </button>
+      ) : null}
+      {marker ? (
+        <span className="sd-marker" aria-hidden="true"
+              style={{"--sd-marker": marker}}/>
+      ) : null}
+      <h3 className="sd-tile-title">
+        {link ? <a href={link}>{title}</a> : title}
+      </h3>
+      {editing ? (
+        <div className="sd-tile-tools">
+          <button type="button" className="sd-iconbtn"
+                  onClick={() => props.onSettings(tile.id)}
+                  title={t("tile_settings")}
+                  aria-label={t("tile_settings")}>
+            <Icon name="sliders" size={16}/>
+          </button>
+          <button type="button" className="sd-iconbtn is-danger"
+                  onClick={() => props.onRemove(tile.id)}
+                  title={t("hide")} aria-label={t("hide")}>
+            <Icon name="close" size={16}/>
+          </button>
+        </div>
+      ) : null}
+    </header>
+  );
+}
+
+export default function Tile(props) {
+  const {tile, editing, context, spotlight} = props;
+  const [ref, size] = useSize();
+  const articleRef = useSpotlight(spotlight);
+  const drill = useDrill(tile, context, editing, props.onOpenChange);
+  const depth = drill.stack.length;
+  useDrillFocus(articleRef, depth);
+  const title = titleText(tile.title);
+  const link = editing ? null : resolveLink(tile, context);
+  const onKeyDown = (event) => {
+    if (event.key === "Escape" && depth) {
+      event.stopPropagation();
+      drill.actions.back();
+    }
+  };
   return (
     <article ref={articleRef}
              className={`sd-tile sd-tile-${tile.type}` +
                         (editing ? " is-editing" : "") +
+                        (depth ? " is-drilled" : "") +
                         (spotlight ? " is-spotlight" : "")}
-             aria-label={title}>
-      <header className="sd-tile-head">
-        {editing ? (
-          <button type="button" className="sd-tile-grip"
-                  title={t("keyboard_hint")}
-                  aria-label={`${title}: ${t("keyboard_hint")}`}
-                  onKeyDown={(event) => onKey(event, tile, props.onNudge)}>
-            <Icon name="grip" size={16}/>
-          </button>
-        ) : null}
-        {marker ? (
-          <span className="sd-marker" aria-hidden="true"
-                style={{"--sd-marker": marker}}/>
-        ) : null}
-        <h3 className="sd-tile-title">
-          {link ? <a href={link}>{title}</a> : title}
-        </h3>
-        {editing ? (
-          <div className="sd-tile-tools">
-            <button type="button" className="sd-iconbtn"
-                    onClick={() => onSettings(tile.id)}
-                    title={t("tile_settings")}
-                    aria-label={t("tile_settings")}>
-              <Icon name="sliders" size={16}/>
-            </button>
-            <button type="button" className="sd-iconbtn is-danger"
-                    onClick={() => onRemove(tile.id)}
-                    title={t("hide")} aria-label={t("hide")}>
-              <Icon name="close" size={16}/>
-            </button>
-          </div>
-        ) : null}
-      </header>
+             aria-label={title} onKeyDown={onKeyDown}>
+      {depth ? (
+        <header className="sd-tile-head">
+          <DrillHead stack={drill.stack} tileTitle={title}
+                     onBack={drill.actions.back}/>
+        </header>
+      ) : (
+        <TileHead tile={tile} title={title} link={link} editing={editing}
+                  props={props}/>
+      )}
       <div className="sd-tile-body" ref={ref}>
-        {size.width ? (
+        {depth ? (
+          <DrillBody stack={drill.stack} forward={drill.forward}
+                     context={context} actions={drill.actions}/>
+        ) : null}
+        {!depth && size.width ? (
           <TileBoundary tile={tile} data={props.data}>
-            <Body {...props} size={size} listing={link}/>
+            <Body {...props} size={size} listing={link}
+                  onPick={drill.pick}/>
           </TileBoundary>
         ) : null}
       </div>

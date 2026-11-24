@@ -62,6 +62,8 @@ export function createApi(baseUrl) {
     view: (dashboardId, draft) =>
       request(`/view/${id(dashboardId)}${draft ? "?draft=1" : ""}`),
     data: (tiles) => request("/data", {tiles}),
+    // The objects behind a part of a tile, or an object opened in it
+    drill: (body) => request("/drill", body),
     choices: (dataset, field) =>
       request(`/choices/${id(dataset)}/${id(field)}`),
     save: (dashboardId, tiles, leaving) =>
