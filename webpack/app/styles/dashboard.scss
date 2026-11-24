@@ -108,9 +108,21 @@
   }
 }
 
+// While the data loads: how far it has come, instead of the refresh
+.sd-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 4px 6px;
+  font-size: 13px;
+  color: var(--sd-ink-2);
+}
+
 // -- Tabs ------------------------------------------------------------------
 
 .sd-tabs {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -216,6 +228,36 @@
   &.is-draft {
     background: var(--sd-warning-soft);
     color: var(--sd-warning);
+  }
+}
+
+// A thin line running along the rule under the tabs while data loads
+.sd-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 30%;
+    background: var(--sd-accent);
+    animation: sd-slide 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes sd-slide {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(340%);
   }
 }
 
@@ -629,40 +671,56 @@
   align-items: flex-start;
 }
 
+// Placeholders while a tile waits for its data, in the shape of what
+// comes: a number, bars or rows
 .sd-skeleton {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-top: 6px;
+  gap: 12px;
+  padding-top: 4px;
 
   span {
     display: block;
     height: 12px;
-    border-radius: 6px;
-    background: linear-gradient(90deg, var(--sd-skeleton), var(--sd-band),
-      var(--sd-skeleton));
-    background-size: 200% 100%;
-    animation: sd-shimmer 1.4s infinite linear;
+    border-radius: 3px;
+    background: var(--sd-skeleton);
+    animation: sd-pulse 1.4s ease-in-out infinite;
+  }
 
-    &:nth-child(1) {
-      width: 40%;
-      height: 28px;
-    }
+  &.is-kpi span {
+    width: 3.5ch;
+    height: 32px;
+  }
 
-    &:nth-child(2) {
-      width: 85%;
-    }
-
-    &:nth-child(3) {
-      width: 60%;
-    }
+  &.is-bars span {
+    height: 10px;
   }
 }
 
-@keyframes sd-shimmer {
-  to {
-    background-position: -200% 0;
+@keyframes sd-pulse {
+  50% {
+    opacity: 0.45;
   }
+}
+
+// Shown in a tile that waits longer than usual
+.sd-slow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--sd-ink-2);
+}
+
+.sd-spinner {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--sd-accent-soft);
+  border-top-color: var(--sd-accent);
+  border-radius: 50%;
+  animation: sd-turn 0.8s linear infinite;
 }
 
 // Narrow screens: one column, numbers two by two
@@ -1794,6 +1852,8 @@
   .sd-app,
   .sd-drawer,
   .sd-skeleton span,
+  .sd-spinner,
+  .sd-progress::before,
   .sd-toast,
   .sd-tile,
   .sd-refresh svg,

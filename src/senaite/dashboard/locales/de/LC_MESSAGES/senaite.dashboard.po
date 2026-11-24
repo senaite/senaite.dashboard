@@ -1541,3 +1541,11 @@ msgstr "Dunkel"
 #: senaite/dashboard/strings.py
 msgid "Light"
 msgstr "Hell"
+
+#: senaite/dashboard/strings.py
+msgid "Loading data, {done} of {total} ready"
+msgstr "Daten werden geladen, {done} von {total} fertig"
+
+#: senaite/dashboard/strings.py
+msgid "This takes longer than usual."
+msgstr "Das dauert länger als üblich."

@@ -8,6 +8,9 @@ import {t} from "../i18n";
 const REFRESH_INTERVAL = 5 * 60 * 1000;
 // Changes are saved once the user stopped changing for this long
 const SAVE_DELAY = 600;
+// Data requests at the same time. Each asks for one tile, so a slow
+// tile does not hold back the others and the page fills as it goes.
+const PARALLEL_REQUESTS = 3;
 
 // What the data of a tile depends on
 function signature(tile) {
@@ -30,6 +33,27 @@ function withoutIds(map, ids) {
   const next = {...map};
   ids.forEach((id) => { delete next[id]; });
   return next;
+}
+
+// Runs the task for every item, at most `limit` of them at a time
+async function eachLimited(items, limit, task) {
+  const queue = items.slice();
+  const worker = async () => {
+    while (queue.length) {
+      await task(queue.shift());
+    }
+  };
+  const workers = Math.min(limit, queue.length);
+  await Promise.all(Array.from({length: workers}, worker));
+}
+
+// The data a tile keeps after a request: what came back, or, when the
+// request failed, the data it had unless that was an error too
+function nextResult(previous, answer, failed) {
+  if (failed && previous && !previous.error) {
+    return previous;
+  }
+  return answer || {error: failed || t("no_data")};
 }
 
 // Everything the page knows about the dashboard on screen, and what
@@ -61,6 +85,30 @@ export default function useDashboard(api, boot) {
     setError(exc.message || String(exc));
   }, []);
 
+  // Asks for the data of one tile and keeps the answer, unless a newer
+  // request for the tile was made meanwhile or another dashboard opened
+  const fetchTile = useCallback(async (tile, isLatest) => {
+    let answer = null;
+    let failed = null;
+    try {
+      const response = await api.data([tile]);
+      answer = response.results[tile.id];
+      setUpdated(response.now);
+    } catch (exc) {
+      failed = exc.message;
+    }
+    if (!isLatest(tile.id)) {
+      return;
+    }
+    setResults((prev) => ({
+      ...prev, [tile.id]: nextResult(prev[tile.id], answer, failed)
+    }));
+    if (failed) {
+      setError(failed);
+    }
+    setPending((prev) => withoutIds(prev, [tile.id]));
+  }, [api]);
+
   const fetchData = useCallback(async (tiles) => {
     const wanted = dataTiles(tiles);
     if (!wanted.length) {
@@ -73,33 +121,9 @@ export default function useDashboard(api, boot) {
     const isLatest = (id) => sequence.current.tiles[id] === seq &&
       viewRef.current && viewRef.current.id === viewId;
     setPending((prev) => withIds(prev, ids, true));
-    let answers;
-    let failed = null;
-    try {
-      const answer = await api.data(wanted);
-      answers = answer.results;
-      setUpdated(answer.now);
-    } catch (exc) {
-      answers = {};
-      failed = exc.message;
-    }
-    const current = ids.filter(isLatest);
-    // A tile the answer leaves out has no data rather than a skeleton;
-    // a request that failed keeps the data a tile has, if any
-    setResults((prev) => {
-      const next = {...prev};
-      current.forEach((id) => {
-        const kept = failed && prev[id] && !prev[id].error;
-        next[id] = kept ? prev[id]
-          : answers[id] || {error: failed || t("no_data")};
-      });
-      return next;
-    });
-    if (failed) {
-      setError(failed);
-    }
-    setPending((prev) => withoutIds(prev, current));
-  }, [api]);
+    await eachLimited(wanted, PARALLEL_REQUESTS,
+                      (tile) => fetchTile(tile, isLatest));
+  }, [fetchTile]);
 
   const show = useCallback((answer) => {
     const nextView = {...answer, tiles: answer.tiles.map(normalizeTile)};

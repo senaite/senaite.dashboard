@@ -1540,3 +1540,11 @@ msgstr ""
 #: senaite/dashboard/strings.py
 msgid "Light"
 msgstr ""
+
+#: senaite/dashboard/strings.py
+msgid "Loading data, {done} of {total} ready"
+msgstr ""
+
+#: senaite/dashboard/strings.py
+msgid "This takes longer than usual."
+msgstr ""

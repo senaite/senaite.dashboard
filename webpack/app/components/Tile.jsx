@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 import Icon from "./Icon";
 import TileBoundary from "./TileBoundary";
@@ -31,10 +31,42 @@ function resolveLink(tile, context) {
   return dataset ? dataset.listing : null;
 }
 
-function Skeleton() {
+// A tile that waits longer than this says so
+const SLOW_MS = 4000;
+
+// The placeholders of a tile while it waits, in the shape of what
+// comes: a number, bars or rows
+const SKELETONS = {
+  kpi: {className: "is-kpi", widths: [null]},
+  bar: {className: "is-bars", widths: [100, 85, 60, 45, 30]},
+  donut: {className: "is-bars", widths: [100, 70, 45]},
+  chart: {className: "is-bars", widths: [100, 90, 75, 55]}
+};
+const ROWS = {className: "", widths: [92, 85, 88, 70]};
+
+function useSlow() {
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setSlow(true), SLOW_MS);
+    return () => clearTimeout(timer);
+  }, []);
+  return slow;
+}
+
+function Skeleton({type}) {
+  const slow = useSlow();
+  const shape = SKELETONS[type] || ROWS;
   return (
-    <div className="sd-skeleton" aria-busy="true">
-      <span/><span/><span/>
+    <div className={"sd-skeleton " + shape.className} aria-busy="true">
+      {shape.widths.map((width, index) => (
+        <span key={index} style={width ? {width: `${width}%`} : null}/>
+      ))}
+      {slow ? (
+        <p className="sd-slow">
+          <span className="sd-spinner" aria-hidden="true"/>
+          {t("slow_tile")}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -45,7 +77,7 @@ function Body({tile, data, pending, size, context, listing}) {
     return <p className="sd-empty">{tile.type}</p>;
   }
   if (tile.source && !data) {
-    return <Skeleton/>;
+    return <Skeleton type={tile.type}/>;
   }
   if (data && data.error) {
     return (

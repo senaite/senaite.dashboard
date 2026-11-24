@@ -24,6 +24,15 @@ function byName(items) {
   return map;
 }
 
+// How many tiles of the view have their data, while some still wait
+// for it; null once all of them have it
+function loadingProgress(view, pending) {
+  const tiles = view ? view.tiles.filter((tile) => tile.source) : [];
+  const waiting = tiles.filter((tile) => pending[tile.id]).length;
+  return waiting ? {done: tiles.length - waiting, total: tiles.length}
+    : null;
+}
+
 // Which dashboard a change was made on: its draft is another one
 function viewKey(view) {
   return view ? `${view.id}/${view.mode}` : null;
@@ -52,6 +61,7 @@ export default function App({api, boot}) {
     defaultTrend: boot.default_trend
   }), [api, boot]);
 
+  const progress = loadingProgress(view, pending);
   const draft = view && view.mode === "draft";
   const isEditing = Boolean(view) && (draft || editing);
 
@@ -128,9 +138,10 @@ export default function App({api, boot}) {
     <div className={"sd-app" + (isEditing ? " is-editing" : "") +
                     (panel ? " has-panel" : "")}>
       <Greeting user={boot.user} now={boot.now} updated={updated}
-                onRefresh={actions.refresh}/>
+                progress={progress} onRefresh={actions.refresh}/>
       <Tabs dashboards={dashboards} activeId={view && view.id}
-            manage={permissions.manage} onOpen={(id) => open(id)}>
+            manage={permissions.manage} loading={Boolean(progress)}
+            onOpen={(id) => open(id)}>
         {permissions.customize ? (
           <button type="button" className="sd-tab-add"
                   onClick={() => setDialog("new")}
