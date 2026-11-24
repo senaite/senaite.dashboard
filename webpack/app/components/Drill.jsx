@@ -10,6 +10,14 @@ import {format, t} from "../i18n";
 // level of the stack is what the server is asked for: a part of the
 // tile ({tile, pick}) or an object opened in it ({object}).
 
+// The page listing exactly the objects of a level, named after it
+function listingUrl(answer, title) {
+  if (!answer.listing) {
+    return null;
+  }
+  return `${answer.listing}&title=${encodeURIComponent(title || "")}`;
+}
+
 function isLate(iso) {
   return Boolean(iso) && new Date(iso) < new Date();
 }
@@ -139,7 +147,7 @@ function Facts({object}) {
 }
 
 // The rows of a level; more come with the last row
-function Rows({answer, more, loadingMore, onMore, onOpen}) {
+function Rows({answer, title, more, loadingMore, onMore, onOpen}) {
   const rows = answer.rows.concat(more);
   const left = answer.total - rows.length;
   return (
@@ -158,7 +166,7 @@ function Rows({answer, more, loadingMore, onMore, onOpen}) {
       ) : null}
       {answer.listing && !answer.object ? (
         <li className="sd-row is-more">
-          <a className="sd-row-open" href={answer.listing}>
+          <a className="sd-row-open" href={listingUrl(answer, title)}>
             <span>{t("open_list")}</span>
             <Icon name="forward" size={14}/>
           </a>
@@ -235,7 +243,8 @@ export function DrillLevel({api, level, onScope, onOpen, onAnswer}) {
               onScope={onScope}/>
       {answer.rows ? (
         answer.total ? (
-          <Rows answer={answer} more={more} loadingMore={loadingMore}
+          <Rows answer={answer} title={level.title} more={more}
+                loadingMore={loadingMore}
                 onMore={loadMore} onOpen={onOpen}/>
         ) : <p className="sd-empty">{t("no_data")}</p>
       ) : null}
@@ -250,7 +259,7 @@ export function DrillHead({stack, tileTitle, onBack}) {
   const previous = stack.length > 1
     ? stack[stack.length - 2].title : tileTitle;
   const link = top.answer && (top.answer.object
-    ? top.answer.object.url : top.answer.listing);
+    ? top.answer.object.url : listingUrl(top.answer, top.title));
   const total = top.answer && top.answer.rows ? top.answer.total : null;
   return (
     <>

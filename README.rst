@@ -157,8 +157,12 @@ number each leaves. A row opens in the tile when there is more below
 it: a sample shows its analyses with their results, an analysis opens
 its sample, a worksheet shows its analyses. The icon at the end of a
 row leads to the object in SENAITE, the one in the head of the tile to
-the list or the object shown, and the last row to the list of the
-dataset.
+the list or the object shown. The list is a listing of exactly the
+objects of the part, narrowed by the chips picked: for samples the
+samples listing of SENAITE with its buttons and actions, for other
+datasets a listing of their columns. Its URL carries the request of
+the tile, and the objects are searched again with it, as the user who
+opens the page.
 
 .. image:: docs/images/drilldown.png
    :alt: The parts of a donut and the number of a count opened to the
@@ -448,7 +452,9 @@ columns of the line below it, the columns on the right of which the
 first with a value is shown, and one below them. Without a card, a
 row shows the first columns. `facts` are the columns shown of an
 opened object, `facets` the fields its rows can be narrowed by and
-`sort` the order of the rows. A `Link` leads from an object to others:
+`sort` the order of the rows, `drill_view` the page below the site
+that lists exactly the objects of a part (by default the plain listing
+`dashboard-objects`). A `Link` leads from an object to others:
 `children` are shown below an opened object, `parent` is what a row
 opens instead of its own object. The samples of senaite.dashboard are
 set up so:

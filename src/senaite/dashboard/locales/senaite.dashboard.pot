@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-11-24 19:32+0000\n"
+"POT-Creation-Date: 2026-11-24 19:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,6 +157,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
+#: senaite/dashboard/browser/listing.py:130
 #: senaite/dashboard/strings.py:23
 msgid "All"
 msgstr ""
@@ -318,7 +319,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:208
+#: senaite/dashboard/query/builtin.py:210
 msgid "Created"
 msgstr ""
 
@@ -542,7 +543,8 @@ msgstr ""
 msgid "Invalid dashboard id"
 msgstr ""
 
-#: senaite/dashboard/query/drill.py:208
+#: senaite/dashboard/browser/listing.py:44
+#: senaite/dashboard/query/drill.py:210
 #: senaite/dashboard/query/params.py:41
 msgid "Invalid parameter ${name}"
 msgstr ""
@@ -887,7 +889,7 @@ msgstr ""
 msgid "Plain"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:163
+#: senaite/dashboard/query/builtin.py:165
 msgid "Point of capture"
 msgstr ""
 
@@ -943,7 +945,7 @@ msgstr ""
 msgid "Received to published"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:185
+#: senaite/dashboard/query/builtin.py:187
 msgid "Received to result"
 msgstr ""
 
@@ -1019,11 +1021,11 @@ msgstr ""
 msgid "Restore default dashboards"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:168
+#: senaite/dashboard/query/builtin.py:170
 msgid "Result captured"
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:175
+#: senaite/dashboard/query/builtin.py:177
 msgid "Result with unit"
 msgstr ""
 
@@ -1256,7 +1258,7 @@ msgstr ""
 msgid "The most recently registered samples"
 msgstr ""
 
-#: senaite/dashboard/query/drill.py:158
+#: senaite/dashboard/query/drill.py:160
 msgid "The object is gone or you may not see it"
 msgstr ""
 
@@ -1332,7 +1334,7 @@ msgstr ""
 msgid "This month"
 msgstr ""
 
-#: senaite/dashboard/query/drill.py:80
+#: senaite/dashboard/query/drill.py:82
 msgid "This period is not shown any more. Refresh the dashboard."
 msgstr ""
 
@@ -1344,7 +1346,7 @@ msgstr ""
 msgid "This tile cannot be shown. Check its settings or remove it."
 msgstr ""
 
-#: senaite/dashboard/query/drill.py:133
+#: senaite/dashboard/query/drill.py:135
 msgid "This tile does not open"
 msgstr ""
 
@@ -1429,7 +1431,7 @@ msgstr ""
 msgid "Undo all your changes to this dashboard?"
 msgstr ""
 
-#: senaite/dashboard/query/datasets.py:270
+#: senaite/dashboard/query/datasets.py:275
 msgid "Unknown column ${name}"
 msgstr ""
 
@@ -1441,7 +1443,7 @@ msgstr ""
 msgid "Unknown dataset ${name}"
 msgstr ""
 
-#: senaite/dashboard/query/datasets.py:259
+#: senaite/dashboard/query/datasets.py:264
 msgid "Unknown field ${name}"
 msgstr ""
 
@@ -1449,7 +1451,7 @@ msgstr ""
 msgid "Unknown interval ${name}"
 msgstr ""
 
-#: senaite/dashboard/query/datasets.py:309
+#: senaite/dashboard/query/datasets.py:314
 msgid "Unknown span ${name}"
 msgstr ""
 
@@ -1505,7 +1507,7 @@ msgstr ""
 msgid "What a tile may filter and group by. Fields only for the laboratory are not offered to client contacts."
 msgstr ""
 
-#: senaite/dashboard/query/builtin.py:211
+#: senaite/dashboard/query/builtin.py:213
 msgid "Worksheet"
 msgstr ""
 

@@ -134,6 +134,8 @@ SAMPLES = Dataset(
     sort=("getDueDate", "ascending"),
     children=Link("analyses", "getAncestorsUIDs", own_uid,
                   title=_("Analyses")),
+    # The listing of SENAITE, with its actions, of the samples alone
+    drill_view="samples/dashboard-samples",
 )
 
 ANALYSES = Dataset(
