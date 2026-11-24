@@ -1,10 +1,17 @@
 // Table
 
+// The rows scroll when they do not fit, the line below them stays
 .sd-table-wrap {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: auto;
+}
+
+.sd-table-rows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .sd-table {
@@ -54,6 +61,7 @@
 }
 
 .sd-table-foot {
+  flex: none;
   display: flex;
   justify-content: space-between;
   gap: 12px;

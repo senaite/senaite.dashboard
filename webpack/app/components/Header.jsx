@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 
 import Icon from "./Icon";
+import Loader from "./Loader";
 import {formatDateTime, formatToday} from "../format";
 import {format, t, titleText} from "../i18n";
 
@@ -45,16 +46,6 @@ function RefreshButton({updated, onRefresh}) {
   );
 }
 
-// How far the data of the dashboard has come, while it is loading
-function LoadingStatus({progress}) {
-  return (
-    <p className="sd-loading" role="status">
-      <span className="sd-spinner" aria-hidden="true"/>
-      {format("loading_progress", progress)}
-    </p>
-  );
-}
-
 export function Greeting({user, now, updated, progress, onRefresh}) {
   return (
     <div className="sd-greeting">
@@ -64,8 +55,11 @@ export function Greeting({user, now, updated, progress, onRefresh}) {
         </h1>
         <p className="sd-today">{formatToday(now)}</p>
       </div>
-      {progress ? <LoadingStatus progress={progress}/>
-        : <RefreshButton updated={updated} onRefresh={onRefresh}/>}
+      <div className="sd-greeting-status">
+        {progress
+          ? <Loader label={format("loading_progress", progress)}/> : null}
+      </div>
+      <RefreshButton updated={updated} onRefresh={onRefresh}/>
     </div>
   );
 }
@@ -88,11 +82,9 @@ function TabBadge({dashboard, manage}) {
 
 // The dashboards a user can switch between. Each is a page of its own,
 // so this is navigation, not a tab widget.
-export function Tabs({dashboards, activeId, manage, loading, onOpen,
-                     children}) {
+export function Tabs({dashboards, activeId, manage, onOpen, children}) {
   return (
     <nav className="sd-tabs" aria-label={t("dashboards")}>
-      {loading ? <span className="sd-progress" aria-hidden="true"/> : null}
       <ul>
         {dashboards.map((dashboard) => (
           <li key={dashboard.id}>

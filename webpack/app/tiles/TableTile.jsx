@@ -66,33 +66,35 @@ function Cell({value, column}) {
 export default function TableTile({data, listing}) {
   return (
     <div className="sd-table-wrap">
-      <table className="sd-table">
-        <thead>
-          <tr>
-            {data.columns.map((column) => (
-              <th key={column.name} scope="col"
-                  className={`is-${column.kind}`}>{column.title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.rows.map((row) => (
-            <tr key={row.uid}>
-              {data.columns.map((column, index) => {
-                const cell = (
-                  <Cell value={row.cells[column.name]} column={column}/>
-                );
-                // The first cell leads to the object
-                return (
-                  <td key={column.name} className={`is-${column.kind}`}>
-                    {index === 0 ? <a href={row.url}>{cell}</a> : cell}
-                  </td>
-                );
-              })}
+      <div className="sd-table-rows">
+        <table className="sd-table">
+          <thead>
+            <tr>
+              {data.columns.map((column) => (
+                <th key={column.name} scope="col"
+                    className={`is-${column.kind}`}>{column.title}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.rows.map((row) => (
+              <tr key={row.uid}>
+                {data.columns.map((column, index) => {
+                  const cell = (
+                    <Cell value={row.cells[column.name]} column={column}/>
+                  );
+                  // The first cell leads to the object
+                  return (
+                    <td key={column.name} className={`is-${column.kind}`}>
+                      {index === 0 ? <a href={row.url}>{cell}</a> : cell}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {data.total > data.rows.length ? (
         <div className="sd-table-foot">
           {format("of_total", {shown: formatNumber(data.rows.length),
