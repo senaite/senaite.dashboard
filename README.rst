@@ -139,6 +139,38 @@ Personal
          tile open next to it
 
 
+Themes and colors
+-----------------
+
+The dashboard looks like SENAITE: it sits on the page without boxes
+around its tiles, a section is set apart by the rule under its
+heading, as in the listings, and numbers sit on the light grey band of
+SENAITE.
+
+Every color is a custom property (`--sd-...`) of a theme in
+`webpack/app/styles/_themes.scss`. A theme is one Sass map there: the
+surfaces, text, lines, accent, feedback colors, the colors of the
+workflow states and the colors of groups without a meaning of their
+own. A new theme is a new map; nothing else changes. The theme on
+screen is named by `data-sd-theme` on the root element of the page:
+`light`, `dark`, or `auto`, which follows the system. Users switch it
+in the menu next to the actions of a dashboard; the choice is kept in
+the browser, and the page starts in the light theme.
+
+The light theme takes the colors of SENAITE: the ink and greys of
+`senaite.core`, the grey of the logo and the link blue as accent. The
+workflow states have the colors of the SENAITE listings, so a state
+looks the same everywhere; where the listing tone is too pale for a
+mark on white (sample due, to be verified), the stronger tone of the
+same color is used.
+
+The script never holds a color of its own: `colors.js` hands out
+references to the custom properties, by the meaning of what they
+color, and charts set them as style. The color of a number tile is a
+name: a color (`blue`, `orange`, ...) or a workflow state
+(`to_be_verified`, `published`, ...), whose color it then takes.
+
+
 Architecture
 ------------
 
@@ -150,7 +182,7 @@ the tile library. The web layer on top ties them together:
 .. code-block:: text
 
     Browser (React, react-grid-layout)       webpack/app
-        |  one request for the data of all tiles
+        |  one request per tile, three at a time
         v
     routes/       JSON API below @@API/senaite/v1/dashboard
                   base, dashboard, data, library, datasets
@@ -204,14 +236,25 @@ each source describes the shape of its answer) and a dataset in
 in its `__init__.py`.
 
 In the browser, `webpack/app/index.js` mounts one of two pages:
-`components/App.jsx` is the dashboard, with its state in
-`hooks/useDashboard.js`; `datasets/DatasetsApp.jsx` is the page of
-the datasets. A tile is drawn by the component of its type
-(`tiles/`), and edited in `settings/TileSettings.jsx`.
+`components/App.jsx` is the dashboard; `datasets/DatasetsApp.jsx` is
+the page of the datasets. The state of the dashboard is in three
+hooks: `hooks/useDashboard.js` keeps the dashboard on screen and its
+actions, `hooks/useTileData.js` the data of the tiles and
+`hooks/useSaveQueue.js` saves changes in order. A tile is drawn by the
+component of its type (`tiles/`), and edited in
+`settings/TileSettings.jsx`.
 
 The page carries everything it needs to start (dashboards, datasets,
 the tile library, translated texts), so the first paint does not wait
-for a request. The data of all tiles then comes in one request.
+for a request. Then every tile asks for its data on its own, three
+requests at a time, so the page fills as it goes and a slow tile does
+not hold back the others. While it does, three cells of the logo
+hexagon light up in the row of the tabs, with how many tiles are ready
+next to them; the listings of SENAITE load with the same cells. A
+waiting tile shows placeholders in the shape of what comes, and says
+so when it takes longer than four seconds. The rows of a table scroll
+on their own, so the number of rows and the link to the list stay in
+view.
 
 
 The query language
@@ -228,7 +271,7 @@ A tile names a data source and its parameters:
                             "getClientUID": "$client"},
                 "trend": {"date_field": "created", "interval": "week",
                           "periods": 8}},
-     "options": {"color": "orange", "link": "samples"},
+     "options": {"color": "to_be_verified", "link": "samples"},
      "layout": {"x": 0, "y": 0, "w": 3, "h": 2}}
 
 Datasets
@@ -469,6 +512,10 @@ The frontend lives in `webpack/` and builds into
     yarn install
     yarn build      # or: yarn watch
     yarn lint       # ESLint, and names used but never defined
+
+The styles are in `webpack/app/styles`: `dashboard.scss` uses the
+partials in the order they cascade in, one per part of the page, and
+`_themes.scss` holds the colors (see `Themes and colors`_).
 
 React comes from `senaite.core` as a global; it is never bundled.
 Webpack builds a bundle that uses a name it never imports without a
