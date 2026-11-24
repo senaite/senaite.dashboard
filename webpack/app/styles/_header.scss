@@ -55,13 +55,84 @@
   }
 }
 
-// While the data loads: how far it has come, instead of the refresh
-.sd-loading {
-  display: inline-flex;
+// The middle of the greeting, where the loader shows while data loads
+.sd-greeting-status {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  min-width: 0;
+}
+
+// The loader of the SENAITE listings: four dots that circle each other,
+// with how far the data has come below them
+.sd-loader {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 8px;
-  margin: 0;
-  padding: 4px 6px;
-  font-size: 13px;
-  color: var(--sd-ink-2);
 }
+
+.sd-loader-dots {
+  position: relative;
+  width: 44px;
+  height: 8px;
+
+  span {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--sd-loader-dot);
+  }
+
+  span:nth-child(1) {
+    left: 12px;
+    background: var(--sd-loader-accent);
+    animation: sd-dot-a 1.5s linear infinite;
+  }
+
+  span:nth-child(2) {
+    left: 24px;
+    animation: sd-dot-b 1.5s linear 0.5s infinite;
+  }
+
+  span:nth-child(3) {
+    left: 12px;
+    animation: sd-dot-c 1.5s linear infinite;
+  }
+
+  span:nth-child(4) {
+    left: 24px;
+    animation: sd-dot-d 1.5s linear 0.5s infinite;
+  }
+}
+
+.sd-loader-label {
+  font-size: 12px;
+  color: var(--sd-muted);
+}
+
+// A dot turns half a circle around the middle between two dots, rests,
+// and turns back; a and c clockwise, b and d the other way
+@mixin sd-dot-turn($name, $angle, $offset) {
+  @keyframes #{$name} {
+    0% {
+      transform: rotate(0deg) translateX($offset);
+    }
+
+    25%,
+    75% {
+      transform: rotate($angle) translateX($offset);
+    }
+
+    100% {
+      transform: rotate($angle * 2) translateX($offset);
+    }
+  }
+}
+
+@include sd-dot-turn(sd-dot-a, 180deg, -12px);
+@include sd-dot-turn(sd-dot-b, -180deg, -12px);
+@include sd-dot-turn(sd-dot-c, 180deg, 12px);
+@include sd-dot-turn(sd-dot-d, -180deg, 12px);

@@ -69,10 +69,7 @@ function Skeleton({type}) {
         <span key={index} style={width ? {width: `${width}%`} : null}/>
       ))}
       {slow ? (
-        <p className="sd-slow">
-          <span className="sd-spinner" aria-hidden="true"/>
-          {t("slow_tile")}
-        </p>
+        <p className="sd-slow">{t("slow_tile")}</p>
       ) : null}
     </div>
   );

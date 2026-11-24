@@ -188,9 +188,17 @@
     animation: sd-pulse 1.4s ease-in-out infinite;
   }
 
-  &.is-kpi span {
-    width: 3.5ch;
-    height: 32px;
+  // A number waits on one line with the note, the band is low
+  &.is-kpi {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+
+    span {
+      flex: none;
+      width: 3.5ch;
+      height: 32px;
+    }
   }
 
   &.is-bars span {
@@ -206,22 +214,12 @@
 
 // Shown in a tile that waits longer than usual
 .sd-slow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 2px 0 0;
-  font-size: 13px;
-  color: var(--sd-ink-2);
-}
-
-.sd-spinner {
-  flex: none;
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--sd-accent-soft);
-  border-top-color: var(--sd-accent);
-  border-radius: 50%;
-  animation: sd-turn 0.8s linear infinite;
+  margin: 0;
+  font-size: 12px;
+  color: var(--sd-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // Narrow screens: one column, numbers two by two

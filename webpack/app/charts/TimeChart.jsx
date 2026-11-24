@@ -8,12 +8,22 @@ import {groupColors} from "../colors";
 import {formatNumber, formatPeriod} from "../format";
 import {t} from "../i18n";
 
-const MARGIN = {top: 8, right: 8, bottom: 24, left: 36};
+const MARGIN = {top: 8, right: 8, bottom: 24};
+// Width per character of a value label, and the room next to it
+const LABEL_CHAR_WIDTH = 7;
+const LABEL_GAP = 12;
 const MAX_BAR = 24;
 const GAP = 2;
 const LABEL_SPACE = 56;
 // Vertical room per tick label of the value axis
 const TICK_SPACE = 28;
+
+// The room the value labels need on the left, so that none is cut
+function leftMargin(ticks) {
+  const longest = Math.max(1, ...ticks.map(
+    (tick) => formatNumber(tick).length));
+  return LABEL_GAP + longest * LABEL_CHAR_WIDTH;
+}
 
 function stackSeries(series, count) {
   const base = new Array(count).fill(0);
@@ -148,7 +158,6 @@ export default function TimeChart({data, style, width, height}) {
   const {buckets, series, interval, kind} = data;
   const colors = series.length > 1 ? groupColors(series, kind)
     : {[series[0].key]: ACCENT};
-  const innerWidth = Math.max(10, width - MARGIN.left - MARGIN.right);
   const innerHeight = Math.max(10, height - MARGIN.top - MARGIN.bottom);
   const stacked = stackSeries(series, buckets.length);
   const totals = stacked.length ? stacked[stacked.length - 1].highs : [];
@@ -159,6 +168,9 @@ export default function TimeChart({data, style, width, height}) {
     Math.floor(innerHeight / TICK_SPACE)));
   const y = scaleLinear().domain([0, peak]).nice(tickCount)
     .range([innerHeight, 0]);
+  const ticks = y.ticks(tickCount);
+  const left = leftMargin(ticks);
+  const innerWidth = Math.max(10, width - left - MARGIN.right);
   const x = scaleBand().domain(buckets.map((b, index) => index))
     .range([0, innerWidth]).paddingInner(0.12).paddingOuter(0.04);
   const every = Math.max(1, Math.ceil(
@@ -166,12 +178,12 @@ export default function TimeChart({data, style, width, height}) {
 
   const onMove = (event) => {
     const box = event.currentTarget.getBoundingClientRect();
-    const position = event.clientX - box.left - MARGIN.left;
+    const position = event.clientX - box.left - left;
     const index = Math.floor(position / (innerWidth / buckets.length));
     setActive(index >= 0 && index < buckets.length ? index : null);
   };
   const tip = active === null ? null : {
-    x: MARGIN.left + x(active) + x.bandwidth() / 2,
+    x: left + x(active) + x.bandwidth() / 2,
     y: MARGIN.top
   };
   const props = {stacked, series, x, y, colors, style};
@@ -182,8 +194,8 @@ export default function TimeChart({data, style, width, height}) {
         <svg width={width} height={height} onMouseMove={onMove}
              onMouseLeave={() => setActive(null)} role="img"
              aria-label={series.map((serie) => serie.label).join(", ")}>
-          <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
-            <Axis ticks={y.ticks(tickCount)} scale={y} width={innerWidth}/>
+          <g transform={`translate(${left},${MARGIN.top})`}>
+            <Axis ticks={ticks} scale={y} width={innerWidth}/>
             {active !== null ? (
               <rect x={x(active) - 2} width={x.bandwidth() + 4}
                     y={0} height={innerHeight} className="sd-hoverband"/>
