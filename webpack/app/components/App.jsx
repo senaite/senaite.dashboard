@@ -130,9 +130,10 @@ export default function App({api, boot}) {
     <div className={"sd-app" + (isEditing ? " is-editing" : "") +
                     (panel ? " has-panel" : "")}>
       <Greeting user={boot.user} now={boot.now} updated={updated}
-                progress={progress} onRefresh={actions.refresh}/>
+                onRefresh={actions.refresh}/>
       <Tabs dashboards={dashboards} activeId={view && view.id}
-            manage={permissions.manage} onOpen={(id) => open(id)}>
+            manage={permissions.manage} progress={progress}
+            onOpen={(id) => open(id)}>
         {permissions.customize ? (
           <button type="button" className="sd-tab-add"
                   onClick={() => setDialog("new")}

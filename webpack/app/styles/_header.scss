@@ -55,22 +55,12 @@
   }
 }
 
-// The middle of the greeting, where the loader shows while data loads
-.sd-greeting-status {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  min-width: 0;
-}
-
 // The loader: three cells of the logo hexagon that light up one after
-// the other, with how far the data has come below them
+// the other, with how far the data has come next to them
 .sd-loader {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .sd-loader-cells {

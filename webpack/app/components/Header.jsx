@@ -46,7 +46,7 @@ function RefreshButton({updated, onRefresh}) {
   );
 }
 
-export function Greeting({user, now, updated, progress, onRefresh}) {
+export function Greeting({user, now, updated, onRefresh}) {
   return (
     <div className="sd-greeting">
       <div>
@@ -54,10 +54,6 @@ export function Greeting({user, now, updated, progress, onRefresh}) {
           {greeting(now)}, {user.fullname.split(" ")[0]}
         </h1>
         <p className="sd-today">{formatToday(now)}</p>
-      </div>
-      <div className="sd-greeting-status">
-        {progress
-          ? <Loader label={format("loading_progress", progress)}/> : null}
       </div>
       <RefreshButton updated={updated} onRefresh={onRefresh}/>
     </div>
@@ -82,9 +78,15 @@ function TabBadge({dashboard, manage}) {
 
 // The dashboards a user can switch between. Each is a page of its own,
 // so this is navigation, not a tab widget.
-export function Tabs({dashboards, activeId, manage, onOpen, children}) {
+export function Tabs({dashboards, activeId, manage, progress, onOpen,
+                     children}) {
   return (
     <nav className="sd-tabs" aria-label={t("dashboards")}>
+      {progress ? (
+        <div className="sd-tabs-status">
+          <Loader label={format("loading_progress", progress)}/>
+        </div>
+      ) : null}
       <ul>
         {dashboards.map((dashboard) => (
           <li key={dashboard.id}>

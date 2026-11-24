@@ -30,6 +30,13 @@
   .sd-viewactions {
     margin-left: 0;
   }
+
+  // The loader gets a line of its own below the tabs
+  .sd-tabs-status {
+    order: 4;
+    flex-basis: 100%;
+    padding: 6px 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
