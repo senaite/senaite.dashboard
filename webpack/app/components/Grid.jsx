@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback, useState} from "react";
 import ReactGridLayout, {
   useContainerWidth, verticalCompactor
 } from "react-grid-layout";
@@ -11,14 +11,36 @@ const ROW_HEIGHT = 64;
 const MARGIN = [16, 16];
 // Below this width the tiles stack in reading order
 const STACK_BELOW = 720;
+// An opened tile is at least this many rows high, so that its rows fit
+const OPEN_ROWS = 6;
 
-function Stack({tiles, renderTile}) {
+// The tile as the grid places it: an opened tile grows for the time it
+// is open. The grow is not saved; only a drag or a resize is.
+function placed(tile, open) {
+  if (!open || tile.layout.h >= OPEN_ROWS) {
+    return toItem(tile);
+  }
+  return {...toItem(tile), h: OPEN_ROWS};
+}
+
+// Which tiles are opened to the objects behind their numbers
+function useOpenTiles() {
+  const [open, setOpen] = useState({});
+  const onOpenChange = useCallback((tileId, isOpen) => {
+    setOpen((prev) => (Boolean(prev[tileId]) === isOpen ? prev
+      : {...prev, [tileId]: isOpen}));
+  }, []);
+  return [open, onOpenChange];
+}
+
+function Stack({tiles, renderTile, open}) {
   return (
     <div className="sd-stack">
       {inReadingOrder(tiles).map((tile) => (
         <div key={tile.id}
              className={`sd-stack-item is-h${tile.layout.h}` +
-                        (tile.type === "kpi" ? " is-half" : "")}>
+                        (tile.type === "kpi" ? " is-half" : "") +
+                        (open[tile.id] ? " is-open" : "")}>
           {renderTile(tile)}
         </div>
       ))}
@@ -29,13 +51,15 @@ function Stack({tiles, renderTile}) {
 export default function Grid(props) {
   const {tiles, editing, onTilesChange} = props;
   const {width, containerRef, mounted} = useContainerWidth();
+  const [open, onOpenChange] = useOpenTiles();
 
   const renderTile = (tile) => (
     <Tile tile={tile} data={props.results[tile.id]}
           pending={props.pending[tile.id]} editing={editing}
           onSettings={props.onSettings} onRemove={props.onRemove}
           onNudge={props.onNudge} context={props.context}
-          spotlight={props.spotlight === tile.id}/>
+          spotlight={props.spotlight === tile.id}
+          onOpenChange={onOpenChange}/>
   );
 
   // Only what the user did counts; the grid also reports the layout
@@ -52,12 +76,12 @@ export default function Grid(props) {
   return (
     <div ref={containerRef} className="sd-grid">
       {mounted && width < STACK_BELOW ? (
-        <Stack tiles={tiles} renderTile={renderTile}/>
+        <Stack tiles={tiles} renderTile={renderTile} open={open}/>
       ) : null}
       {mounted && width >= STACK_BELOW ? (
         <ReactGridLayout
           width={width}
-          layout={tiles.map(toItem)}
+          layout={tiles.map((tile) => placed(tile, open[tile.id]))}
           gridConfig={{cols: COLUMNS, rowHeight: ROW_HEIGHT,
                        margin: MARGIN, containerPadding: [0, 0]}}
           dragConfig={{enabled: editing, handle: ".sd-tile-head",

@@ -57,7 +57,7 @@ function Axis({ticks, scale, width}) {
   );
 }
 
-function Columns({stacked, x, y, colors, active}) {
+function Columns({stacked, x, y, colors, active, onPart}) {
   const band = x.bandwidth();
   const width = Math.min(MAX_BAR, band * 0.72);
   const offset = (band - width) / 2;
@@ -76,6 +76,11 @@ function Columns({stacked, x, y, colors, active}) {
           <path key={index}
                 d={columnPath(x(index) + offset, top, width, height,
                               isTop ? 4 : 0)}
+                className={onPart ? "is-pickable" : null}
+                onClick={onPart ? (event) => {
+                  event.stopPropagation();
+                  onPart(index, serie);
+                } : undefined}
                 opacity={active === null || active === index ? 1 : 0.45}/>
         );
       })}
@@ -152,8 +157,22 @@ function Legend({series, colors}) {
   );
 }
 
-// Counts per period: stacked columns, stacked areas or lines
-export default function TimeChart({data, style, width, height}) {
+// What a click on a period, or a part of a column, opens: its period
+// and, in a stack, its value
+function partOf(data, index, serie, colors) {
+  const {buckets, series, interval} = data;
+  const period = formatPeriod(buckets[index], interval, true);
+  if (!serie || series.length < 2) {
+    return [{bucket: buckets[index]}, period, null];
+  }
+  return [{bucket: buckets[index], key: serie.key},
+          `${period} · ${serie.label}`, colors[serie.key]];
+}
+
+// Counts per period: stacked columns, stacked areas or lines. With
+// `onPick` a column, a part of it or a period of a line opens to its
+// objects.
+export default function TimeChart({data, style, width, height, onPick}) {
   const [active, setActive] = useState(null);
   const {buckets, series, interval, kind} = data;
   const colors = series.length > 1 ? groupColors(series, kind)
@@ -187,12 +206,21 @@ export default function TimeChart({data, style, width, height}) {
     y: MARGIN.top
   };
   const props = {stacked, series, x, y, colors, style};
+  const onPart = onPick
+    ? (index, serie) => onPick(...partOf(data, index, serie, colors))
+    : null;
+  const onPeriod = onPick ? () => {
+    if (active !== null) {
+      onPart(active, null);
+    }
+  } : undefined;
 
   return (
     <div className="sd-timechart">
       <div className="sd-timechart-plot">
         <svg width={width} height={height} onMouseMove={onMove}
-             onMouseLeave={() => setActive(null)} role="img"
+             onMouseLeave={() => setActive(null)} onClick={onPeriod}
+             className={onPick ? "is-pickable" : null} role="img"
              aria-label={series.map((serie) => serie.label).join(", ")}>
           <g transform={`translate(${left},${MARGIN.top})`}>
             <Axis ticks={ticks} scale={y} width={innerWidth}/>
@@ -201,7 +229,7 @@ export default function TimeChart({data, style, width, height}) {
                     y={0} height={innerHeight} className="sd-hoverband"/>
             ) : null}
             {style === "bars"
-              ? <Columns {...props} active={active}/>
+              ? <Columns {...props} active={active} onPart={onPart}/>
               : <Lines {...props}/>}
             {style !== "bars"
               ? <Markers {...props} index={active}/> : null}

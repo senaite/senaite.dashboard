@@ -11,6 +11,7 @@ from senaite.dashboard.dashboards.model import MAX_TILES
 from senaite.dashboard.exceptions import ValidationError
 from senaite.dashboard.query.compute import compute
 from senaite.dashboard.query.compute import get_cost
+from senaite.dashboard.query.drill import drill as drill_down
 from senaite.dashboard.query.registry import get_dataset
 from senaite.dashboard.query.vocabularies import get_choices
 from senaite.dashboard.routes.base import get_body
@@ -72,3 +73,12 @@ def choices(env, request, dataset, field):
     dataset = get_dataset(dataset, env)
     field = dataset.get_field(field, env)
     return {"choices": get_choices(field, dataset, env)}
+
+
+@route("/drill", ["POST"])
+def drill(env, request):
+    """The objects behind a part of a tile, or an object opened in it.
+
+    Body and answer: see senaite.dashboard.query.drill
+    """
+    return drill_down(get_body(), env)

@@ -26,9 +26,11 @@ from senaite.dashboard.query.datasets import COL_NUMBER  # noqa: F401
 from senaite.dashboard.query.datasets import COL_PERCENT  # noqa: F401
 from senaite.dashboard.query.datasets import COL_STATE  # noqa: F401
 from senaite.dashboard.query.datasets import COL_TEXT  # noqa: F401
+from senaite.dashboard.query.datasets import Card  # noqa: F401
 from senaite.dashboard.query.datasets import Column  # noqa: F401
 from senaite.dashboard.query.datasets import Dataset  # noqa: F401
 from senaite.dashboard.query.datasets import DatasetExtension  # noqa: F401
+from senaite.dashboard.query.datasets import Link  # noqa: F401
 from senaite.dashboard.query.datasets import Span  # noqa: F401
 from senaite.dashboard.query.datasets import choice_getter  # noqa: F401
 from senaite.dashboard.query.datasets import index_getter  # noqa: F401

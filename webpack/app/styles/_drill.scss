@@ -1,0 +1,377 @@
+// A tile opened to the objects behind its numbers: a navigation stack
+// in the tile, with rows in the manner of a table view
+
+// What opens on a click looks like it
+.sd-donut path.is-pickable,
+.sd-timechart svg.is-pickable,
+.sd-timechart path.is-pickable {
+  cursor: pointer;
+}
+
+.sd-legend-pick,
+.sd-barlist-row.is-pickable > button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sd-legend-pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sd-legend.is-list li:has(.sd-legend-pick):hover {
+  background: var(--sd-hover);
+}
+
+.sd-barlist-row.is-pickable {
+  display: block;
+
+  > button {
+    display: grid;
+    grid-template-columns: minmax(80px, 34%) 1fr auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 2px 6px;
+    margin: 0 -6px;
+    border-radius: 5px;
+    box-sizing: content-box;
+
+    &:hover {
+      background: var(--sd-hover);
+    }
+  }
+}
+
+// The number keeps its size; only the button around it is undone
+.sd-kpi-value.is-pickable {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--sd-radius-small);
+
+  &:hover {
+    color: var(--sd-accent);
+  }
+}
+
+// An opened number tile leaves its band for the page, as a list does
+.sd-tile.is-drilled {
+  background: var(--sd-surface);
+
+  .sd-tile-head {
+    min-height: 40px;
+    padding: 6px 0 8px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--sd-line-strong);
+  }
+
+  .sd-tile-body {
+    margin: 0;
+  }
+}
+
+.sd-tile-kpi.is-drilled {
+  box-shadow: inset 0 0 0 1px var(--sd-line);
+
+  .sd-tile-head {
+    padding: 6px 12px 8px;
+  }
+}
+
+.sd-drill-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+  max-width: 45%;
+  padding: 2px 6px 2px 0;
+  border: 0;
+  background: none;
+  color: var(--sd-accent);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    color: var(--sd-accent-strong);
+  }
+}
+
+.sd-drill-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.sd-drill-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sd-drill-count {
+  font-weight: 400;
+  color: var(--sd-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// The level slides in from the side it comes from
+.sd-drill {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  &.is-forward {
+    animation: sd-drill-forward 0.22s ease-out;
+  }
+
+  &.is-back {
+    animation: sd-drill-back 0.22s ease-out;
+  }
+}
+
+@keyframes sd-drill-forward {
+  from {
+    transform: translateX(40%);
+    opacity: 0;
+  }
+}
+
+@keyframes sd-drill-back {
+  from {
+    transform: translateX(-30%);
+    opacity: 0;
+  }
+}
+
+.sd-drill-section {
+  margin: 0;
+  padding: 12px 0 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sd-muted);
+  border-bottom: 1px solid var(--sd-line);
+}
+
+// Values to narrow the list by, as chips that wrap
+.sd-facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--sd-line);
+}
+
+.sd-facet {
+  display: contents;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border: 1px solid var(--sd-line-strong);
+    border-radius: 999px;
+    background: var(--sd-surface);
+    color: var(--sd-ink-2);
+    font: inherit;
+    font-size: 12.5px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--sd-muted);
+    }
+
+    &[aria-pressed="true"] {
+      border-color: transparent;
+      background: var(--sd-accent-soft);
+      color: var(--sd-accent-strong);
+      font-weight: 600;
+
+      .sd-facet-count {
+        color: var(--sd-accent-strong);
+      }
+    }
+  }
+}
+
+.sd-facet-count {
+  color: var(--sd-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sd-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sd-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--sd-line);
+
+  &:hover {
+    background: var(--sd-hover);
+  }
+
+  &.is-more {
+    border-bottom: 0;
+
+    .sd-row-open {
+      color: var(--sd-accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+  }
+}
+
+.sd-row-open {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 8px 4px 8px 2px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &.is-static {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    cursor: default;
+  }
+
+  > .sd-icon {
+    color: var(--sd-line-strong);
+  }
+
+  &:disabled {
+    cursor: progress;
+  }
+}
+
+.sd-row.is-more .sd-row-open {
+  grid-template-columns: 1fr auto;
+
+  > .sd-icon {
+    color: var(--sd-accent);
+  }
+}
+
+.sd-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sd-row-main {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.sd-row-title {
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sd-row-sub {
+  font-size: 12.5px;
+  color: var(--sd-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sd-row-side {
+  display: grid;
+  gap: 1px;
+  justify-items: end;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+
+  .sd-row-sub {
+    font-size: 12px;
+  }
+}
+
+.sd-row-link {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  border-radius: var(--sd-radius-small);
+  color: var(--sd-muted);
+
+  &:hover {
+    color: var(--sd-accent);
+  }
+}
+
+// An object opened in the tile: what it is, then what it holds
+.sd-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px 16px;
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--sd-line);
+  font-size: 13px;
+
+  dt {
+    font-size: 12px;
+    color: var(--sd-muted);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.sd-tile-kpi.is-drilled {
+  .sd-drill-section,
+  .sd-facets,
+  .sd-facts {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .sd-row-open {
+    padding-left: 12px;
+  }
+}
+
+// On narrow screens an opened tile takes the room of a list
+.sd-stack-item.is-open {
+  grid-column: span 2;
+  height: 420px;
+}

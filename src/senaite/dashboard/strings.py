@@ -23,6 +23,7 @@ UI_STRINGS = OrderedDict([
     ("all", _("All")),
     ("appearance", _("Appearance")),
     ("ascending", _("Oldest first")),
+    ("back_to", _("Back to {title}")),
     ("back_to_dashboard", _("Back to the dashboard")),
     ("before_now", _("Before now")),
     ("cancel", _("Cancel")),
@@ -196,6 +197,7 @@ UI_STRINGS = OrderedDict([
     ("of_total", _("{shown} of {total}")),
     ("open_draft", _("Open the draft")),
     ("open_list", _("Open list")),
+    ("open_object", _("Open")),
     ("or", _("or ...")),
     ("p90", _("90% within")),
     ("pending_hint", _("The draft has changes that are not published "
@@ -230,6 +232,7 @@ UI_STRINGS = OrderedDict([
     ("session_expired", _("Your session has expired. Please reload the "
                           "page and sign in again.")),
     ("settings", _("Settings")),
+    ("show_more", _("Show {count} more")),
     ("slow_tile", _("This takes longer than usual.")),
     ("sort_on", _("Sort by")),
     ("source", _("Kind of data")),

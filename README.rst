@@ -139,6 +139,32 @@ Personal
          tile open next to it
 
 
+Opening a tile
+--------------
+
+A click on a number opens the tile to the objects it counts: a part
+of a donut or its line in the legend, a bar of a bar list, a column of
+a chart or a part of it, or the number of a count. The tile shows them
+as rows in place, the way a list on a phone does: the way back is on
+the left of its head, Esc goes back too. A small tile grows for as
+long as it is open; the dashboard is not changed by it.
+
+The rows come from the same search the tile counts with, narrowed by
+the part clicked, so their number is the number of the part. Chips
+above the rows narrow them further, by the client or the sample type
+of a sample, or the analysis or analyst of an analysis, with the
+number each leaves. A row opens in the tile when there is more below
+it: a sample shows its analyses with their results, an analysis opens
+its sample, a worksheet shows its analyses. The icon at the end of a
+row leads to the object in SENAITE, the one in the head of the tile to
+the list or the object shown, and the last row to the list of the
+dataset.
+
+.. image:: docs/images/drilldown.png
+   :alt: The parts of a donut and the number of a count opened to the
+         samples they count, and an analysis opened to its sample
+
+
 Themes and colors
 -----------------
 
@@ -416,6 +442,33 @@ the index without waking the object, `choice_getter(field)` shows the
 title of the value of a choice field, read from the metadata column
 of the same name or from the getter it is given.
 
+How the objects of a dataset show when a tile is opened is up to the
+dataset, too. A `Card` names the columns of a row: the title, the
+columns of the line below it, the columns on the right of which the
+first with a value is shown, and one below them. Without a card, a
+row shows the first columns. `facts` are the columns shown of an
+opened object, `facets` the fields its rows can be narrowed by and
+`sort` the order of the rows. A `Link` leads from an object to others:
+`children` are shown below an opened object, `parent` is what a row
+opens instead of its own object. The samples of senaite.dashboard are
+set up so:
+
+.. code-block:: python
+
+    SAMPLES = api.Dataset(
+        ...,
+        card=api.Card("getId",
+                      subtitle=["getClientTitle", "getSampleTypeTitle"],
+                      detail=["getDueDate"], note="getProgress"),
+        facets=["getClientUID", "getSampleTypeUID"],
+        sort=("getDueDate", "ascending"),
+        # the analyses whose ancestors include the sample, partitions
+        # too; the function returns the value for the index
+        children=api.Link("analyses", "getAncestorsUIDs",
+                          lambda brain, dataset: brain.UID,
+                          title=_("Analyses")),
+    )
+
 A data source subclasses `DataSource`. It declares the parameters it
 takes by kind, is called with them and the `Environment` of the
 request, raises `ValidationError` for anything it does not accept, and
@@ -486,6 +539,8 @@ stable API for other clients.
   (`?draft=1` for the draft).
 - `POST /data`, `GET /choices/<dataset>/<field>`: the data of many
   tiles at once, the values a filter offers.
+- `POST /drill`: the objects behind a part of a tile, or an object
+  opened in it with the objects below it.
 - `POST /save/<id>`, `/reset/<id>`, `/activate/<id>`, `/new`,
   `/settings/<id>`, `/remove/<id>`: changes of a user to their
   dashboards.

@@ -34,15 +34,22 @@ function Duration({data}) {
   );
 }
 
-// One number, with its course over the last periods when there is one
-export default function KpiTile({tile, data}) {
+// One number, with its course over the last periods when there is one.
+// With `onPick` the number opens to the objects it counts.
+export default function KpiTile({tile, data, onPick}) {
   if (data.unit === "hours") {
     return <Duration data={data}/>;
   }
   const color = namedColor(tile.options.color);
+  const value = formatNumber(data.value);
   return (
     <div className="sd-kpi">
-      <div className="sd-kpi-value">{formatNumber(data.value)}</div>
+      {onPick ? (
+        <button type="button" className="sd-kpi-value is-pickable"
+                onClick={() => onPick({}, null, color)}>
+          {value}
+        </button>
+      ) : <div className="sd-kpi-value">{value}</div>}
       <Sparkline trend={data.trend} color={color}/>
     </div>
   );

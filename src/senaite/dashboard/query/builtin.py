@@ -20,8 +20,10 @@ from senaite.dashboard.query.datasets import COL_DUE
 from senaite.dashboard.query.datasets import COL_NUMBER
 from senaite.dashboard.query.datasets import COL_PERCENT
 from senaite.dashboard.query.datasets import COL_STATE
+from senaite.dashboard.query.datasets import Card
 from senaite.dashboard.query.datasets import Column
 from senaite.dashboard.query.datasets import Dataset
+from senaite.dashboard.query.datasets import Link
 from senaite.dashboard.query.datasets import Span
 from senaite.dashboard.query.fields import BOOLEAN
 from senaite.dashboard.query.fields import DATE
@@ -31,6 +33,7 @@ from senaite.dashboard.query.fields import STATE
 from senaite.dashboard.query.fields import TEXT
 from senaite.dashboard.query.fields import USER
 from senaite.dashboard.query.fields import Field
+from senaite.dashboard.query.search import get_index_value
 
 
 def can_view_result(brain, env):
@@ -40,6 +43,31 @@ def can_view_result(brain, env):
     client contact the result only once it is verified.
     """
     return env.can(ViewResults, api.get_object(brain))
+
+
+def result_with_unit(brain):
+    """The result of an analysis with its unit, or None without one."""
+    result = brain.getResult
+    if result in (None, ""):
+        return None
+    unit = brain.getUnit
+    return u" ".join(api.safe_unicode(part) for part in (result, unit)
+                     if part)
+
+
+def own_uid(brain, dataset):
+    return brain.UID
+
+
+def root_sample_uid(brain, dataset):
+    """The UID of the sample an analysis belongs to, through partitions.
+
+    The index holds the sample of the analysis and its ancestors, the
+    root last; the samples dataset holds root samples only.
+    """
+    uids = get_index_value(dataset.catalog, "getAncestorsUIDs",
+                           brain.getRID())
+    return uids[-1] if uids else None
 
 
 SAMPLES = Dataset(
@@ -98,6 +126,14 @@ SAMPLES = Dataset(
         Span("to_reception", _("Sampled to received"),
              "getDateSampled", "getDateReceived"),
     ],
+    card=Card("getId", subtitle=["getClientTitle", "getSampleTypeTitle"],
+              detail=["getDueDate"], note="getProgress"),
+    facts=["getClientTitle", "getSampleTypeTitle", "review_state",
+           "getDateReceived", "getDueDate", "getProgress"],
+    facets=["getClientUID", "getSampleTypeUID"],
+    sort=("getDueDate", "ascending"),
+    children=Link("analyses", "getAncestorsUIDs", own_uid,
+                  title=_("Analyses")),
 )
 
 ANALYSES = Dataset(
@@ -136,6 +172,8 @@ ANALYSES = Dataset(
         Column("getRequestID", _c("Sample ID")),
         Column("getClientTitle", _c("Client")),
         Column("getResult", _c("Result"), guard=can_view_result),
+        Column("result_with_unit", _("Result with unit"),
+               guard=can_view_result, getter=result_with_unit),
         Column("getUnit", _c("Unit")),
         Column("review_state", _c("Status"), COL_STATE),
         Column("getMethodTitle", _c("Method")),
@@ -147,6 +185,11 @@ ANALYSES = Dataset(
         Span("to_result", _("Received to result"),
              "getDateReceived", "getResultCaptureDate"),
     ],
+    card=Card("Title", subtitle=["getRequestID", "getClientTitle"],
+              detail=["result_with_unit", "getDueDate"], note="review_state"),
+    facets=["getKeyword", "getClientUID", "getAnalyst"],
+    sort=("getDueDate", "ascending"),
+    parent=Link("samples", "UID", root_sample_uid),
 )
 
 WORKSHEETS = Dataset(
@@ -173,4 +216,8 @@ WORKSHEETS = Dataset(
         Column("getProgressPercentage", _c("Progress"), COL_PERCENT),
         Column("created", _("Created"), COL_DATE),
     ],
+    card=Card("getId", subtitle=["getWorksheetTemplateTitle"],
+              detail=["created"], note="getProgressPercentage"),
+    children=Link("analyses", "getWorksheetUID", own_uid,
+                  title=_c("Analyses")),
 )

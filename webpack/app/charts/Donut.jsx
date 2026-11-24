@@ -5,9 +5,24 @@ import {groupColors} from "../colors";
 import {formatNumber, formatPercent} from "../format";
 import {t} from "../i18n";
 
+// What a part of the legend says
+function LegendEntry({item, color, total}) {
+  return (
+    <>
+      <span className="sd-swatch" style={{background: color}}/>
+      <span className="sd-legend-label">{item.label}</span>
+      <span className="sd-legend-value">{formatNumber(item.value)}</span>
+      <span className="sd-legend-share">
+        {total ? formatPercent(item.value / total) : ""}
+      </span>
+    </>
+  );
+}
+
 // Parts of a whole. The legend names every part with its number, so
-// no part depends on its color alone.
-export default function Donut({items, kind, width, height}) {
+// no part depends on its color alone. With `onPick` a part opens to
+// its objects, by its slice or its line of the legend.
+export default function Donut({items, kind, width, height, onPick}) {
   const [active, setActive] = useState(null);
   const colors = groupColors(items, kind);
   const total = items.reduce((sum, item) => sum + item.value, 0);
@@ -35,8 +50,11 @@ export default function Donut({items, kind, width, height}) {
             {slices.map((slice) => (
               <path key={slice.data.key} d={shape(slice)}
                     style={{fill: colors[slice.data.key]}}
+                    className={onPick ? "is-pickable" : null}
                     opacity={active && active !== slice.data.key ? 0.3 : 1}
-                    onMouseEnter={() => setActive(slice.data.key)}/>
+                    onMouseEnter={() => setActive(slice.data.key)}
+                    onClick={onPick ? () => onPick(
+                      slice.data, colors[slice.data.key]) : undefined}/>
             ))}
           </g>
         </svg>
@@ -56,15 +74,17 @@ export default function Donut({items, kind, width, height}) {
           <li key={item.key}
               className={active === item.key ? "is-active" : ""}
               onMouseEnter={() => setActive(item.key)}>
-            <span className="sd-swatch"
-                  style={{background: colors[item.key]}}/>
-            <span className="sd-legend-label">{item.label}</span>
-            <span className="sd-legend-value">
-              {formatNumber(item.value)}
-            </span>
-            <span className="sd-legend-share">
-              {total ? formatPercent(item.value / total) : ""}
-            </span>
+            {onPick ? (
+              <button type="button" className="sd-legend-pick"
+                      onFocus={() => setActive(item.key)}
+                      onClick={() => onPick(item, colors[item.key])}>
+                <LegendEntry item={item} color={colors[item.key]}
+                             total={total}/>
+              </button>
+            ) : (
+              <LegendEntry item={item} color={colors[item.key]}
+                           total={total}/>
+            )}
           </li>
         ))}
       </ul>
