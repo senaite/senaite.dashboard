@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import Icon from "./Icon";
 import Loader from "./Loader";
-import {formatDateTime, formatToday, toDate} from "../format";
+import {formatDateTime, formatToday, hourOf} from "../format";
 import {format, t, titleText} from "../i18n";
 
 // The answers are often cached and back at once: the button turns at
@@ -10,7 +10,7 @@ import {format, t, titleText} from "../i18n";
 const REFRESH_MIN_MS = 600;
 
 function greeting(now) {
-  const hour = (toDate(now) || new Date()).getHours();
+  const hour = hourOf(now);
   if (hour < 12) {
     return t("good_morning");
   }
