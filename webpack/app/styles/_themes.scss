@@ -55,10 +55,10 @@ $sd-themes: (
     inverse-muted: #c9d1d1,
     inverse-action: #9cc3ff,
     inverse-hover: rgba(255, 255, 255, 0.1),
-    // loading: the dots of the SENAITE listings
+    // loading: the cells light up from the logo grey to the ink
     skeleton: #e6e9e9,
-    loader-dot: #cccccc,
-    loader-accent: #e579b8,
+    loader-cell: #d6dadb,
+    loader-active: #606969,
     // charts
     chart-grid: #e8ebeb,
     chart-axis: #c9cfd0,
@@ -118,8 +118,8 @@ $sd-themes: (
     inverse-action: #2b6585,
     inverse-hover: rgba(0, 0, 0, 0.08),
     skeleton: #2f3838,
-    loader-dot: #566161,
-    loader-accent: #e579b8,
+    loader-cell: #3d4747,
+    loader-active: #b2bbbb,
     chart-grid: #303939,
     chart-axis: #4a5656,
     state-new: #b0bec5,

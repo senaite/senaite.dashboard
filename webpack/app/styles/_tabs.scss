@@ -68,6 +68,7 @@
 }
 
 .sd-tab-add {
+  order: 1;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -85,6 +86,7 @@
 }
 
 .sd-viewactions {
+  order: 3;
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -107,4 +109,17 @@
     background: var(--sd-warning-soft);
     color: var(--sd-warning);
   }
+}
+
+// While data loads, the loader sits in the row of the tabs, on the
+// height of their labels, in the middle of the room between the tabs
+// and the actions of the dashboard
+.sd-tabs-status {
+  order: 2;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  min-width: 0;
+  padding: 0 12px;
 }
