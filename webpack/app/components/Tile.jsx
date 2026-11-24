@@ -211,15 +211,19 @@ function useDrillFocus(articleRef, depth) {
   }, [articleRef, depth]);
 }
 
-function DrillBody({stack, forward, context, actions}) {
+// A level that fails to render shows an error in the tile, like a
+// tile does; the way back stays in its head
+function DrillBody({tile, stack, forward, context, actions}) {
   const depth = stack.length;
   const level = stack[depth - 1];
   return (
     <div key={depth}
          className={"sd-drill " + (forward ? "is-forward" : "is-back")}>
-      <DrillLevel api={context.api} level={level}
-                  onScope={actions.setScope} onOpen={actions.openRow}
-                  onAnswer={(answer) => actions.keepAnswer(depth, answer)}/>
+      <TileBoundary tile={tile} data={level}>
+        <DrillLevel api={context.api} level={level}
+                    onScope={actions.setScope} onOpen={actions.openRow}
+                    onAnswer={(answer) => actions.keepAnswer(depth, answer)}/>
+      </TileBoundary>
     </div>
   );
 }
@@ -297,7 +301,7 @@ export default function Tile(props) {
       )}
       <div className="sd-tile-body" ref={ref}>
         {depth ? (
-          <DrillBody stack={drill.stack} forward={drill.forward}
+          <DrillBody tile={tile} stack={drill.stack} forward={drill.forward}
                      context={context} actions={drill.actions}/>
         ) : null}
         {!depth && size.width ? (

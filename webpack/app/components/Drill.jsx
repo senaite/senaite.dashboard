@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 
 import Icon from "./Icon";
 import {stateColor} from "../colors";
-import {formatDate, formatNumber, formatPercent,
-        formatRelative} from "../format";
+import {formatDate, formatNumber, formatPercent, formatRelative,
+        isPast} from "../format";
 import {format, t} from "../i18n";
 
 // The objects behind a number of a tile, shown in the tile itself. A
@@ -18,10 +18,6 @@ function listingUrl(answer, title) {
   return `${answer.listing}&title=${encodeURIComponent(title || "")}`;
 }
 
-function isLate(iso) {
-  return Boolean(iso) && new Date(iso) < new Date();
-}
-
 // One value of a row as text, by the kind of its column
 function Slot({slot}) {
   if (!slot || slot.value === null || slot.value === undefined ||
@@ -33,7 +29,7 @@ function Slot({slot}) {
     case "due":
       return (
         <time dateTime={value} title={formatDate(value)}
-              className={isLate(value) ? "sd-late" : ""}>
+              className={isPast(value) ? "sd-late" : ""}>
           {formatRelative(value)}
         </time>
       );
