@@ -1,8 +1,8 @@
 import React from "react";
 
 import {stateColor} from "../colors";
-import {formatDate, formatNumber, formatPercent,
-        formatRelative} from "../format";
+import {formatDate, formatNumber, formatPercent, formatRelative,
+        isPast} from "../format";
 import {format, t} from "../i18n";
 
 function DateCell({value, column}) {
@@ -11,7 +11,7 @@ function DateCell({value, column}) {
   }
   // A due date is read against today, any other date as a date
   if (column.kind === "due") {
-    const late = new Date(value) < new Date();
+    const late = isPast(value);
     return (
       <time dateTime={value} title={formatDate(value)}
             className={late ? "sd-late" : ""}>

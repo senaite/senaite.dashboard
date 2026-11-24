@@ -38,30 +38,55 @@ export function formatDuration(hours) {
   return {value: formatDecimal(hours / 24, 1), unit: t("days")};
 }
 
+// A date from the server, or null for anything that is none. The text
+// is read with Date.parse and the date made from the number: a script
+// of the page or of the browser may replace Date with one that fails
+// on what the browser's own reads, and an invalid date must not reach
+// Intl, which throws on it.
+export function toDate(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+  if (typeof value !== "string" && typeof value !== "number") {
+    return null;
+  }
+  const time = typeof value === "number" ? value : Date.parse(value);
+  return Number.isNaN(time) ? null : new Date(time);
+}
+
+// Whether a date lies before now
+export function isPast(value) {
+  const date = toDate(value);
+  return Boolean(date) && date.getTime() < Date.now();
+}
+
 export function formatDate(iso) {
-  if (!iso) {
+  const date = toDate(iso);
+  if (!date) {
     return "";
   }
   return new Intl.DateTimeFormat(getLanguage(), {
     day: "numeric", month: "short", year: "numeric"
-  }).format(new Date(iso));
+  }).format(date);
 }
 
 export function formatDateTime(iso) {
-  if (!iso) {
+  const date = toDate(iso);
+  if (!date) {
     return "";
   }
   return new Intl.DateTimeFormat(getLanguage(), {
     day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
-  }).format(new Date(iso));
+  }).format(date);
 }
 
 // "in 3 days", "2 hours ago"
-export function formatRelative(iso, now = new Date()) {
-  if (!iso) {
+export function formatRelative(iso, now = Date.now()) {
+  const date = toDate(iso);
+  if (!date) {
     return "";
   }
-  const seconds = (new Date(iso) - now) / 1000;
+  const seconds = (date.getTime() - now) / 1000;
   const units = [
     ["day", 86400], ["hour", 3600], ["minute", 60]
   ];
@@ -76,7 +101,10 @@ export function formatRelative(iso, now = new Date()) {
 
 // Label of a period on a time axis
 export function formatPeriod(iso, interval, long = false) {
-  const date = new Date(iso);
+  const date = toDate(iso);
+  if (!date) {
+    return "";
+  }
   const options = interval === "month"
     ? {month: long ? "long" : "short", year: long ? "numeric" : undefined}
     : {day: "numeric", month: "short"};
@@ -86,7 +114,7 @@ export function formatPeriod(iso, interval, long = false) {
 export function formatToday(iso) {
   return new Intl.DateTimeFormat(getLanguage(), {
     weekday: "long", day: "numeric", month: "long"
-  }).format(iso ? new Date(iso) : new Date());
+  }).format(toDate(iso) || new Date());
 }
 
 // Caption of one period of a trend: "This week", "Week of 12 Oct"
