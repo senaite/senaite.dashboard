@@ -248,9 +248,13 @@ The page carries everything it needs to start (dashboards, datasets,
 the tile library, translated texts), so the first paint does not wait
 for a request. Then every tile asks for its data on its own, three
 requests at a time, so the page fills as it goes and a slow tile does
-not hold back the others. While it does, the header says how many
-tiles are ready, and a waiting tile shows placeholders in the shape of
-what comes; one that takes longer than four seconds says so.
+not hold back the others. While it does, three cells of the logo
+hexagon light up in the row of the tabs, with how many tiles are ready
+next to them; the listings of SENAITE load with the same cells. A
+waiting tile shows placeholders in the shape of what comes, and says
+so when it takes longer than four seconds. The rows of a table scroll
+on their own, so the number of rows and the link to the list stay in
+view.
 
 
 The query language
