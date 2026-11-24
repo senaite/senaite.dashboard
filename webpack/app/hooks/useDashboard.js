@@ -1,59 +1,55 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 
-import useDebounce from "./useDebounce";
+import useSaveQueue from "./useSaveQueue";
+import useTileData from "./useTileData";
 import {normalizeTile} from "../model";
-import {t} from "../i18n";
 
 // Data is refreshed this often while the page is visible, in ms
 const REFRESH_INTERVAL = 5 * 60 * 1000;
-// Changes are saved once the user stopped changing for this long
-const SAVE_DELAY = 600;
-// Data requests at the same time. Each asks for one tile, so a slow
-// tile does not hold back the others and the page fills as it goes.
-const PARALLEL_REQUESTS = 3;
 
 // What the data of a tile depends on
 function signature(tile) {
   return tile.source ? JSON.stringify([tile.source, tile.params]) : null;
 }
 
-function dataTiles(tiles) {
-  return tiles.filter((tile) => tile.source).map((tile) => ({
-    id: tile.id, source: tile.source, params: tile.params
-  }));
+function byId(tiles) {
+  const map = {};
+  tiles.forEach((tile) => { map[tile.id] = tile; });
+  return map;
 }
 
-function withIds(map, ids, value) {
-  const next = {...map};
-  ids.forEach((id) => { next[id] = value; });
-  return next;
+// Whether a tile needs new data after a change: it is new, or its
+// source or parameters changed
+function needsData(tile, before) {
+  return Boolean(tile.source) &&
+    (!before || signature(before) !== signature(tile));
 }
 
-function withoutIds(map, ids) {
-  const next = {...map};
-  ids.forEach((id) => { delete next[id]; });
-  return next;
+// Whether the data a tile has is of another source than it has now
+function switchedSource(tile, before) {
+  return Boolean(before) && before.source !== tile.source;
 }
 
-// Runs the task for every item, at most `limit` of them at a time
-async function eachLimited(items, limit, task) {
-  const queue = items.slice();
-  const worker = async () => {
-    while (queue.length) {
-      await task(queue.shift());
-    }
-  };
-  const workers = Math.min(limit, queue.length);
-  await Promise.all(Array.from({length: workers}, worker));
+// A request whose failure does not matter, e.g. telling the server
+// which dashboard was opened last: the page works without it
+function ignoreFailure(promise) {
+  return promise.catch(() => null);
 }
 
-// The data a tile keeps after a request: what came back, or, when the
-// request failed, the data it had unless that was an error too
-function nextResult(previous, answer, failed) {
-  if (failed && previous && !previous.error) {
-    return previous;
-  }
-  return answer || {error: failed || t("no_data")};
+function errorText(exc) {
+  return exc.message || String(exc);
+}
+
+// Refresh while the page is on screen
+function useAutoRefresh(refresh) {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        refresh();
+      }
+    }, REFRESH_INTERVAL);
+    return () => clearInterval(timer);
+  }, [refresh]);
 }
 
 // Everything the page knows about the dashboard on screen, and what
@@ -61,75 +57,21 @@ function nextResult(previous, answer, failed) {
 export default function useDashboard(api, boot) {
   const [dashboards, setDashboards] = useState(boot.dashboards);
   const [view, setViewState] = useState(null);
-  const [results, setResults] = useState({});
-  const [pending, setPending] = useState({});
-  const [saveState, setSaveState] = useState("idle");
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
-  const [updated, setUpdated] = useState(null);
   // The view as of the last change, not the last render, so that two
   // changes in a row build on each other
   const viewRef = useRef(null);
-  // The latest data request per tile; older answers are dropped
-  const sequence = useRef({count: 0, tiles: {}});
-  // The number of the latest save, and the end of the chain of saves:
-  // each waits for the one before, so they reach the server in order
-  const saving = useRef({count: 0, last: Promise.resolve()});
 
   const setView = useCallback((next) => {
     viewRef.current = next;
     setViewState(next);
   }, []);
 
-  const fail = useCallback((exc) => {
-    setError(exc.message || String(exc));
-  }, []);
+  const fail = useCallback((exc) => setError(errorText(exc)), []);
 
-  // Asks for the data of one tile and keeps the answer, unless a newer
-  // request for the tile was made meanwhile or another dashboard opened
-  const fetchTile = useCallback(async (tile, isLatest) => {
-    let answer = null;
-    let failed = null;
-    try {
-      const response = await api.data([tile]);
-      answer = response.results[tile.id];
-      setUpdated(response.now);
-    } catch (exc) {
-      failed = exc.message;
-    }
-    if (!isLatest(tile.id)) {
-      return;
-    }
-    setResults((prev) => ({
-      ...prev, [tile.id]: nextResult(prev[tile.id], answer, failed)
-    }));
-    if (failed) {
-      setError(failed);
-    }
-    setPending((prev) => withoutIds(prev, [tile.id]));
-  }, [api]);
-
-  const fetchData = useCallback(async (tiles) => {
-    const wanted = dataTiles(tiles);
-    if (!wanted.length) {
-      return;
-    }
-    const viewId = viewRef.current && viewRef.current.id;
-    const ids = wanted.map((tile) => tile.id);
-    const seq = (sequence.current.count += 1);
-    ids.forEach((id) => { sequence.current.tiles[id] = seq; });
-    const isLatest = (id) => sequence.current.tiles[id] === seq &&
-      viewRef.current && viewRef.current.id === viewId;
-    setPending((prev) => withIds(prev, ids, true));
-    await eachLimited(wanted, PARALLEL_REQUESTS,
-                      (tile) => fetchTile(tile, isLatest));
-  }, [fetchTile]);
-
-  const show = useCallback((answer) => {
-    const nextView = {...answer, tiles: answer.tiles.map(normalizeTile)};
-    setView(nextView);
-    fetchData(nextView.tiles);
-  }, [setView, fetchData]);
+  const {results, pending, updated, fetchData, forget, clear} =
+    useTileData(api, viewRef, setError);
 
   const reloadList = useCallback(async () => {
     const answer = await api.list();
@@ -137,100 +79,61 @@ export default function useDashboard(api, boot) {
     return answer;
   }, [api]);
 
+  // Keep the tiles on screen, take over what the server says about
+  // the dashboard (customized, unpublished changes)
+  const onSaved = useCallback((target, saved) => {
+    const current = viewRef.current;
+    if (current && current.id === saved.id && current.mode === saved.mode) {
+      setView({...saved, tiles: current.tiles});
+    }
+    if (target.mode === "draft") {
+      ignoreFailure(reloadList());
+    }
+  }, [setView, reloadList]);
+
+  const {saveState, persist, finishSaving} = useSaveQueue(
+    api, onSaved, fail);
+
+  const show = useCallback((answer) => {
+    const nextView = {...answer, tiles: answer.tiles.map(normalizeTile)};
+    setView(nextView);
+    fetchData(nextView.tiles);
+  }, [setView, fetchData]);
+
   const refresh = useCallback(async () => {
     if (viewRef.current) {
       await fetchData(viewRef.current.tiles);
     }
   }, [fetchData]);
 
-  // Saving
-
-  const save = useCallback(async (target, tiles, seq, leaving) => {
-    const isLatest = () => saving.current.count === seq;
-    setSaveState("saving");
-    try {
-      const saved = target.mode === "draft"
-        ? await api.saveDraft(target.id, tiles, leaving)
-        : await api.save(target.id, tiles, leaving);
-      if (!isLatest()) {
-        return;
-      }
-      // Keep the tiles on screen, take over what the server says
-      // about the dashboard (customized, unpublished changes)
-      const current = viewRef.current;
-      if (current && current.id === saved.id &&
-          current.mode === saved.mode) {
-        setView({...saved, tiles: current.tiles});
-      }
-      setSaveState("saved");
-      if (target.mode === "draft") {
-        reloadList().catch(() => null);
-      }
-    } catch (exc) {
-      setSaveState("error");
-      fail(exc);
-    }
-  }, [api, setView, reloadList, fail]);
-
-  // Each save waits for the one before. When the page is left there
-  // is no time to wait: that save goes out at once, the page is gone
-  // before an answer could matter
-  const [persist, flushSave] = useDebounce((target, tiles, leaving) => {
-    const seq = (saving.current.count += 1);
-    if (leaving) {
-      return save(target, tiles, seq, true);
-    }
-    saving.current.last = saving.current.last.then(
-      () => save(target, tiles, seq, false));
-    return saving.current.last;
-  }, SAVE_DELAY);
-
-  // Send the change still waiting and wait for every save on its way:
-  // publishing, discarding or opening another dashboard must not
-  // overtake the last change
-  const finishSaving = useCallback(async () => {
-    flushSave();
-    await saving.current.last;
-  }, [flushSave]);
-
   // Change the tiles: a list, or a function from the current tiles
   const setTiles = useCallback((change) => {
     const current = viewRef.current;
     const tiles = typeof change === "function"
       ? change(current.tiles) : change;
-    const before = {};
-    current.tiles.forEach((tile) => { before[tile.id] = tile; });
-    const changed = tiles.filter((tile) => tile.source && (
-      !before[tile.id] || signature(before[tile.id]) !== signature(tile)));
+    const before = byId(current.tiles);
     // An answer of another source does not fit the tile any more
-    const switched = changed.filter((tile) =>
-      before[tile.id] && before[tile.id].source !== tile.source);
-    if (switched.length) {
-      setResults((prev) => withoutIds(prev, switched.map((tile) => tile.id)));
-    }
+    tiles.filter((tile) => switchedSource(tile, before[tile.id]))
+      .forEach((tile) => forget(tile.id));
     setView({...current, tiles});
     persist({id: current.id, mode: current.mode}, tiles);
-    if (changed.length) {
-      fetchData(changed);
-    }
-  }, [setView, persist, fetchData]);
-
-  // Dashboard actions
+    fetchData(tiles.filter((tile) => needsData(tile, before[tile.id])));
+  }, [setView, persist, fetchData, forget]);
 
   const open = useCallback(async (dashboardId, draft = false) => {
     await finishSaving();
     setError(null);
     try {
       const nextView = await api.view(dashboardId, draft);
-      setResults({});
-      setPending({});
+      clear();
       show(nextView);
-      api.activate(dashboardId).catch(() => null);
+      ignoreFailure(api.activate(dashboardId));
     } catch (exc) {
       fail(exc);
     }
-  }, [api, show, fail, finishSaving]);
+  }, [api, show, fail, finishSaving, clear]);
 
+  // Runs an action after the saves on their way; its failure is shown
   const run = useCallback(async (action) => {
     await finishSaving();
     setError(null);
@@ -311,29 +214,7 @@ export default function useDashboard(api, boot) {
     dismissNotice: () => setNotice(null)
   };
 
-  // A change that could not be saved is lost when the page is left:
-  // the browser asks first
-  useEffect(() => {
-    if (saveState !== "error") {
-      return undefined;
-    }
-    const warn = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [saveState]);
-
-  // Keep the numbers fresh while the page is on screen
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (document.visibilityState === "visible") {
-        refresh();
-      }
-    }, REFRESH_INTERVAL);
-    return () => clearInterval(timer);
-  }, [refresh]);
+  useAutoRefresh(refresh);
 
   useEffect(() => {
     if (boot.active) {
